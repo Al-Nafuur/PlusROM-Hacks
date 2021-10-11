@@ -682,6 +682,7 @@ EndCompressMode
   ; Set GameOver Type
   ldx #128|GAMEOVERTIME   ; [56] + 2
   stx TIMER               ; [58] + 3
+  jsr SendPlusROMScore
   jmp StartKernel         ; [61] + 3      = 64
 
 NextShape
@@ -1361,6 +1362,28 @@ EndLevels
 
   DC.B  "LENIN"
 
+  IF PLUSROM
+PlusROM_API
+    .byte "a", 0, "h.firmaplus.de", 0
+
+SendPlusROMScore:
+
+   lda LINES+1
+   sta WriteToBuffer
+   lda LEVEL
+   sta WriteToBuffer
+   lda SCORE+2
+   sta WriteToBuffer
+   lda SCORE+1
+   sta WriteToBuffer
+   lda SCORE+0
+   sta WriteToBuffer
+
+   lda #HIGHSCORE_ID                ; game id in Highscore DB
+   sta WriteSendBuffer
+   rts
+  ENDIF
+
   ALIGN 256
 
   ; Row Offsets for Shape Drawing (256 Bytes)
@@ -1815,5 +1838,6 @@ DrawShape5B
 
   ORG     $9FF4
   RORG    $FFF4
-  DC.B    "BANK1", 0, 0, 0
+  DC.B    "BANK1", 0
+  DC.W    (PlusROM_API - $D000)
   DC.W    Init1, Init1

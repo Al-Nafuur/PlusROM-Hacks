@@ -522,6 +522,7 @@ EndTitleKernel2B
 
   ORG     $DFF4
   RORG    $FFF4
-  DC.B    "BANK5", 0, 0, 0
+  DC.B    "BANK5", 0
+  DC.W    (PlusROM_API - $D000)
   DC.W    Init5, Init5
 

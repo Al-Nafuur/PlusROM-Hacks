@@ -1112,6 +1112,33 @@ PackName
   
   DC.B  "AA0"
 
+DoStall
+  ; Initialise & Reposition Stall Sprites
+  ldx #1
+StallPos
+  sta WSYNC               ; [0]
+  ldy #0                  ; [0] + 2
+  sty GRP0                ; [2] + 3
+  sty GRP1                ; [5] + 3
+  sty VDELP0              ; [8] + 3
+  sty VDELP1              ; [11] + 3
+  sty NUSIZ0              ; [14] + 3
+  sty NUSIZ1              ; [17] + 3
+  sty COLUPF              ; [20] + 3
+  sty PF0                 ; [23] + 3
+  sty PF1                 ; [26] + 3
+  sty PF2                 ; [29] + 3
+  ldy #WHITE              ; [32] + 2
+  sty COLUP1              ; [34] + 3
+  ldy #RED                ; [37] + 2
+  sty COLUP0              ; [39] + 3
+  sta RESP0,X             ; [42] + 4 = 46
+  dex
+  bpl StallPos
+  jmp CopyCodeStall
+
+
+
 ; -----------------------------------------------------------------------------
 ; STARTUP CODE
 ; -----------------------------------------------------------------------------
@@ -1802,35 +1829,12 @@ EndNormalTextKernel
 ; STALL CODE
 ; -----------------------------------------------------------------------------
 
-DoStall
-  ; Initialise & Reposition Stall Sprites
-  ldx #1
-StallPos
-  sta WSYNC               ; [0]
-  ldy #0                  ; [0] + 2
-  sty GRP0                ; [2] + 3
-  sty GRP1                ; [5] + 3
-  sty VDELP0              ; [8] + 3
-  sty VDELP1              ; [11] + 3
-  sty NUSIZ0              ; [14] + 3
-  sty NUSIZ1              ; [17] + 3
-  sty COLUPF              ; [20] + 3
-  sty PF0                 ; [23] + 3
-  sty PF1                 ; [26] + 3
-  sty PF2                 ; [29] + 3
-  ldy #WHITE              ; [32] + 2
-  sty COLUP1              ; [34] + 3
-  ldy #RED                ; [37] + 2
-  sty COLUP0              ; [39] + 3
-  sta RESP0,X             ; [42] + 4 = 46
-  dex
-  bpl StallPos
-
+CopyCodeStall
   ; Copy Stall Code
   START_FRAME
   ldx #(EndStall - RAMSPINNER)
 CopyStall
-  lda $FFA0,X
+  lda $FF80,X
   sta RAMSPINNER,X
   dex
   bpl CopyStall
@@ -1840,9 +1844,9 @@ CopyStall
   WAIT_OVERSCAN
   jmp StartStall
 
-  echo "----",($FFA0 - *) , "bytes left (BANK 7 - HIGH SCORES)"
+  echo "----",($FF80 - *) , "bytes left (BANK 7 - HIGH SCORES)"
 
-  ORG   $FFA0
+  ORG   $FF80
   RORG  RAMSPINNER
 
   ; Spinner Data
@@ -1943,12 +1947,13 @@ EndStall                  ; Leave Space For Stack!
   ; echo "----",($100 - *) , " bytes left (BANK 7 - STALL)"
 
   ; Switch Points (BANK 3 & 4)
-  ORG     $FFEE
-  RORG    $FFEE
+  ORG     $FFE9
+  RORG    $FFE9
   jmp     Start
   jmp     EndOfGame
   ORG     $FFF4
   RORG    $FFF4
-  DC.B    "CHETIRY!"
+  DC.B    "CHETIR"
+  DC.W    (PlusROM_API - $D000)
   DC.W    Start, Resume
   

@@ -1873,7 +1873,7 @@ MusicStallPos
   ; Copy Stall Code
   ldx #(EndMusicStall - RAMSPINNER)
 CopyMusicStall
-  lda $FFA0,X
+  lda $FF80,X
   sta RAMSPINNER,X
   dex
   bpl CopyMusicStall
@@ -1902,9 +1902,9 @@ NoRndEor2
 
   DC.B  "KRUSHCHEV"
 
-  echo "----",($FFA0 - *) , "bytes left (BANK 2 - GAME KERNEL)"
+  echo "----",($FF80 - *) , "bytes left (BANK 2 - GAME KERNEL)"
 
-  ORG   $AFA0
+  ORG   $AF80
   RORG  RAMSPINNER
 
   ; Spinner Data
@@ -2004,8 +2004,8 @@ EndMusicStall
 
   ; echo "----",($100 - *) , " bytes left (BANK 2 - STALL)"
 
-  ORG     $AFEE
-  RORG    $FFEE
+  ORG     $AFE9
+  RORG    $FFE9
 
 ShowSpecial
   ; Switch To Bank 4
@@ -2016,6 +2016,7 @@ ShowSpecial
 
   ORG     $AFF4
   RORG    $FFF4
-  DC.B    "BANK2", 0, 0, 0
+  DC.B    "BANK2", 0
+  DC.W    (PlusROM_API - $D000)
   DC.W    Init2, Init2
 

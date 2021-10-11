@@ -12,6 +12,9 @@
   INCLUDE "chetiry.h"
   INCLUDE "chetirydata.h"
 
+MELODY = 0
+PLUSROM = 1
+
 ; -------------------------- GAME MACROS --------------------------------------
 
   ; Play Audio
@@ -192,6 +195,17 @@ ORANGE                    =  $36
 BLUE                      =  $86
 WHITE                     =  $0E
   ENDIF
+
+; PlusROM hotspots and gameId for HSC backend
+   IF PLUSROM
+WriteToBuffer           = $1FF0
+WriteSendBuffer         = $1FF1
+ReceiveBuffer           = $1FF2
+ReceiveBufferSize       = $1FF3
+
+HIGHSCORE_ID            = 47        ; Chetiry game ID in Highscore DB
+   ENDIF
+
 
   SEG.U   VARS
   ORG     $80
@@ -408,7 +422,8 @@ Init0
   
   ORG     $8FF4
   RORG    $FFF4
-  DC.B    "BANK0", 0, 0, 0
+  DC.B    "BANK0", 0
+  DC.W    (PlusROM_API - $D000)
   DC.W    Init0, Init0
 
 ; -----------------------------------------------------------------------------

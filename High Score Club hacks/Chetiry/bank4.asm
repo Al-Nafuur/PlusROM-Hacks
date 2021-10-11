@@ -1415,6 +1415,14 @@ LiftOffFrames3Hi
   DC.B  "N2"
   ALIGN 256
   BURAN3
+
+BuranSmokeSeq
+  DC.B  0, 1, 0, 1, 0, 1, 0, 1, 2, 1, 2, 1, 2, 1, 2
+SoyuzSmokeSeq
+  DC.B  4, 3, 4, 3, 4, 3, 4, 3, 4
+RocketSmokeSeq
+  DC.B  6, 5, 6, 5, 6, 5, 6, 5, 6
+
   DC.B  "N3"
   ALIGN 256
   BURAN4
@@ -1436,19 +1444,13 @@ FlyingFrames
 
 SmokeHeight
   DC.B  20, 8, 8
-BuranSmokeSeq
-  DC.B  0, 1, 0, 1, 0, 1, 0, 1, 2, 1, 2, 1, 2, 1, 2
-SoyuzSmokeSeq
-  DC.B  4, 3, 4, 3, 4, 3, 4, 3, 4
-RocketSmokeSeq
-  DC.B  6, 5, 6, 5, 6, 5, 6, 5, 6
-  
+ 
   ; DC.B  "N4"
-  echo "----",($FFEB - *) , "bytes left (BANK 4 - SHUTTLE B)"
+  echo "----",($FFE6 - *) , "bytes left (BANK 4 - SHUTTLE B)"
 
   ; Switch Points
-  ORG     $CFEB
-  RORG    $FFEB
+  ORG     $CFE6
+  RORG    $FFE6
 Init4
   ; Switch to Bank 7
   nop     $FFFB
@@ -1460,6 +1462,7 @@ QuitSpecial
 
   ORG     $CFF4
   RORG    $FFF4
-  DC.B    "BANK4", 0, 0, 0
+  DC.B    "BANK4", 0
+  DC.W    (PlusROM_API - $D000)
   DC.W    Init4, Init4
 

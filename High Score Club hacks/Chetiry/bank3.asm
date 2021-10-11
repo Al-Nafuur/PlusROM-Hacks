@@ -135,11 +135,11 @@ FinishScreen
 
   DC.B    "ROSCOSMOS"
 
-  echo "----",($FFEB - *) , "bytes left (BANK 3 - SHUTTLE A)"
+  echo "----",($FFE6 - *) , "bytes left (BANK 3 - SHUTTLE A)"
 
   ; Switch Points
-  ORG     $BFEB
-  RORG    $FFEB
+  ORG     $BFE6
+  RORG    $FFE6
 Init3
   ; Switch to Bank 7
   nop     $FFFB
@@ -152,5 +152,6 @@ ExitLaunch
 
   ORG     $BFF4
   RORG    $FFF4
-  DC.B    "BANK3", 0, 0, 0
+  DC.B    "BANK3", 0
+  DC.W    (PlusROM_API - $D000)
   DC.W    Init3, Init3
