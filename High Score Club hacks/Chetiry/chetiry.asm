@@ -11,10 +11,7 @@
   INCLUDE "macro.h"
   INCLUDE "chetiry.h"
   INCLUDE "chetirydata.h"
-
-MELODY = 0
-PLUSROM = 1
-
+  
 ; -------------------------- GAME MACROS --------------------------------------
 
   ; Play Audio
@@ -136,6 +133,9 @@ PLUSROM = 1
 ; -------------------------- GAME CONSTANTS -----------------------------------
 
 ; Game Constants
+MELODY                    = 0
+PLUSROM                   = 1
+
 NO_ILLEGAL_OPCODES        = 0           ; Allow Undocumented Opcodes
 FAKESPIN                  = 0           ; Fake Spinner (1 = Yes)
 PALMODE                   = 0           ; PAL/NTSC (0 = NTSC)

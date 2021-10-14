@@ -150,6 +150,8 @@ StoreNewTable
   ; Load Score Table
   ldx #2                  ; [41] + 2
   jsr DoOperation         ; [43] + 6
+  jsr ReadHscTableFromBuffer
+
 ShowScoreTable
   ; Show Score Table
   lda SLOWCYCLE
@@ -253,6 +255,24 @@ EndOfGame
   ldx #2
   jsr DoOperation
   
+  IF PLUSROM
+
+  jsr ReadHscTableFromBuffer
+  jmp FinishHiScores
+
+ReadHscTableFromBuffer
+  ldx #0
+  lda ReceiveBufferSize
+  beq FinishHiScores
+FillRAMFromInternet
+  lda ReceiveBuffer
+  sta HI_WRITE,x
+  inx
+  lda ReceiveBufferSize
+  bne FillRAMFromInternet
+  rts
+
+  ELSE
   ; Check For Empty Score
   lda SCORE+2
   ora SCORE+1
@@ -310,6 +330,8 @@ NextScorePosition
   bpl FindPositionLoop      ; [38] + 2/3
                             ; WORST CASE = 41*8 + 40 + 12 + 8*75 
                             ;            = 980 (APPROX 13 SCANLINES)
+  ENDIF
+
 FinishHiScores
   ; Debounce Fire Button
   ldx #KEYSHORT|%10000000
@@ -728,6 +750,14 @@ EndScoreTableLoop
   ; 3 = Write Score Table
   ; 4 = Wipe Scores
 DoOperation
+  IF PLUSROM
+  cpx #2               ; check for Read Score operation
+  bne EndOperation
+  lda TABLE
+  sta WriteToBuffer
+  lda #HIGHSCORE_ID
+  sta WriteSendBuffer  ; send highscore_id request to receive HS table from backend
+  ELSE
   ; Store Operation & Index
   stx TEMP
   asl
@@ -740,6 +770,7 @@ DoOperation
   ; Initialise Timeout Counter
   ldx #RETRYOP
   stx TIMEOUT
+  ENDIF
 
 TimeoutLoop
   ; Do Operation
@@ -1158,7 +1189,7 @@ ClearMemLoop
   bne ClearMemLoop        ; SP=$FF, X = A = 0
   sty INITIALS+1
   ELSE
-  
+
   ; Check for 7800 Console (needed for pause button handling)
   sei
   ldy #$FF
@@ -1240,6 +1271,8 @@ FinishStartup
   sta TABLE
   ldx #2
   jsr DoOperation
+  jsr ReadHscTableFromBuffer
+
   ; Skip To Title Screen
   jmp ShowTitles
 
@@ -1907,9 +1940,14 @@ SyncLoop
   beq FinishStall
   nop
   ELSE
+  IF PLUSROM
+  lda ReceiveBufferSize
+  bne FinishStall               ; can fail on PlusCart, because ReceiveBufferSize > 0 doesn't mean request has been fully received
+  ELSE
   jmp FinishStall
   nop
   nop
+  ENDIF
   ENDIF
   ENDIF
 

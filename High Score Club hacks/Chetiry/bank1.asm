@@ -797,6 +797,8 @@ FullGameOver
   sta MUSIC               ; [36] + 3
   sta AUDV0               ; [39] + 3
   sta TUNERESET_W         ; [42] + 4
+  jsr SendPlusROMScore
+
   
 ShapeCalc
   ; Recalculate Shape Values
