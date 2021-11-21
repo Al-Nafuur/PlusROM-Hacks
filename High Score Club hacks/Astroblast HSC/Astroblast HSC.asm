@@ -9,6 +9,11 @@
 ;
 ; PlusROM functions for High Score sending added
 ;  by Wolfgang Stubig (05.10.2020)
+; Last Update: November 19, 2021
+;
+; 100k points bug fix
+; by Carles Wieland AtariAge member cwieland (https://atariage.com/forums/profile/19873-cwieland/)
+; supposed here: https://atariage.com/forums/topic/327302-astroblast-100k-bug/?do=findComment&comment=4949444
 ;
 ; *** 115 BYTES OF RAM USED 13 BYTES FREE
 ;
@@ -26,7 +31,7 @@
 ; = EXACT GAME ROM, THE LABELS AND COMMENTS ARE THE INTERPRETATION OF MY OWN   =
 ; = AND MAY NOT REPRESENT THE ORIGINAL VISION OF THE AUTHOR.                   =
 ; =                                                                            =
-; = THE ASSEMBLED CODE IS ? 1982, MATTEL CANADA, INC.                          =
+; = THE ASSEMBLED CODE IS © 1982, MATTEL CANADA, INC.                          =
 ; =                                                                            =
 ; ==============================================================================
 ;
@@ -80,7 +85,7 @@ TIA_BASE_READ_ADDRESS = $00         ; set the read address base so this runs on
 ; A S S E M B L E R - S W I T C H E S
 ;===============================================================================
 
-PLUSROM         	= 1
+PLUSROM                 = 1
 
 NTSC                    = 0
 PAL50                   = 1
@@ -172,7 +177,7 @@ LASERBASE_INIT_VERT_POS = 14
 MISSILE_INIT_VERT_POS   = LASERBASE_INIT_VERT_POS + 5
 SPINNERS_INIT_VERT_POS  = H_KERNEL - 1
 
-SPINNER_ANIMATION_BYTES = <SpinnerAnimation3_0 + 23 - SpinnerSprites_0
+SPINNER_ANIMATION_BYTES = <[SpinnerAnimation3_0 + 23 - SpinnerSprites_0]
 
 MAX_ANIMATION_FRAMES    = 4
 
@@ -477,13 +482,13 @@ KernelLoop
 ;--------------------------------------
    lda #0                     ; 2
    cpy player0GraphicOffset   ; 3
-   bcs .setGRP0GraphicValue_0 ; 2?
+   bcs .setGRP0GraphicValue_0 ; 2³
    lda (player0GraphicsPointer),y;5
 .setGRP0GraphicValue_0
    sta GRP0                   ; 3 = @15
    dey                        ; 2
    cpy player1GraphicOffset   ; 3
-   bcs .skipSetGRP1GraphicValue_0;2?
+   bcs .skipSetGRP1GraphicValue_0;2³
    lda (player1GraphicsPointer),y;5
    sta GRP1                   ; 3 = @30
 .skipSetGRP1GraphicValue_0
@@ -491,24 +496,24 @@ KernelLoop
 ;--------------------------------------
    lda #0                     ; 2
    cpy player0GraphicOffset   ; 3
-   bcs .setGRP0GraphicValue_1 ; 2?
+   bcs .setGRP0GraphicValue_1 ; 2³
    lda (player0GraphicsPointer),y;5
 .setGRP0GraphicValue_1
    sta GRP0                   ; 3 = @15
 .jmpIntoKernel
    dey                        ; 2
-   beq .prepareToDrawScoreKernel;2?
+   beq .prepareToDrawScoreKernel;2³
    cpy player1GraphicOffset   ; 3
-   bcs .skipSetGRP1GraphicValue_1;2?
+   bcs .skipSetGRP1GraphicValue_1;2³
    lda (player1GraphicsPointer),y;5
    sta GRP1                   ; 3 = @32
    jmp SetupPlayerGraphicBufferValues;3
    
 .skipSetGRP1GraphicValue_1
-   beq SetupPlayerGraphicBufferValues; 2?
+   beq SetupPlayerGraphicBufferValues; 2³
 .jmpIntoKernelLoop
    cpy player0GraphicOffset   ; 3
-   bcs .jmpToDrawMountainTerrain;2?
+   bcs .jmpToDrawMountainTerrain;2³
    lda (player0GraphicsPointer),y;5
    sta tempPlayer0Graphic     ; 3
 .jmpToDrawMountainTerrain
@@ -517,7 +522,7 @@ KernelLoop
    
 SetupPlayerGraphicBufferValues
    cpy player0GraphicOffset   ; 3
-   bcs .setupGRP1BufferValue  ; 2?
+   bcs .setupGRP1BufferValue  ; 2³
    lda (player0GraphicsPointer),y;5
    sta tempPlayer0Graphic     ; 3
 .setupGRP1BufferValue
@@ -530,7 +535,7 @@ SetupPlayerGraphicBufferValues
    lda tempPlayer0Graphic     ; 3
    sta GRP0                   ; 3 = @06
    cpy #32                    ; 2
-   bcs .checkForPaddleCapacitor;2?
+   bcs .checkForPaddleCapacitor;2³
    tya                        ; 2
    sta tempScanline           ; 3
    lsr                        ; 2
@@ -547,7 +552,7 @@ SetupPlayerGraphicBufferValues
    lda tempPlayer1Graphic     ; 3
    sta GRP1                   ; 3
    bit INPT1                  ; 3         read paddle 1 value
-   bmi .skipSetPaddleValue    ; 2?        branch if capacitor charged
+   bmi .skipSetPaddleValue    ; 2³        branch if capacitor charged
    sty paddleValue            ; 3
 .skipSetPaddleValue
    lda #0                     ; 2
@@ -557,19 +562,19 @@ KernelStart
    sta WSYNC
 ;--------------------------------------
    cpy player0GraphicOffset   ; 3
-   bcs .drawGRP0ForCurrentSection;2?
+   bcs .drawGRP0ForCurrentSection;2³
    lda (player0GraphicsPointer),y;5
-   beq .prepareGRP0ForNextSection;2?
+   beq .prepareGRP0ForNextSection;2³
 .drawGRP0ForCurrentSection
    sta GRP0                   ; 3 = @15
 .nextScanline
    dey                        ; 2
-   beq .prepareToDrawScoreKernel;2?
+   beq .prepareToDrawScoreKernel;2³
    cpy player1GraphicOffset   ; 3
-   bcs .jmpToKernelLoop       ; 2?
+   bcs .jmpToKernelLoop       ; 2³
    lda (player1GraphicsPointer),y;5
    sta GRP1                   ; 3 = @32
-   beq PrepareGRP1ForNextSection;2?
+   beq PrepareGRP1ForNextSection;2³
 .jmpToKernelLoop
    jmp KernelLoop             ; 3
    
@@ -585,18 +590,18 @@ KernelStart
    tax                        ; 2
    lda playerOffsetValues,x   ; 4
    sta player0GraphicOffset   ; 3
-   beq .nextScanline          ; 2?
+   beq .nextScanline          ; 2³
    lda playerGraphicLSBValues,x;4
    sta player0GraphicsPointer ; 3
    dey                        ; 2
-   beq .prepareToDrawScoreKernel;2?
+   beq .prepareToDrawScoreKernel;2³
    cpy player1GraphicOffset   ; 3
-   bcc .drawPlayer1Graphic    ; 2?
-   beq .bufferPlayer1GraphicValue;2?
+   bcc .drawPlayer1Graphic    ; 2³
+   beq .bufferPlayer1GraphicValue;2³
    lda #0                     ; 2
    sta tempPlayer1Graphic     ; 3
    dey                        ; 2
-   bne .setupToHorizPositionGRP0;2?
+   bne .setupToHorizPositionGRP0;2³
 .drawPlayer1Graphic
    lda (player1GraphicsPointer),y;5
    sta GRP1                   ; 3 = @56
@@ -613,7 +618,7 @@ KernelStart
    lda playerHorizValues,x    ; 4
    and #$0F                   ; 2
    cmp #6                     ; 2
-   bcc .coarseMovePlayer0OnLeft;2?
+   bcc .coarseMovePlayer0OnLeft;2³
    lda tempPlayer1Graphic     ; 3
    sta GRP1                   ; 3 = @21
    lda playerColorValues,x    ; 4
@@ -625,7 +630,7 @@ KernelStart
    sec                        ; 2
 .coarseMovePlayer0OnRight
    sbc #1                     ; 2
-   bne .coarseMovePlayer0OnRight;2?
+   bne .coarseMovePlayer0OnRight;2³
    sta RESP0                  ; 3
 .doneMovePlayer0
    sta WSYNC
@@ -641,10 +646,10 @@ PrepareGRP1ForNextSection
    tax                        ; 2
    lda playerOffsetValues,x   ; 4
    sta player1GraphicOffset   ; 3
-   beq .jmpToKernelLoop       ; 2?
+   beq .jmpToKernelLoop       ; 2³
    lda #0                     ; 2
    cpy player0GraphicOffset   ; 3
-   bcs .skipGRP0Draw          ; 2?
+   bcs .skipGRP0Draw          ; 2³
    lda (player0GraphicsPointer),y;5
 .skipGRP0Draw
    dey                        ; 2
@@ -655,7 +660,7 @@ PrepareGRP1ForNextSection
    lda playerHorizValues,x    ; 4
    and #$0F                   ; 2
    cmp #6                     ; 2
-   bcc .positionPlayer1OnLeft ; 2?
+   bcc .positionPlayer1OnLeft ; 2³
    lda playerGraphicLSBValues,x;4
    sta player1GraphicsPointer ; 3
    lda GRP0                   ; 3 = @23
@@ -667,19 +672,19 @@ PrepareGRP1ForNextSection
    sbc #5                     ; 2
 .coarseMovePlayer1OnRight
    sbc #1                     ; 2
-   bne .coarseMovePlayer1OnRight;2?
+   bne .coarseMovePlayer1OnRight;2³
    sta RESP1                  ; 3
 .donePrepareGRP1ForNextSection
    sta WSYNC
 ;--------------------------------------
    sta HMOVE                  ; 3 = @03
    cpy player0GraphicOffset   ; 3
-   bcs .checkForKernelEnd     ; 2?
+   bcs .checkForKernelEnd     ; 2³
    lda (player0GraphicsPointer),y;5
    sta GRP0                   ; 3 = @16
 .checkForKernelEnd
    dey                        ; 2
-   bne .continueGameKernel    ; 2?
+   bne .continueGameKernel    ; 2³
    jmp .prepareToDrawScoreKernel;3
    
 .continueGameKernel
@@ -687,7 +692,7 @@ PrepareGRP1ForNextSection
    
 .coarseMovePlayer0OnLeft
    sbc #1                     ; 2 = @18
-   bpl .coarseMovePlayer0OnLeft;2?
+   bpl .coarseMovePlayer0OnLeft;2³
    sta RESP0                  ; 3
    lda tempPlayer1Graphic     ; 3
    sta GRP1                   ; 3
@@ -701,7 +706,7 @@ PrepareGRP1ForNextSection
    sec                        ; 2 = @16
 .coarseMovePlayer1OnLeft
    sbc #1                     ; 2
-   bne .coarseMovePlayer1OnLeft;2?
+   bne .coarseMovePlayer1OnLeft;2³
    sta RESP1                  ; 3 = @43
    lda playerGraphicLSBValues,x;4
    sta player1GraphicsPointer ; 3
@@ -751,7 +756,7 @@ DrawScoreKernel
    lda (numOfBasesPF2GraphPtr),y;5
    sta PF2                    ; 3 = @58
    dex                        ; 2
-   bpl .drawScore             ; 2?
+   bpl .drawScore             ; 2³
    lda #PF_REFLECT            ; 2
    sta CTRLPF                 ; 3 = @67
    lda #0                     ; 2
@@ -1166,7 +1171,7 @@ CheckToSpawnNewObject
    lda tempMod127
    and #1                           ; keep D0 value
    beq .spawnNewRock
-   lda #<SmallRock_0 + H_SMALL_ROCK - SPINNERS_INIT_VERT_POS - (BigRock_0 + H_BIG_ROCK - SPINNERS_INIT_VERT_POS)
+   lda #<[SmallRock_0 + H_SMALL_ROCK - SPINNERS_INIT_VERT_POS - (BigRock_0 + H_BIG_ROCK - SPINNERS_INIT_VERT_POS)]
 .spawnNewRock
    clc
    adc #<(BigRock_0 + H_BIG_ROCK - SPINNERS_INIT_VERT_POS)
@@ -1204,7 +1209,7 @@ CheckToSpawnNewObject
    jsr NextRandom                   ; get new random number
    and PulsarSpawnFrequency,y
    bne .doneSpawnSpinnerOrPulsar
-   lda #<Pulsar_0 + H_PULSAR - SPINNERS_INIT_VERT_POS
+   lda #<(Pulsar_0 + H_PULSAR - SPINNERS_INIT_VERT_POS)
    sta playerGraphicLSBValues,x     ; set pulsar graphic LSB value
    lda #WHITE - 1
    sta playerColorValues,x          ; set pulsar color
@@ -1702,7 +1707,7 @@ CheckToFireMissile
    sta objectVelocity,x             ; set missile vertical velocity
    lda #WHITE - 6
    sta playerColorValues,x          ; set missile color
-   lda #<MissileSprite_0 + H_MISSILE - MISSILE_INIT_VERT_POS
+   lda #<(MissileSprite_0 + H_MISSILE - MISSILE_INIT_VERT_POS)
    sta playerGraphicLSBValues,x     ; set missile graphic LSB value
    jmp SetMissileLaunchSoundIndicators
    
@@ -2056,6 +2061,18 @@ IncrementScore
    cmp peakScore+1
    beq .checkToSetNewPeakScore
    bcc .checkToSetNewPeakScore
+
+   ; 100k points bug fix
+   ; This bug occurs when the score has gone past a 100k mark (e.g. 100000, 200000, etc.) and subsequently drops
+   ; below the 100k mark.  An extra base is awarded until the 100k mark is reached again or the player has 99 bases.
+   
+   ; At this point in the logic we know that the player hundreds value is greater than the peak hundreds value.
+   ; This additional logic ensures that the player thousands value is also equal to or greater the peak thousands value.
+
+   lda playerScore                  ; get player thousands value
+   cmp peakScore                    
+   bcc .checkToSetNewPeakScore      ; Prevent running extra man logic if player thousands score is less than peak score thousands
+
 .incrementNumberOfBases
    lda numberOfLaserBases           ; get number of remaining laser bases
    clc
@@ -2290,7 +2307,7 @@ DetermineToLaunchUFO
    sta playerHorizValues,x          ; set UFO bomb horizontal position value
    lda objectHorizPositions         ; get UFO horizontal position value
    sta objectHorizPositions,x       ; set UFO bomb horizontal position
-   lda #<UFOBombSprite_0 + H_UFO_BOMB - UFO_BOMB_INIT_VERT_POS
+   lda #<(UFOBombSprite_0 + H_UFO_BOMB - UFO_BOMB_INIT_VERT_POS)
    sta playerGraphicLSBValues,x     ; set UFO bomb graphic LSB value
    lda #WHITE | 1
    sta playerColorValues,x          ; color UFO bomb
@@ -2410,6 +2427,7 @@ NextRandom
    rts
 
 SendPlusROMScore:
+   ldx #2
    lda gameLevel
    sta WriteToBuffer
    lda playerScore
@@ -2418,11 +2436,7 @@ SendPlusROMScore:
    sta WriteToBuffer
    lda playerScore+2
    sta WriteToBuffer
-   lda rightPF0DigitPointer 
-   sta WriteToBuffer
-   lda #10                  	     ; Astroblast game id in Highscore DB
-   sta WriteSendBuffer              ; send request to backend..
-   rts
+   jmp SendPlusROMScorePart2
   ENDIF
    
    FILL_BOUNDARY 0, -1
@@ -2691,6 +2705,12 @@ UFOBombSprite_0
    .byte $38 ; |..XXX...|
    .byte $10 ; |...X....|
 
+  IF PLUSROM
+SendPlusROMScorePart2
+   lda rightPF0DigitPointer 
+   jmp SendPlusROMScorePart3
+  ENDIF
+
    FILL_BOUNDARY 0, -1
    
 GameSprites_1
@@ -2956,6 +2976,12 @@ UFOBombSprite_1
    .byte $10 ; |...X....|
    .byte $38 ; |..XXX...|
    .byte $10 ; |...X....|
+
+  IF PLUSROM
+SendPlusROMScorePart3
+   sta WriteToBuffer
+   jmp SendPlusROMScorePart4
+  ENDIF
 
    FILL_BOUNDARY 0, -1
    
@@ -3253,6 +3279,13 @@ NextRandom
    rts
   ENDIF
 
+  IF PLUSROM
+  org $fff4
+SendPlusROMScorePart4
+   lda #10                  	     ; Astroblast game id in Highscore DB
+   sta WriteSendBuffer              ; send request to backend..
+   rts
+  ENDIF
 
    FILL_BOUNDARY 250, -1            ; push to the RESET vector (this was done instead
                                     ; of using an .ORG to easily keep track of free ROM)
