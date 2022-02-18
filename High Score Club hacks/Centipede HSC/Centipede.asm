@@ -7,6 +7,10 @@
 ;  by Dennis Debro
 ; Last Update: February 16, 2022
 ;
+; PlusROM High Score Club hack added by
+; Wolfgang Stubig (Al_Nafuur)
+; February 18, 2022
+;
 ;  *** 128 BYTES OF RAM USED 0 BYTES FREE
 ;
 ; NTSC ROM usage stats
@@ -87,6 +91,8 @@ PAL60                   = 2
 TRUE                    = 1
 FALSE                   = 0
 
+PLUSROM                 = 1
+
    IFNCONST COMPILE_REGION
 
 COMPILE_REGION          = NTSC      ; change to compile for different regions
@@ -104,8 +110,16 @@ COMPILE_REGION          = NTSC      ; change to compile for different regions
    ENDIF
 
    IFNCONST ORIGINAL_ROM
+
+   IF PLUSROM
+      
+ORIGINAL_ROM            = FALSE
+
+   ELSE
    
 ORIGINAL_ROM            = TRUE
+
+   ENDIF
 
    ENDIF
    
@@ -116,6 +130,21 @@ ORIGINAL_ROM            = TRUE
       echo "*** Valid values: FALSE = 0, TRUE = 1"
       echo ""
       err
+
+   ENDIF
+
+;===============================================================================
+; PlusROM hotspots and gameId for HSC backend
+;===============================================================================
+ 
+   IF PLUSROM
+
+WriteToBuffer           = $1FF0
+WriteSendBuffer         = $1FF1
+ReceiveBuffer           = $1FF2
+ReceiveBufferSize       = $1FF3
+
+HIGHSCORE_ID            = 50         ; Centipede game ID in Highscore DB
 
    ENDIF
 
@@ -2808,6 +2837,26 @@ AtariLogo_04
 
    ENDIF
 
+   IF PLUSROM
+
+PlusROM_API
+   .byte "a", 0, "h.firmaplus.de", 0
+
+SendPlusROMScore
+   lda gameSelection
+   sta WriteToBuffer                ; game variation
+   lda playerScore
+   sta WriteToBuffer
+   lda playerScore + 1
+   sta WriteToBuffer
+   lda playerScore + 2
+   sta WriteToBuffer
+   lda #HIGHSCORE_ID                ; game id in Highscore DB
+   sta WriteSendBuffer
+   jmp SwitchToSetNumberOfCentipedeSegments
+
+   ENDIF
+
    FILL_BOUNDARY 0, 0
 
 HMOVE_Table
@@ -3267,7 +3316,19 @@ WaveColorValues
 
    ENDIF
 
+   IF PLUSROM
+
+   FILL_BOUNDARY 222, 0
+
+SwitchToSetNumberOfCentipedeSegments
+   sta BANK1STROBE
+   jmp SendPlusROMScore
+
+   ELSE
+
    FILL_BOUNDARY 236, 0
+
+   ENDIF
 
 SwitchToGameScreenOverscan
    sta BANK1STROBE
@@ -3293,7 +3354,15 @@ SwitchToOverscan
    
    ENDIF
    
+   IF PLUSROM
+
+   .word (PlusROM_API - $C000)        ; PlusRom API pointer
+
+   ELSE
+
    FILL_BOUNDARY 252, 0
+
+   ENDIF
    
    echo "***", (FREE_BYTES)d, "BYTES OF ROM FREE IN BANK0"
    
@@ -3395,7 +3464,18 @@ ResetGameWave
    lda gameState                    ; get current game state
    ora #SELECT_SCREEN               ; set to show SELECT_SCREEN for game over
    sta gameState
+
+   IF PLUSROM
+
+   bit centipedeFineMotion+1        ; check if we are coming from titlescreen !
+   bvc SetNumberOfCentipedeSegments ; branch if from titlescreen
+   jmp SwitchToSendPlusROMScore
+
+   ELSE
+
    bne SetNumberOfCentipedeSegments ; unconditional branch
+
+   ENDIF
 
 .decrementLives
    sec
@@ -5614,7 +5694,19 @@ FlickerPriorityBitValues
       
    ENDIF
 
+   IF PLUSROM
+
+   FILL_BOUNDARY 222, 0
+
+SwitchToSendPlusROMScore
+   sta BANK0STROBE
+   jmp SetNumberOfCentipedeSegments
+
+   ELSE
+
    FILL_BOUNDARY 236, 0
+
+   ENDIF
 
 SwitchToTitleScreenProcessing
    sta BANK0STROBE
@@ -5640,7 +5732,15 @@ SwitchToCheckToPlayBonusLifeSound
 
    ENDIF
 
+   IF PLUSROM
+
+   .word (PlusROM_API - $C000)        ; PlusRom API pointer
+
+   ELSE
+
    FILL_BOUNDARY 252, 0
+
+   ENDIF
 
    echo "***", (FREE_BYTES)d, "BYTES OF ROM FREE IN BANK1"
    
