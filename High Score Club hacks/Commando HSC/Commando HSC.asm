@@ -360,7 +360,7 @@ ram_F7             ds 9  ; x3
     adc    #$03                  ; 2
 .mx021:
     sbc    #$0F                  ; 2
-    bcs    .mx021                ; 2ï¿½
+    bcs    .mx021                ; 2³
     adc    #$0F                  ; 2
     tay                          ; 2
     lda    .mx47B,Y              ; 4
@@ -371,9 +371,9 @@ ram_F7             ds 9  ; x3
 ;---------------------------------------
     sta    HMOVE                 ; 3
     ldy    ram_81                ; 3
-    beq    .mx03F                ; 2ï¿½
+    beq    .mx03F                ; 2³
     cpy    #$1F                  ; 2
-    bcs    .mx041                ; 2ï¿½
+    bcs    .mx041                ; 2³
     jmp    .mx100                ; 3
 
 .mx03F:
@@ -394,7 +394,7 @@ ram_F7             ds 9  ; x3
     lda    (ram_E1),Y            ; 5
     sta    PF1                   ; 3
     ldy    ram_81                ; 3
-    bne    .mx078                ; 2ï¿½
+    bne    .mx078                ; 2³
     sta    WSYNC                 ; 3
 ;---------------------------------------
     sta    HMOVE                 ; 3
@@ -433,7 +433,7 @@ ram_F7             ds 9  ; x3
     sta    ram_E2                ; 3
     sta    ram_E4                ; 3
     cpy    #$1F                  ; 2
-    bne    .mx0AC                ; 2ï¿½
+    bne    .mx0AC                ; 2³
     lda    (ram_DD),Y            ; 5
     sta    GRP1                  ; 3
     lda    (ram_E1),Y            ; 5
@@ -455,7 +455,7 @@ ram_F7             ds 9  ; x3
 .mx0BE:
     dey                          ; 2
     cpy    #$1F                  ; 2
-    beq    .mx0D0                ; 2ï¿½
+    beq    .mx0D0                ; 2³
     sta    WSYNC                 ; 3
 ;---------------------------------------
     sta    HMOVE                 ; 3
@@ -517,7 +517,7 @@ ram_F7             ds 9  ; x3
     nop                          ; 2
     tya                          ; 2
     and    #$01                  ; 2
-    beq    .mx12C                ; 2ï¿½
+    beq    .mx12C                ; 2³
     lda    (ram_DD),Y            ; 5
     sta.w  GRP1                  ; 4
     iny                          ; 2
@@ -558,12 +558,12 @@ ram_F7             ds 9  ; x3
     lda    (ram_E1),Y            ; 5
     tax                          ; 2
     cpy    ram_DA                ; 3
-    beq    .mx17F                ; 2ï¿½
+    beq    .mx17F                ; 2³
     lda    ram_D9                ; 3
     cmp    ram_C0                ; 3
-    bne    .mx16F                ; 2ï¿½
+    bne    .mx16F                ; 2³
     cpy    ram_C1                ; 3
-    bne    .mx172                ; 2ï¿½
+    bne    .mx172                ; 2³
     lda    (ram_E9),Y            ; 5
     sta    GRP0                  ; 3
     lda    (ram_DD),Y            ; 5
@@ -616,12 +616,12 @@ ram_F7             ds 9  ; x3
     lda    (ram_E1),Y            ; 5
     tax                          ; 2
     cpy    ram_DA                ; 3
-    beq    .mx1DE                ; 2ï¿½
+    beq    .mx1DE                ; 2³
     lda    ram_D9                ; 3
     cmp    ram_C0                ; 3
-    bne    .mx1CE                ; 2ï¿½
+    bne    .mx1CE                ; 2³
     cpy    ram_C1                ; 3
-    bne    .mx1D1                ; 2ï¿½
+    bne    .mx1D1                ; 2³
     lda    (ram_E9),Y            ; 5
     sta    GRP0                  ; 3
     lda    (ram_DD),Y            ; 5
@@ -677,11 +677,11 @@ ram_F7             ds 9  ; x3
     lda    (ram_E1),Y            ; 5
     tax                          ; 2
     cpy    ram_DA                ; 3
-    beq    .mx234                ; 2ï¿½
+    beq    .mx234                ; 2³
     nop                          ; 2
     lda    (ram_E9),Y            ; 5
     sta    GRP0                  ; 3
-    bne    .mx22B                ; 2ï¿½
+    bne    .mx22B                ; 2³
     lda    (ram_DD),Y            ; 5
     sta.w  GRP1                  ; 4
     stx    PF1                   ; 3
@@ -755,7 +755,7 @@ ram_F7             ds 9  ; x3
     adc    #$03                  ; 2
 .mx2A3:
     sbc    #$0F                  ; 2
-    bcs    .mx2A3                ; 2ï¿½
+    bcs    .mx2A3                ; 2³
     tax                          ; 2
     dey                          ; 2
     lda    (ram_E9),Y            ; 5
@@ -841,11 +841,11 @@ ram_F7             ds 9  ; x3
     lda    (ram_E1),Y            ; 5
     tax                          ; 2
     cpy    ram_DA                ; 3
-    beq    .mx361                ; 2ï¿½
+    beq    .mx361                ; 2³
     nop                          ; 2
     lda    (ram_E9),Y            ; 5
     sta    GRP0                  ; 3
-    bne    .mx358                ; 2ï¿½
+    bne    .mx358                ; 2³
     lda    (ram_DD),Y            ; 5
     sta.w  GRP1                  ; 4
     stx    PF2                   ; 3
@@ -879,11 +879,11 @@ ram_F7             ds 9  ; x3
 
 .mx384:
     dec    ram_D9                ; 5
-    bmi    .mx3AA                ; 2ï¿½
+    bmi    .mx3AA                ; 2³
     ldx    ram_D9                ; 3
     lda    ram_82,X              ; 4
     cmp    #$1F                  ; 2
-    bcc    .mx3CA                ; 2ï¿½
+    bcc    .mx3CA                ; 2³
     lda    #$25                  ; 2
     sbc    ram_82,X              ; 4
     tay                          ; 2
@@ -895,7 +895,7 @@ ram_F7             ds 9  ; x3
 ;---------------------------------------
     sta    HMOVE                 ; 3
     dey                          ; 2
-    bne    .mx39B                ; 2ï¿½
+    bne    .mx39B                ; 2³
     jsr    .mx13F                ; 6
     nop                          ; 2
     nop                          ; 2
@@ -955,7 +955,7 @@ ram_F7             ds 9  ; x3
     adc    #$03                  ; 2
 .mx406:
     sbc    #$0F                  ; 2
-    bcs    .mx406                ; 2ï¿½
+    bcs    .mx406                ; 2³
     adc    #$0F                  ; 2
     tax                          ; 2
     lda    .mx47B,X              ; 4
@@ -1072,7 +1072,7 @@ ram_F7             ds 9  ; x3
     sty    GRP1                  ; 3
     sta    GRP0                  ; 3
     dec    ram_D7                ; 5
-    bpl    .mx4A1                ; 2ï¿½
+    bpl    .mx4A1                ; 2³
     sta    WSYNC                 ; 3
 ;---------------------------------------
     sta    HMOVE                 ; 3
@@ -2913,7 +2913,7 @@ LDAC4:
     clc                          ; 2
     adc    #$01                  ; 2
     cmp    #$3E                  ; 2
-    bcc    .mxD51                ; 2ï¿½
+    bcc    .mxD51                ; 2³
     sbc    #$3E                  ; 2
     eor    #$FF                  ; 2
     adc    #$3D                  ; 2
@@ -2922,7 +2922,7 @@ LDAC4:
     pha                          ; 3
     cmp    #$1E                  ; 2
     tya                          ; 2
-    bcc    .mxD5B                ; 2ï¿½
+    bcc    .mxD5B                ; 2³
     and    #$FE                  ; 2
     bcs    .mxD5D                ; 3   always branch
 
@@ -2937,10 +2937,10 @@ LDAC4:
     sec                          ; 2
     lda    ram_D6                ; 3
     and    .mxD77,Y              ; 4
-    bne    .mxD74                ; 2ï¿½
+    bne    .mxD74                ; 2³
     lda    ram_D6                ; 3
     and    .mxD77,Y              ; 4
-    bne    .mxD74                ; 2ï¿½
+    bne    .mxD74                ; 2³
     clc                          ; 2
 .mxD74:
     jmp    .mxFEB | {1}          ; 3
@@ -3626,7 +3626,7 @@ L9DB5:
     lda    ram_D6                ; 3
     sec                          ; 2
     sbc    playerVpos            ; 3
-    bcs    L9DC4                 ; 2ï¿½
+    bcs    L9DC4                 ; 2³
     eor    #$FF                  ; 2
     adc    #$01                  ; 2
     dey                          ; 2
@@ -3636,27 +3636,27 @@ L9DC4:
     lda    playerHpos            ; 3
     sec                          ; 2
     sbc    ram_92,X              ; 4
-    bcs    L9DD2                 ; 2ï¿½
+    bcs    L9DD2                 ; 2³
     eor    #$FF                  ; 2
     adc    #$01                  ; 2
     dey                          ; 2
 L9DD2:
     sta    ram_D8                ; 3
     cmp    ram_D7                ; 3
-    bcc    L9DF1                 ; 2ï¿½
+    bcc    L9DF1                 ; 2³
     lda    ram_D7                ; 3
     asl                          ; 2
     asl                          ; 2
     adc    ram_D7                ; 3
     cmp    ram_D8                ; 3
     lda    #$00                  ; 2
-    bcc    L9E0A                 ; 2ï¿½+1
+    bcc    L9E0A                 ; 2³+1
     lda    ram_D7                ; 3
     lsr                          ; 2
     adc    ram_D7                ; 3
     cmp    ram_D8                ; 3
     lda    #$01                  ; 2
-    bcc    L9E0A                 ; 2ï¿½+1
+    bcc    L9E0A                 ; 2³+1
     bcs    L9E08                 ; 3+1   always branch
 
 L9DF1:
@@ -3666,13 +3666,13 @@ L9DF1:
     adc    ram_D8                ; 3
     cmp    ram_D7                ; 3
     lda    #$04                  ; 2
-    bcc    L9E0A                 ; 2ï¿½+1
+    bcc    L9E0A                 ; 2³+1
     lda    ram_D8                ; 3
     lsr                          ; 2
     adc    ram_D8                ; 3
     cmp    ram_D7                ; 3
     lda    #$03                  ; 2
-    bcc    L9E0A                 ; 2ï¿½
+    bcc    L9E0A                 ; 2³
 L9E08:
     lda    #$02                  ; 2
 L9E0A:
@@ -4880,9 +4880,9 @@ LBD40:
 
 LBDB5:
     ldy    ram_CE                ; 3
-    beq    LBE11                 ; 2ï¿½+1
+    beq    LBE11                 ; 2³+1
     cpy    #$0F                  ; 2
-    bcs    LBDC6                 ; 2ï¿½
+    bcs    LBDC6                 ; 2³
     lda    LBF0A,Y               ; 4
     sta    ram_CE                ; 3
     lda    #$81                  ; 2
@@ -4891,13 +4891,13 @@ LBDC6:
     dec    ram_CF                ; 5
     lda    ram_CF                ; 3
     and    #$7F                  ; 2
-    bne    LBE11                 ; 2ï¿½+1
+    bne    LBE11                 ; 2³+1
     tay                          ; 2
     lda    ram_CF                ; 3
     and    #$80                  ; 2
     eor    #$80                  ; 2
     sta    ram_D6                ; 3
-    bne    LBDDB                 ; 2ï¿½
+    bne    LBDDB                 ; 2³
     inc    ram_CE                ; 5
 LBDDB:
     lda    #$BF                  ; 2
@@ -4912,10 +4912,10 @@ LBDDB:
     and    #$0F                  ; 2
     tay                          ; 2
     lda    ram_D6                ; 3
-    beq    LBDF6                 ; 2ï¿½
+    beq    LBDF6                 ; 2³
     ldy    #$01                  ; 2
     ora    LBED7,X               ; 4
-    bmi    LBDF9                 ; 2ï¿½
+    bmi    LBDF9                 ; 2³
 LBDF6:
     ora    LBECA,X               ; 4
 LBDF9:
@@ -4929,15 +4929,15 @@ LBDF9:
     lsr                          ; 2
     lsr                          ; 2
     sta    AUDC0                 ; 3
-    bne    LBE11                 ; 2ï¿½
+    bne    LBE11                 ; 2³
     lda    #$00                  ; 2
     sta    ram_CE                ; 3
 LBE11:
     lda    frameCounter          ; 3
     lsr                          ; 2
-    bcs    LBE43                 ; 2ï¿½
+    bcs    LBE43                 ; 2³
     lda    soundIndex            ; 3
-    beq    LBE43                 ; 2ï¿½
+    beq    LBE43                 ; 2³
     and    #$E0                  ; 2
     lsr                          ; 2
     lsr                          ; 2
@@ -4960,7 +4960,7 @@ LBE11:
     inc    soundIndex            ; 5
     lda    LBE54,Y               ; 4
     sta    AUDF1                 ; 3
-    bne    LBE43                 ; 2ï¿½
+    bne    LBE43                 ; 2³
     sta    soundIndex            ; 3
     sta    AUDC1                 ; 3
 LBE43:
@@ -6240,7 +6240,7 @@ LDE75:
     inc    ram_81                ; 5
     lda    ram_81                ; 3
     cmp    #$25                  ; 2
-    bcc    LDE83                 ; 2ï¿½
+    bcc    LDE83                 ; 2³
     lda    #$00                  ; 2
     sta    ram_81                ; 3
     inc    ram_80                ; 5
@@ -6248,7 +6248,7 @@ LDE83:
     inc    ram_82                ; 5
     lda    ram_82                ; 3
     cmp    #$25                  ; 2
-    bcc    LDEBC                 ; 2ï¿½
+    bcc    LDEBC                 ; 2³
     lda    #$00                  ; 2
     sta    ram_82                ; 3
     ldx    #$01                  ; 2
@@ -6265,7 +6265,7 @@ LDE93:
     iny                          ; 2
     inx                          ; 2
     cpx    #$05                  ; 2
-    bcc    LDE93                 ; 2ï¿½
+    bcc    LDE93                 ; 2³
     dex                          ; 2
     lda    #$80                  ; 2
     sta    ram_92,X              ; 4
@@ -6280,34 +6280,34 @@ LDEBE:
     dec    ram_B5,X              ; 6
     lda    ram_B5,X              ; 4
     cmp    #$8E                  ; 2
-    bcc    LDECA                 ; 2ï¿½
+    bcc    LDECA                 ; 2³
     lda    #$8F                  ; 2
     sta    ram_B5,X              ; 4
 LDECA:
     dex                          ; 2
-    bpl    LDEBE                 ; 2ï¿½
+    bpl    LDEBE                 ; 2³
     jmp    LDFEB                 ; 3
 
 LDED0:
     lda.wy ram_B9,Y              ; 4
     and    #$F0                  ; 2
-    beq    LDEFB                 ; 2ï¿½
+    beq    LDEFB                 ; 2³
     lda.wy ram_B1,Y              ; 4
     sec                          ; 2
     sbc    playerHpos            ; 3
-    bcc    LDEFB                 ; 2ï¿½
+    bcc    LDEFB                 ; 2³
     cmp    #$02                  ; 2
-    bcc    LDEFB                 ; 2ï¿½
+    bcc    LDEFB                 ; 2³
     cmp    #$07                  ; 2
-    bcs    LDEFB                 ; 2ï¿½
+    bcs    LDEFB                 ; 2³
     lda    playerVpos            ; 3
     sec                          ; 2
     sbc.wy ram_B5,Y              ; 4
-    bcc    LDEFB                 ; 2ï¿½
+    bcc    LDEFB                 ; 2³
     cmp    #$06                  ; 2
-    bcc    LDEFB                 ; 2ï¿½
+    bcc    LDEFB                 ; 2³
     cmp    #$12                  ; 2
-    bcs    LDEFB                 ; 2ï¿½
+    bcs    LDEFB                 ; 2³
     sec                          ; 2
     jmp    LDFEB                 ; 3
 
@@ -6318,25 +6318,25 @@ LDEFB:
 LDEFF:
     sec                          ; 2
     sbc    ram_B5                ; 3
-    bcc    LDF2B                 ; 2ï¿½
+    bcc    LDF2B                 ; 2³
     cmp    #$02                  ; 2
-    bcc    LDF2B                 ; 2ï¿½
+    bcc    LDF2B                 ; 2³
     cmp    #$15                  ; 2
-    bcs    LDF2B                 ; 2ï¿½
+    bcs    LDF2B                 ; 2³
     lda    ram_B5                ; 3
     cmp    #$8E                  ; 2
-    bcs    LDF2B                 ; 2ï¿½
+    bcs    LDF2B                 ; 2³
     lda    ram_B9                ; 3
     and    #$F0                  ; 2
-    beq    LDF2B                 ; 2ï¿½
+    beq    LDF2B                 ; 2³
     lda    ram_B1                ; 3
     sec                          ; 2
     sbc    ram_92,X              ; 4
-    bcc    LDF2B                 ; 2ï¿½
+    bcc    LDF2B                 ; 2³
     cmp    #$01                  ; 2
-    bcc    LDF2B                 ; 2ï¿½
+    bcc    LDF2B                 ; 2³
     cmp    #$08                  ; 2
-    bcs    LDF2B                 ; 2ï¿½
+    bcs    LDF2B                 ; 2³
     sec                          ; 2
     jmp    LDFEB                 ; 3
 
@@ -6580,7 +6580,7 @@ LF000:
 .loopClear:
     sta    0,X                   ; 4
     inx                          ; 2
-    bne    .loopClear            ; 2ï¿½
+    bne    .loopClear            ; 2³
 
     sta    ram_81                ; 3
     lda    #$AB                  ; 2
@@ -6612,8 +6612,8 @@ LF020:
     lsr                          ; 2
     lsr                          ; 2
     lsr                          ; 2
-    bcs    LF050                 ; 2ï¿½
-    beq    LF071                 ; 2ï¿½
+    bcs    LF050                 ; 2³
+    beq    LF071                 ; 2³
     lda    #0                    ; 2
     sta    scoreBig              ; 3
     lda    ram_C3                ; 3
@@ -6643,10 +6643,10 @@ LF071:
     lda    SWCHB                 ; 4
     ora    #$FC                  ; 2
     cmp    SWCHA                 ; 4
-    bne    LF083                 ; 2ï¿½
+    bne    LF083                 ; 2³
     lda.w  INPT4                 ; 4
     and.w  INPT5                 ; 4
-    bmi    LF087                 ; 2ï¿½
+    bmi    LF087                 ; 2³
 LF083:
     lda    #$00                  ; 2
     sta    ram_D2                ; 3
@@ -6657,7 +6657,7 @@ LF087:
     lda    LFE4B,Y               ; 4
     sta    ram_D5                ; 3
     lda    ram_C2                ; 3
-    bmi    LF098                 ; 2ï¿½
+    bmi    LF098                 ; 2³
     jmp    LF149                 ; 3
 
 LF098:
@@ -6665,7 +6665,7 @@ LF098:
     sta    ram_C2                ; 3
     lda    ram_C3                ; 3
     and    #$10                  ; 2
-    beq    LF0B5                 ; 2ï¿½
+    beq    LF0B5                 ; 2³
     lda    frameCounter          ; 3
     and    #$07                  ; 2
     ora    #$40                  ; 2
@@ -6673,13 +6673,13 @@ LF098:
     lda    #SOUND_80              ; 2
     jsr    SetSoundEvent         ; 6
     lda    ram_CE                ; 3
-    bne    LF0BB                 ; 2ï¿½
+    bne    LF0BB                 ; 2³
     beq    LF0C5                 ; 3   always branch
 
 LF0B5:
     lda    frameCounter          ; 3
     cmp    #$80                  ; 2
-    beq    LF0BE                 ; 2ï¿½
+    beq    LF0BE                 ; 2³
 LF0BB:
     jmp    LF149                 ; 3
 
@@ -6694,7 +6694,7 @@ LF0C5:
     sta    ram_C2                ; 3
     lda    ram_C3                ; 3
     and    #$10                  ; 2
-    beq    LF0E5                 ; 2ï¿½
+    beq    LF0E5                 ; 2³
     lda    livesLevelNum         ; 3
     adc    #$01                  ; 2
     and    #$F7                  ; 2
@@ -6711,10 +6711,10 @@ LF0E5:
     sta    ram_D6                ; 3
     jsr    LFB5C                 ; 6
     lda    livesLevelNum         ; 3
-    bpl    LF103                 ; 2ï¿½+1
+    bpl    LF103                 ; 2³+1
     jsr    LFB5C                 ; 6
     lda    livesLevelNum         ; 3
-    bpl    LF103                 ; 2ï¿½+1
+    bpl    LF103                 ; 2³+1
     lda    ram_D6                ; 3
     sta    otherPlayerStats      ; 3
     lda    ram_C3                ; 3
@@ -6743,7 +6743,7 @@ LF11D:
     lda    #$8F                  ; 2
     sta    ram_B5,X              ; 4
     dex                          ; 2
-    bpl    LF11D                 ; 2ï¿½
+    bpl    LF11D                 ; 2³
     inx                          ; 2
     stx    ram_B0                ; 3
     lda    #$1E                  ; 2
@@ -6760,55 +6760,55 @@ LF138:
     sta    ram_9C,X              ; 4
     sta    ram_82,X              ; 4
     dex                          ; 2
-    bpl    LF138                 ; 2ï¿½
+    bpl    LF138                 ; 2³
     sta    ram_92                ; 3
 LF149:
     bit    ram_C3                ; 3
-    bvs    LF176                 ; 2ï¿½
-    bpl    LF15B                 ; 2ï¿½
+    bvs    LF176                 ; 2³
+    bpl    LF15B                 ; 2³
     lda    frameCounter          ; 3
     and    #$7F                  ; 2
-    bne    LF176                 ; 2ï¿½
+    bne    LF176                 ; 2³
     jsr    LFB5C                 ; 6
     jmp    LF176                 ; 3
 
 LF15B:
     bit    ram_C2                ; 3
-    bvc    LF176                 ; 2ï¿½
-    bmi    LF176                 ; 2ï¿½
+    bvc    LF176                 ; 2³
+    bmi    LF176                 ; 2³
     lda    ram_C3                ; 3
     and    #$01                  ; 2
     tay                          ; 2
     lda.wy INPT4,Y               ; 4
-    bpl    LF170                 ; 2ï¿½
+    bpl    LF170                 ; 2³
     jsr    LFB76                 ; 6
-    beq    LF176                 ; 2ï¿½
+    beq    LF176                 ; 2³
 LF170:
     lda    ram_C2                ; 3
     and    #$BF                  ; 2
     sta    ram_C2                ; 3
 LF176:
     lda    ram_CE                ; 3
-    bne    LF18F                 ; 2ï¿½
+    bne    LF18F                 ; 2³
     ldy    #$02                  ; 2
     bit    ram_C3                ; 3
-    bmi    LF18F                 ; 2ï¿½
+    bmi    LF18F                 ; 2³
     bit    ram_C2                ; 3
-    bmi    LF18F                 ; 2ï¿½
-    bvs    LF18D                 ; 2ï¿½
+    bmi    LF18F                 ; 2³
+    bvs    LF18D                 ; 2³
     lda    frameCounter          ; 3
     lsr                          ; 2
-    bcc    LF18D                 ; 2ï¿½
+    bcc    LF18D                 ; 2³
     ldy    #$01                  ; 2
 LF18D:
     sty    ram_CE                ; 3
 LF18F:
     jsr    LFFD0                 ; 6   bankswitch, goto LBDB5
     bit    ram_C2                ; 3
-    bvs    LF19C                 ; 2ï¿½
+    bvs    LF19C                 ; 2³
     lda    frameCounter          ; 3
     and    #$01                  ; 2
-    beq    LF19F                 ; 2ï¿½
+    beq    LF19F                 ; 2³
 LF19C:
     jmp    LF3AD                 ; 3
 
@@ -6818,7 +6818,7 @@ LF19F:
     lda    LFECA,Y               ; 4
     tay                          ; 2
     sta    ram_D8                ; 3
-    bne    LF1AE                 ; 2ï¿½
+    bne    LF1AE                 ; 2³
     jmp    LF1B6                 ; 3
 
 LF1AE:
@@ -6834,11 +6834,11 @@ LF1B6:
     clc                          ; 2
     lda    playerHpos            ; 3
     adc    LFEDA,Y               ; 4
-    bpl    LF1C8                 ; 2ï¿½
+    bpl    LF1C8                 ; 2³
     lda    #$00                  ; 2
 LF1C8:
     cmp    #$75                  ; 2
-    bcc    LF1CE                 ; 2ï¿½
+    bcc    LF1CE                 ; 2³
     lda    #$74                  ; 2
 LF1CE:
     sta    playerHpos            ; 3
@@ -6846,11 +6846,11 @@ LF1CE:
     lda    playerVpos            ; 3
     adc    LFEE6,Y               ; 4
     cmp    #$86                  ; 2
-    bcc    LF1DC                 ; 2ï¿½
+    bcc    LF1DC                 ; 2³
     lda    #$86                  ; 2
 LF1DC:
     cmp    #$20                  ; 2
-    bcs    LF1E2                 ; 2ï¿½
+    bcs    LF1E2                 ; 2³
     lda    #$20                  ; 2
 LF1E2:
     sta    playerVpos            ; 3
@@ -6867,8 +6867,8 @@ LF1F2:
     inx                          ; 2
     adc    #$25                  ; 2
     cmp    ram_F1                ; 3
-    bcc    LF1F2                 ; 2ï¿½
-    beq    LF1F2                 ; 2ï¿½
+    bcc    LF1F2                 ; 2³
+    beq    LF1F2                 ; 2³
     stx    ram_C0                ; 3
     sbc    ram_F1                ; 3
     eor    #$FF                  ; 2
@@ -6894,46 +6894,46 @@ LF1F2:
     ldy    ram_C1                ; 3
     sty    ram_D6                ; 3
     cpy    #$1F                  ; 2
-    bcs    LF23E                 ; 2ï¿½
+    bcs    LF23E                 ; 2³
     lda    playerHpos            ; 3
     jsr    LFF88                 ; 6
-    bcc    LF23E                 ; 2ï¿½
+    bcc    LF23E                 ; 2³
     ldy    #$03                  ; 2
     lda    (ram_ED),Y            ; 5
-    bpl    LF294                 ; 2ï¿½
+    bpl    LF294                 ; 2³
     inc    ram_D7                ; 5
 LF23E:
     ldx    ram_C0                ; 3
     lda    ram_9C,X              ; 4
-    bpl    LF286                 ; 2ï¿½
+    bpl    LF286                 ; 2³
     jsr    LFBD1                 ; 6
     sec                          ; 2
     sbc    #$15                  ; 2
     sec                          ; 2
     sbc    ram_C1                ; 3
-    bpl    LF251                 ; 2ï¿½
+    bpl    LF251                 ; 2³
     eor    #$FF                  ; 2
 LF251:
     cmp    #$07                  ; 2
-    bcs    LF286                 ; 2ï¿½
+    bcs    LF286                 ; 2³
     lda    ram_92,X              ; 4
     sec                          ; 2
     sbc    playerHpos            ; 3
-    bpl    LF25E                 ; 2ï¿½
+    bpl    LF25E                 ; 2³
     eor    #$FF                  ; 2
 LF25E:
     cmp    #$06                  ; 2
-    bcs    LF286                 ; 2ï¿½
+    bcs    LF286                 ; 2³
     ldy    #$03                  ; 2
     lda    (ram_ED),Y            ; 5
     and    #$40                  ; 2
-    bne    LF294                 ; 2ï¿½
+    bne    LF294                 ; 2³
     lda    (ram_ED),Y            ; 5
     and    #$38                  ; 2
     cmp    #$20                  ; 2
-    beq    LF276                 ; 2ï¿½
+    beq    LF276                 ; 2³
     inc    ram_D7                ; 5
-    bne    LF286                 ; 2ï¿½
+    bne    LF286                 ; 2³
 LF276:
     lda    numOfGernades         ; 3
     sed                          ; 2
@@ -6947,10 +6947,10 @@ LF276:
 LF286:
     ldy    #$02                  ; 2
     jsr    LFFB5                 ; 6   bankswitch, goto LDED0
-    bcs    LF294                 ; 2ï¿½
+    bcs    LF294                 ; 2³
     ldy    #$03                  ; 2
     jsr    LFFB5                 ; 6   bankswitch, goto LDED0
-    bcc    LF29A                 ; 2ï¿½
+    bcc    LF29A                 ; 2³
 LF294:
     lda    ram_D7                ; 3
     ora    #$80                  ; 2
@@ -6960,26 +6960,26 @@ LF29A:
     clc                          ; 2
     adc    ram_C0                ; 3
     cmp    #$0E                  ; 2
-    beq    LF2BB                 ; 2ï¿½
+    beq    LF2BB                 ; 2³
     cmp    #$0F                  ; 2
-    beq    LF2A9                 ; 2ï¿½
+    beq    LF2A9                 ; 2³
     bne    LF2C7                 ; 3   always branch
 
 LF2A9:
     lda    ram_C1                ; 3
     cmp    #$1E                  ; 2
-    bcc    LF2C1                 ; 2ï¿½
+    bcc    LF2C1                 ; 2³
     ldy    ram_F4                ; 3
     cpy    playerVpos            ; 3
-    bcs    LF2C7                 ; 2ï¿½
+    bcs    LF2C7                 ; 2³
     cmp    #$1E                  ; 2
-    beq    LF2C1                 ; 2ï¿½
+    beq    LF2C1                 ; 2³
     bne    LF2C7                 ; 3   always branch
 
 LF2BB:
     lda    ram_C1                ; 3
     cmp    #$1B                  ; 2
-    bcc    LF2C7                 ; 2ï¿½
+    bcc    LF2C7                 ; 2³
 LF2C1:
     lda    #$3A                  ; 2
     sta    playerHpos            ; 3
@@ -6987,11 +6987,11 @@ LF2C1:
 
 LF2C7:
     lda    ram_D7                ; 3
-    bpl    LF2CE                 ; 2ï¿½
+    bpl    LF2CE                 ; 2³
     jsr    LFB2D                 ; 6
 LF2CE:
     lda    ram_D7                ; 3
-    beq    LF2DE                 ; 2ï¿½
+    beq    LF2DE                 ; 2³
     lda    ram_F3                ; 3
     sta    playerHpos            ; 3
     lda    ram_F4                ; 3
@@ -7001,28 +7001,28 @@ LF2CE:
 LF2DE:
     lda    playerVpos            ; 3
     cmp    #$48                  ; 2
-    bcc    LF315                 ; 2ï¿½+1
+    bcc    LF315                 ; 2³+1
     lda    distanceMarker        ; 3
     cmp    #$1B                  ; 2
-    bcc    LF304                 ; 2ï¿½+1
+    bcc    LF304                 ; 2³+1
     lda    enemiesKilled         ; 3
-    bpl    LF315                 ; 2ï¿½+1
+    bpl    LF315                 ; 2³+1
     lda    distanceMarker        ; 3
     cmp    #$1C                  ; 2
-    bcs    LF2F8                 ; 2ï¿½
+    bcs    LF2F8                 ; 2³
     dec    playerVpos            ; 5
-    bcc    LF312                 ; 2ï¿½+1
+    bcc    LF312                 ; 2³+1
 LF2F8:
     lda    playerVpos            ; 3
     cmp    #$62                  ; 2
-    bcc    LF315                 ; 2ï¿½+1
+    bcc    LF315                 ; 2³+1
     jsr    LFB32                 ; 6
     jmp    LF312                 ; 3
 
 LF304:
     lda    ram_D8                ; 3
     and    #$01                  ; 2
-    beq    LF315                 ; 2ï¿½
+    beq    LF315                 ; 2³
     lda    #7                    ; 2  reached the base, and the number of enemies to kill gets loaded...
     sta    enemiesKilled         ; 3
     lda    #$48                  ; 2
@@ -7034,10 +7034,10 @@ LF315:
     and    #$01                  ; 2
     tay                          ; 2
     lda.wy INPT4,Y               ; 4
-    bmi    LF373                 ; 2ï¿½
+    bmi    LF373                 ; 2³
     lda    ram_BF                ; 3
     cmp    #$E0                  ; 2
-    bcs    LF379                 ; 2ï¿½
+    bcs    LF379                 ; 2³
     ldx    #$00                  ; 2
     lda    ram_BF                ; 3
     and    #$0F                  ; 2
@@ -7047,11 +7047,11 @@ LF315:
     sta    ram_BF                ; 3
     and    #$F0                  ; 2
     cmp    #$10                  ; 2
-    beq    LF34D                 ; 2ï¿½
+    beq    LF34D                 ; 2³
     cmp    #$E0                  ; 2
-    bne    LF379                 ; 2ï¿½
+    bne    LF379                 ; 2³
     lda    numOfGernades         ; 3
-    beq    LF379                 ; 2ï¿½
+    beq    LF379                 ; 2³
     lda    numOfGernades         ; 3
     sed                          ; 2
     sec                          ; 2
@@ -7063,9 +7063,9 @@ LF315:
 LF34D:
     lda    ram_B9,X              ; 4
     and    #$F0                  ; 2
-    bne    LF379                 ; 2ï¿½
+    bne    LF379                 ; 2³
     cpx    #$00                  ; 2
-    bne    LF35C                 ; 2ï¿½
+    bne    LF35C                 ; 2³
     lda    #SOUND_BULLET         ;
     jsr    SetSoundEvent         ;
 LF35C:
@@ -7099,17 +7099,17 @@ LF379:
     dey                          ; 2
     lda    frameCounter          ; 3
     and    #$03                  ; 2
-    bne    LF39F                 ; 2ï¿½
+    bne    LF39F                 ; 2³
     lda    ram_D8                ; 3
-    beq    LF39D                 ; 2ï¿½
+    beq    LF39D                 ; 2³
     inc    ram_D6                ; 5
-    bne    LF39F                 ; 2ï¿½
+    bne    LF39F                 ; 2³
 LF39D:
     sty    ram_D6                ; 3
 LF39F:
     lda    ram_D6                ; 3
     cmp    (ram_DB),Y            ; 5
-    bcs    LF39D                 ; 2ï¿½
+    bcs    LF39D                 ; 2³
     lda    ram_C2                ; 3
     and    #$F8                  ; 2
     ora    ram_D6                ; 3
@@ -7124,17 +7124,17 @@ LF3B4:
     inx                          ; 2
     adc    #$25                  ; 2
     cmp    playerVpos            ; 3
-    bcc    LF3B4                 ; 2ï¿½
-    beq    LF3B4                 ; 2ï¿½
+    bcc    LF3B4                 ; 2³
+    beq    LF3B4                 ; 2³
     stx    ram_C0                ; 3
     sbc    playerVpos            ; 3
     eor    #$FF                  ; 2
     adc    #$25                  ; 2
     sta    ram_C1                ; 3
     sta    ram_D6                ; 3
-    beq    LF3D8                 ; 2ï¿½
+    beq    LF3D8                 ; 2³
     cmp    #$1F                  ; 2
-    bcc    LF3DC                 ; 2ï¿½
+    bcc    LF3DC                 ; 2³
     inc    ram_C0                ; 5
     lda    ram_D6                ; 3
     sbc    #$25                  ; 2
@@ -7151,20 +7151,20 @@ LF3DC:
     clc                          ; 2
     adc    ram_C0                ; 3
     cmp    #$0E                  ; 2
-    beq    LF40D                 ; 2ï¿½+1
+    beq    LF40D                 ; 2³+1
     cmp    #$0F                  ; 2
-    beq    LF3FC                 ; 2ï¿½
+    beq    LF3FC                 ; 2³
     cmp    #$10                  ; 2
-    bne    LF417                 ; 2ï¿½+1
+    bne    LF417                 ; 2³+1
     lda    ram_C1                ; 3
     cmp    #$0E                  ; 2
-    bcc    LF427                 ; 2ï¿½+1
+    bcc    LF427                 ; 2³+1
     bcs    LF417                 ; 3+1   always branch
 
 LF3FC:
     lda    ram_C1                ; 3
     cmp    #$0D                  ; 2
-    bcs    LF427                 ; 2ï¿½
+    bcs    LF427                 ; 2³
     dec    ram_C0                ; 5
     lda    ram_D6                ; 3
     adc    #$25                  ; 2
@@ -7174,19 +7174,19 @@ LF3FC:
 LF40D:
     lda    ram_C1                ; 3
     cmp    #$18                  ; 2
-    bcc    LF417                 ; 2ï¿½
+    bcc    LF417                 ; 2³
 LF413:
     lda    #$18                  ; 2
     sta    ram_C1                ; 3
 LF417:
     bit    ram_C3                ; 3
-    bmi    LF427                 ; 2ï¿½
+    bmi    LF427                 ; 2³
     bit    ram_C2                ; 3
-    bmi    LF427                 ; 2ï¿½
-    bvc    LF431                 ; 2ï¿½
+    bmi    LF427                 ; 2³
+    bvc    LF431                 ; 2³
     lda    frameCounter          ; 3
     and    #$10                  ; 2
-    bne    LF431                 ; 2ï¿½
+    bne    LF431                 ; 2³
 LF427:
     lda    ram_C2                ; 3
     and    #$F8                  ; 2
@@ -7225,7 +7225,7 @@ LF433:
     inx                          ; 2
     inx                          ; 2
     cpx    #$0C                  ; 2
-    bcc    LF468                 ; 2ï¿½
+    bcc    LF468                 ; 2³
     ldx    #$00                  ; 2
 LF468:
     stx    ram_B0                ; 3
@@ -7240,19 +7240,19 @@ LF46E:
     sta    ram_D7                ; 3
     lda    ram_B9,X              ; 4
     and    #$F0                  ; 2
-    bne    LF483                 ; 2ï¿½
+    bne    LF483                 ; 2³
     jmp    LF598                 ; 3
 
 LF483:
     bit    ram_C2                ; 3
-    bvc    LF48A                 ; 2ï¿½
+    bvc    LF48A                 ; 2³
     jmp    LF5B8                 ; 3
 
 LF48A:
     cpx    #$03                  ; 2
-    bne    LF495                 ; 2ï¿½
+    bne    LF495                 ; 2³
     lda    ram_B0                ; 3
-    beq    LF495                 ; 2ï¿½
+    beq    LF495                 ; 2³
     jmp    LF5B8                 ; 3
 
 LF495:
@@ -7268,7 +7268,7 @@ LF495:
     lsr                          ; 2
     tay                          ; 2
     cpx    #$01                  ; 2
-    beq    LF4AB                 ; 2ï¿½
+    beq    LF4AB                 ; 2³
     ldy    #$01                  ; 2
 LF4AB:
     lda    LFD28,Y               ; 4
@@ -7282,7 +7282,7 @@ LF4AB:
     clc                          ; 2
     adc    ram_B1,X              ; 4
     cmp    #$7C                  ; 2
-    bcc    LF4C6                 ; 2ï¿½
+    bcc    LF4C6                 ; 2³
     inc    ram_D6                ; 5
     lda    #$7C                  ; 2
 LF4C6:
@@ -7290,7 +7290,7 @@ LF4C6:
     lda    LFD18,Y               ; 4
     adc    ram_B5,X              ; 4
     cmp    #$8E                  ; 2
-    bcc    LF4D5                 ; 2ï¿½
+    bcc    LF4D5                 ; 2³
     inc    ram_D6                ; 5
     lda    #$8E                  ; 2
 LF4D5:
@@ -7304,8 +7304,8 @@ LF4DE:
     iny                          ; 2
     adc    #$25                  ; 2
     cmp    ram_B5,X              ; 4
-    bcc    LF4DE                 ; 2ï¿½
-    beq    LF4DE                 ; 2ï¿½
+    bcc    LF4DE                 ; 2³
+    beq    LF4DE                 ; 2³
     pha                          ; 3
     sbc    ram_B5,X              ; 4
     sta    ram_D8                ; 3
@@ -7317,47 +7317,47 @@ LF4DE:
     clc                          ; 2
     adc    distanceMarker        ; 3
     cmp    #$0E                  ; 2
-    bne    LF505                 ; 2ï¿½+1
+    bne    LF505                 ; 2³+1
     pha                          ; 3
     lda    ram_D8                ; 3
     cmp    #$18                  ; 2
     pla                          ; 4
-    bcc    LF509                 ; 2ï¿½
+    bcc    LF509                 ; 2³
     bcs    LF50C                 ; 3   always branch
 
 LF505:
     cmp    #$0F                  ; 2
-    bne    LF50C                 ; 2ï¿½
+    bne    LF50C                 ; 2³
 LF509:
     jmp    LF598                 ; 3
 
 LF50C:
     cpy    #$05                  ; 2
-    bcc    LF513                 ; 2ï¿½
+    bcc    LF513                 ; 2³
     jmp    LF594                 ; 3
 
 LF513:
     cpx    #$02                  ; 2
-    beq    LF584                 ; 2ï¿½
+    beq    LF584                 ; 2³
     cpx    #$03                  ; 2
-    beq    LF584                 ; 2ï¿½
+    beq    LF584                 ; 2³
     stx    ram_D8                ; 3
     cpx    #$00                  ; 2
-    beq    LF549                 ; 2ï¿½
+    beq    LF549                 ; 2³
     lda    ram_BA                ; 3
     and    #$F0                  ; 2
-    bne    LF594                 ; 2ï¿½
+    bne    LF594                 ; 2³
     lda    #SOUND_80_2           ; 2
     jsr    SetSoundEvent         ; 6
     lda.wy ram_9C,Y              ; 4
-    bpl    LF594                 ; 2ï¿½
+    bpl    LF594                 ; 2³
     lda    ram_B2                ; 3
     sec                          ; 2
     sbc.wy ram_92,Y              ; 4
     cmp    #$EC                  ; 2
-    bcs    LF53F                 ; 2ï¿½
+    bcs    LF53F                 ; 2³
     cmp    #$18                  ; 2
-    bcs    LF594                 ; 2ï¿½
+    bcs    LF594                 ; 2³
 LF53F:
     lda    #$03                  ; 2
     jsr    UpdateScore           ; 6
@@ -7369,7 +7369,7 @@ LF549:
     tya                          ; 2
     tax                          ; 2
     lda    ram_9C,X              ; 4
-    bpl    LF57F                 ; 2ï¿½
+    bpl    LF57F                 ; 2³
     jsr    LFBEB                 ; 6
     txa                          ; 2
     clc                          ; 2
@@ -7382,16 +7382,16 @@ LF549:
     ldy    #$03                  ; 2
     lda    (ram_D9),Y            ; 5
     and    #$40                  ; 2
-    beq    LF57F                 ; 2ï¿½
+    beq    LF57F                 ; 2³
     lda    (ram_D9),Y            ; 5
     and    #$38                  ; 2
     cmp    #$28                  ; 2
-    beq    LF57F                 ; 2ï¿½
+    beq    LF57F                 ; 2³
     jsr    LFBD1                 ; 6
     clc                          ; 2
     adc    ram_F1                ; 3
     jsr    LFFBE                 ; 6   bankswitch, goto LDEFF
-    bcc    LF57F                 ; 2ï¿½
+    bcc    LF57F                 ; 2³
 LF57A:
     jsr    LFB87                 ; 6
     inc    ram_D6                ; 5
@@ -7401,16 +7401,16 @@ LF57F:
 
 LF584:
     cmp    #$10                  ; 2
-    beq    LF594                 ; 2ï¿½
+    beq    LF594                 ; 2³
     txa                          ; 2
     tay                          ; 2
     jsr    LFFB5                 ; 6   bankswitch, goto LDED0
-    bcc    LF594                 ; 2ï¿½
+    bcc    LF594                 ; 2³
     jsr    LFB2D                 ; 6
     inc    ram_D6                ; 5
 LF594:
     lda    ram_D6                ; 3
-    beq    LF5B8                 ; 2ï¿½
+    beq    LF5B8                 ; 2³
 LF598:
     lda    #$00                  ; 2
     sta    ram_B9,X              ; 4
@@ -7418,19 +7418,19 @@ LF598:
     lda    #$8F                  ; 2
     sta    ram_B5,X              ; 4
     cpx    #$03                  ; 2
-    beq    LF5B8                 ; 2ï¿½
+    beq    LF5B8                 ; 2³
     ldx    #$02                  ; 2
     lda    ram_B9,X              ; 4
     and    #$F0                  ; 2
-    bne    LF5B8                 ; 2ï¿½
+    bne    LF5B8                 ; 2³
     ldx    #$00                  ; 2
     lda    ram_B9,X              ; 4
     and    #$F0                  ; 2
-    bne    LF5B8                 ; 2ï¿½
+    bne    LF5B8                 ; 2³
     ldx    #$01                  ; 2
 LF5B8:
     cpx    #$03                  ; 2
-    beq    LF5C5                 ; 2ï¿½
+    beq    LF5C5                 ; 2³
     lda    ram_C2                ; 3
     and    #$CF                  ; 2
     ora    LFCF8,X               ; 4
@@ -7441,7 +7441,7 @@ LF5C5:
     sta.wy ram_EF,Y              ; 5
     lda    ram_B5,X              ; 4
     cmp    #$41                  ; 2
-    bcc    LF5DE                 ; 2ï¿½
+    bcc    LF5DE                 ; 2³
     lda    #$8F                  ; 2
     sbc    ram_B5,X              ; 4
     sta    ram_D8                ; 3
@@ -7467,7 +7467,7 @@ LF5E9:
 LF5F3:
     adc    #$25                  ; 2
     dex                          ; 2
-    bpl    LF5F3                 ; 2ï¿½
+    bpl    LF5F3                 ; 2³
     pha                          ; 3
     lda    ram_D7                ; 3
     asl                          ; 2
@@ -7476,15 +7476,15 @@ LF5F3:
     sta    ram_E5,X              ; 4
     sty    ram_E6,X              ; 4
     dec    ram_ED                ; 5
-    beq    LF60C                 ; 2ï¿½
+    beq    LF60C                 ; 2³
     ldx    ram_B0                ; 3
     inx                          ; 2
     jmp    LF46E                 ; 3
 
 LF60C:
     ldy    INTIM                 ; 4
-    bmi    LF613                 ; 2ï¿½
-    bne    LF60C                 ; 2ï¿½
+    bmi    LF613                 ; 2³
+    bne    LF60C                 ; 2³
 LF613:
     lda    #$82                  ; 2
     sta    WSYNC                 ; 3
@@ -7496,7 +7496,7 @@ LF613:
     sec                          ; 2
 LF620:
     sbc    #$0F                  ; 2
-    bcs    LF620                 ; 2ï¿½
+    bcs    LF620                 ; 2³
     adc    #$0F                  ; 2
     tay                          ; 2
     lda    LFE4F,Y               ; 4
@@ -7512,7 +7512,7 @@ LF620:
     sec                          ; 2
 LF638:
     sbc    #$0F                  ; 2
-    bcs    LF638                 ; 2ï¿½
+    bcs    LF638                 ; 2³
     adc    #$0F                  ; 2
     tay                          ; 2
     lda    LFE4F,Y               ; 4
@@ -7553,7 +7553,7 @@ LF662:
     sta    ram_8C,X              ; 4
     sta    ram_F0                ; 3
     lda    ram_92,X              ; 4
-    bpl    LF6F2                 ; 2ï¿½
+    bpl    LF6F2                 ; 2³
 LF685:
     ldy    #$03                  ; 2
     lda    (ram_ED),Y            ; 5
@@ -7572,20 +7572,20 @@ LF685:
     and    #$E0                  ; 2
     sta    ram_97,X              ; 4
     lda    ram_92,X              ; 4
-    bmi    LF6D1                 ; 2ï¿½
+    bmi    LF6D1                 ; 2³
     lda    ram_D8                ; 3
     cmp    #$05                  ; 2
-    beq    LF6D1                 ; 2ï¿½
+    beq    LF6D1                 ; 2³
     lda    ram_F1                ; 3
-    bmi    LF6BD                 ; 2ï¿½
+    bmi    LF6BD                 ; 2³
     cmp    playerVpos            ; 3
-    bcs    LF6BD                 ; 2ï¿½
+    bcs    LF6BD                 ; 2³
     adc    #$2F                  ; 2
     cmp    playerVpos            ; 3
-    bcc    LF6BD                 ; 2ï¿½
+    bcc    LF6BD                 ; 2³
     lda    playerHpos            ; 3
     cmp    #$3A                  ; 2
-    bne    LF6C2                 ; 2ï¿½
+    bne    LF6C2                 ; 2³
 LF6BD:
     lda    frameCounter          ; 3
     lsr                          ; 2
@@ -7594,7 +7594,7 @@ LF6BD:
 LF6C2:
     lda    #$00                  ; 2
     ldy    #$09                  ; 2
-    bcs    LF6CC                 ; 2ï¿½
+    bcs    LF6CC                 ; 2³
     lda    #$74                  ; 2
     ldy    #$05                  ; 2
 LF6CC:
@@ -7610,7 +7610,7 @@ LF6D1:
     sta    ram_92,X              ; 4
     ldy    ram_D8                ; 3
     lda    LFDFA,Y               ; 4
-    bpl    LF6EB                 ; 2ï¿½
+    bpl    LF6EB                 ; 2³
     jsr    LFE65                 ; 6
     and    #$1F                  ; 2
     tay                          ; 2
@@ -7624,7 +7624,7 @@ LF6EC:
 LF6F2:
     ldy    #$00                  ; 2
     lda    ram_9C,X              ; 4
-    bpl    LF720                 ; 2ï¿½+1
+    bpl    LF720                 ; 2³+1
     ldy    #$03                  ; 2
     lda    (ram_ED),Y            ; 5
     and    #$38                  ; 2
@@ -7634,11 +7634,11 @@ LF6F2:
     tay                          ; 2
     lda    LFDFA,Y               ; 4
     tay                          ; 2
-    bpl    LF720                 ; 2ï¿½
+    bpl    LF720                 ; 2³
     ldy    #$00                  ; 2
     lda    ram_9C,X              ; 4
     and    #$40                  ; 2
-    beq    LF711                 ; 2ï¿½
+    beq    LF711                 ; 2³
     iny                          ; 2
 LF711:
     lda    ram_97,X              ; 4
@@ -7653,26 +7653,26 @@ LF711:
 LF720:
     jsr    LFBE1                 ; 6
     bit    ram_C2                ; 3
-    bvs    LF74F                 ; 2ï¿½
+    bvs    LF74F                 ; 2³
     cpx    ram_91                ; 3
-    bne    LF74F                 ; 2ï¿½
+    bne    LF74F                 ; 2³
     lda    ram_9C,X              ; 4
-    bmi    LF754                 ; 2ï¿½
+    bmi    LF754                 ; 2³
     ldy    #$03                  ; 2
     lda    (ram_ED),Y            ; 5
     and    #$38                  ; 2
     cmp    #$30                  ; 2
-    beq    LF73D                 ; 2ï¿½
+    beq    LF73D                 ; 2³
     cmp    #$28                  ; 2
-    bne    LF74F                 ; 2ï¿½
+    bne    LF74F                 ; 2³
 LF73D:
     jsr    LFE65                 ; 6
     and    #$1F                  ; 2
     cmp    #$05                  ; 2
-    bcs    LF74F                 ; 2ï¿½
+    bcs    LF74F                 ; 2³
     lda    frameCounter          ; 3
     and    #$03                  ; 2
-    bne    LF74F                 ; 2ï¿½
+    bne    LF74F                 ; 2³
     jmp    LF685                 ; 3
 
 LF74F:
@@ -7683,7 +7683,7 @@ LF754:
     sty    ram_F2                ; 3
     lda    ram_82,X              ; 4
     cmp    #$1F                  ; 2
-    bcc    LF762                 ; 2ï¿½
+    bcc    LF762                 ; 2³
     jsr    LFB94                 ; 6
     jmp    LF74F                 ; 3
 
@@ -7692,13 +7692,13 @@ LF762:
     lda    (ram_ED),Y            ; 5
     and    #$38                  ; 2
     cmp    #$08                  ; 2
-    beq    LF783                 ; 2ï¿½
+    beq    LF783                 ; 2³
     cmp    #$30                  ; 2
-    beq    LF783                 ; 2ï¿½
+    beq    LF783                 ; 2³
     cmp    #$28                  ; 2
-    beq    LF77E                 ; 2ï¿½
+    beq    LF77E                 ; 2³
     cmp    #$18                  ; 2
-    bne    LF77B                 ; 2ï¿½
+    bne    LF77B                 ; 2³
     jmp    LF81B                 ; 3
 
 LF77B:
@@ -7714,12 +7714,12 @@ LF783:
     adc    LFEF2,Y               ; 4
     sta    ram_D8                ; 3
     lda    LFEF2,Y               ; 4
-    beq    LF79E                 ; 2ï¿½
+    beq    LF79E                 ; 2³
     lda    ram_D8                ; 3
-    beq    LF7D6                 ; 2ï¿½
-    bmi    LF7D6                 ; 2ï¿½
+    beq    LF7D6                 ; 2³
+    bmi    LF7D6                 ; 2³
     cmp    #$75                  ; 2
-    bcs    LF7D6                 ; 2ï¿½
+    bcs    LF7D6                 ; 2³
     bcc    LF7A0                 ; 3   always branch
 
 LF79E:
@@ -7732,16 +7732,16 @@ LF7A0:
     adc    LFF00,Y               ; 4
     sta    ram_D7                ; 3
     lda    LFF00,Y               ; 4
-    beq    LF7C1                 ; 2ï¿½
-    bpl    LF7BB                 ; 2ï¿½
+    beq    LF7C1                 ; 2³
+    bpl    LF7BB                 ; 2³
     lda    ram_D7                ; 3
     cmp    #$E0                  ; 2
-    beq    LF7D6                 ; 2ï¿½
+    beq    LF7D6                 ; 2³
     bne    LF7C5                 ; 3   always branch
 
 LF7BB:
     lda    ram_D7                ; 3
-    beq    LF7D6                 ; 2ï¿½
+    beq    LF7D6                 ; 2³
     bne    LF7C5                 ; 3   always branch
 
 LF7C1:
@@ -7755,13 +7755,13 @@ LF7C5:
     sta    ram_D6                ; 3
     lda    ram_D8                ; 3
     jsr    LFF88                 ; 6
-    bcc    LF7EE                 ; 2ï¿½
+    bcc    LF7EE                 ; 2³
 LF7D6:
     ldy    #$03                  ; 2
     lda    (ram_ED),Y            ; 5
     and    #$38                  ; 2
     cmp    #$28                  ; 2
-    bne    LF7E6                 ; 2ï¿½
+    bne    LF7E6                 ; 2³
     jsr    LFB94                 ; 6
     jmp    LF81B                 ; 3
 
@@ -7781,11 +7781,11 @@ LF7EE:
     lda    (ram_ED),Y            ; 5
     and    #$38                  ; 2
     cmp    #$28                  ; 2
-    beq    LF81B                 ; 2ï¿½
+    beq    LF81B                 ; 2³
     lda    frameCounter          ; 3
     and    #$1F                  ; 2
     cmp    #$19                  ; 2
-    bcc    LF81B                 ; 2ï¿½
+    bcc    LF81B                 ; 2³
     jsr    LFE65                 ; 6
     and    #$1F                  ; 2
     tay                          ; 2
@@ -7803,20 +7803,20 @@ LF81B:
     lda    (ram_ED),Y            ; 5
     and    #$38                  ; 2
     cmp    #$28                  ; 2
-    beq    LF849                 ; 2ï¿½
+    beq    LF849                 ; 2³
     lda    ram_D6                ; 3
     cmp    #$98                  ; 2
-    bcs    LF849                 ; 2ï¿½
+    bcs    LF849                 ; 2³
     cmp    #$0C                  ; 2
-    bcc    LF849                 ; 2ï¿½
+    bcc    LF849                 ; 2³
     ldy    #$02                  ; 2
     lda.wy ram_B9,Y              ; 4
     and    #$F0                  ; 2
-    beq    LF84C                 ; 2ï¿½
+    beq    LF84C                 ; 2³
     ldy    #$03                  ; 2
     lda.wy ram_B9,Y              ; 4
     and    #$F0                  ; 2
-    beq    LF84C                 ; 2ï¿½
+    beq    LF84C                 ; 2³
 LF849:
     jmp    LF886                 ; 3
 
@@ -7824,7 +7824,7 @@ LF84C:
     jsr    LFE65                 ; 6
     and    #$0F                  ; 2
     cmp    #$0A                  ; 2
-    bcs    LF886                 ; 2ï¿½
+    bcs    LF886                 ; 2³
     tya                          ; 2
     pha                          ; 3
     jsr    LFFD9                 ; 6   bankswitch, goto L9DB5
@@ -7835,11 +7835,11 @@ LF84C:
     tay                          ; 2
     lda    ram_D7                ; 3
     cpy    #$03                  ; 2
-    bne    LF871                 ; 2ï¿½
+    bne    LF871                 ; 2³
     cmp    #$08                  ; 2
-    beq    LF871                 ; 2ï¿½
+    beq    LF871                 ; 2³
     cmp    #$00                  ; 2
-    bne    LF886                 ; 2ï¿½
+    bne    LF886                 ; 2³
 LF871:
     ora    #$10                  ; 2
     sta.wy ram_B9,Y              ; 5
@@ -7854,14 +7854,14 @@ LF871:
 LF886:
     lda    ram_D6                ; 3
     cmp    #$A6                  ; 2
-    bcs    LF8A2                 ; 2ï¿½
+    bcs    LF8A2                 ; 2³
     jsr    LFFBE                 ; 6   bankswitch, goto LDEFF
-    bcc    LF8A2                 ; 2ï¿½
+    bcc    LF8A2                 ; 2³
     ldy    #$03                  ; 2
     lda    (ram_ED),Y            ; 5
     and    #$38                  ; 2
     cmp    #$28                  ; 2
-    beq    LF8A2                 ; 2ï¿½
+    beq    LF8A2                 ; 2³
     lda    #$00                  ; 2
     sta    ram_B9                ; 3
     jsr    LFB87                 ; 6
@@ -7871,22 +7871,22 @@ LF8A2:
     and    #$38                  ; 2
     ldy    #$01                  ; 2
     cmp    #$18                  ; 2
-    beq    LF8C0                 ; 2ï¿½
+    beq    LF8C0                 ; 2³
     cmp    #$38                  ; 2
-    bne    LF8C7                 ; 2ï¿½
+    bne    LF8C7                 ; 2³
     txa                          ; 2
     clc                          ; 2
     adc    distanceMarker        ; 3
     cmp    #$0F                  ; 2
     lda    #$01                  ; 2
-    bcs    LF8CB                 ; 2ï¿½
+    bcs    LF8CB                 ; 2³
     lda    #$00                  ; 2
     beq    LF8CB                 ; 3   always branch
 
 LF8C0:
     lda    frameCounter          ; 3
     and    #$04                  ; 2
-    beq    LF8C7                 ; 2ï¿½
+    beq    LF8C7                 ; 2³
     dey                          ; 2
 LF8C7:
     tya                          ; 2
@@ -7896,7 +7896,7 @@ LF8CB:
     and    #$07                  ; 2
     ldy    #$00                  ; 2
     cmp    (ram_DB),Y            ; 5
-    bcc    LF8D4                 ; 2ï¿½
+    bcc    LF8D4                 ; 2³
     tya                          ; 2
 LF8D4:
     sta    ram_D6                ; 3
@@ -7939,22 +7939,22 @@ LF8D4:
     sta    ram_F1                ; 3
     inx                          ; 2
     cpx    #$05                  ; 2
-    bcs    LF922                 ; 2ï¿½
+    bcs    LF922                 ; 2³
     jmp    LF662                 ; 3
 
 LF922:
     ldx    ram_91                ; 3
     dex                          ; 2
-    bpl    LF929                 ; 2ï¿½
+    bpl    LF929                 ; 2³
     ldx    #$04                  ; 2
 LF929:
     stx    ram_91                ; 3
     ldy    #$00                  ; 2
     bit    ram_C3                ; 3
-    bvc    LF95A                 ; 2ï¿½
+    bvc    LF95A                 ; 2³
     lda    scoreBig              ; 3
     cmp    #$9A                  ; 2
-    bcc    LF952                 ; 2ï¿½
+    bcc    LF952                 ; 2³
 
     lda    ram_D2                ; 3
     and    #$03                  ; 2
@@ -7971,14 +7971,14 @@ LF947:
     sta    ram_ED,X              ; 4
     dey                          ; 2
     dex                          ; 2
-    bpl    LF947                 ; 2ï¿½
+    bpl    LF947                 ; 2³
     bmi    LF999                 ; 3   always branch
 
 LF952:
     iny                          ; 2
     lda    ram_C3                ; 3
     and    #$02                  ; 2
-    beq    LF95A                 ; 2ï¿½
+    beq    LF95A                 ; 2³
     iny                          ; 2
 LF95A:
     tya                          ; 2
@@ -8008,27 +8008,27 @@ LF95D:
     sta.wy ram_EF,Y              ; 5
     lda    livesLevelNum,X       ; 4
     dex                          ; 2
-    bpl    LF95D                 ; 2ï¿½
+    bpl    LF95D                 ; 2³
     inx                          ; 2
     ldy    #$8D                  ; 2
 LF98B:
     lda    ram_ED,X              ; 4
     cmp    #$15                  ; 2
-    bne    LF999                 ; 2ï¿½
+    bne    LF999                 ; 2³
     sty    ram_ED,X              ; 4
     inx                          ; 2
     inx                          ; 2
     cpx    #$0A                  ; 2
-    bcc    LF98B                 ; 2ï¿½
+    bcc    LF98B                 ; 2³
 LF999:
     ldx    ram_80                ; 3
     stx    ram_D9                ; 3
     lda    ram_82,X              ; 4
     sta    ram_DA                ; 3
     lda    ram_81                ; 3
-    beq    LF9A9                 ; 2ï¿½
+    beq    LF9A9                 ; 2³
     cmp    #$1F                  ; 2
-    bcc    LF9AB                 ; 2ï¿½
+    bcc    LF9AB                 ; 2³
 LF9A9:
     ldx    #$04                  ; 2
 LF9AB:
@@ -8053,8 +8053,8 @@ LF9AB:
     adc    #$00                  ; 2
 LF9CF:
     ldx    INTIM                 ; 4
-    bmi    LF9D6                 ; 2ï¿½
-    bne    LF9CF                 ; 2ï¿½
+    bmi    LF9D6                 ; 2³
+    bne    LF9CF                 ; 2³
 LF9D6:
     sta    WSYNC                 ; 3
 ;---------------------------------------
@@ -8090,12 +8090,12 @@ LF9D6:
     jsr    LFFE2                 ; 6   bankswitch, goto L948A
     sta    VDELP1                ; 3
     inc    frameCounter          ; 5
-    bne    LFA27                 ; 2ï¿½
+    bne    LFA27                 ; 2³
     lda    ram_D2                ; 3
     and    #$7F                  ; 2
     clc                          ; 2
     adc    #$01                  ; 2
-    bpl    LFA25                 ; 2ï¿½
+    bpl    LFA25                 ; 2³
     lda    #$FF                  ; 2
 LFA25:
     sta    ram_D2                ; 3
@@ -8110,7 +8110,7 @@ LFA27:
     sec                          ; 2
 LFA32:
     sbc    #$0F                  ; 2
-    bcs    LFA32                 ; 2ï¿½
+    bcs    LFA32                 ; 2³
     adc    #$0F                  ; 2
     tay                          ; 2
     sta    HMCLR                 ; 3
@@ -8176,7 +8176,7 @@ LFA86:
     lda    LevelGfx-1,Y          ; 4
     sta    ram_D7                ; 3
     dey                          ; 2
-    bpl    LFA86                 ; 2ï¿½
+    bpl    LFA86                 ; 2³
 
     iny                          ; 2
     sty    GRP0                  ; 3
@@ -8203,7 +8203,7 @@ LFA86:
     sta    ram_F3                ; 3
     lda    livesLevelNum         ; 3
     and    #$F0                  ; 2
-    bmi    LFAE2                 ; 2ï¿½
+    bmi    LFAE2                 ; 2³
     bpl    LFAE4                 ; 3   always branch
 
 LFAE2:
@@ -8234,7 +8234,7 @@ LFAF8:
     nop                          ; 2
     sta    GRP1                  ; 3
     dey                          ; 2
-    bmi    LFB16                 ; 2ï¿½
+    bmi    LFB16                 ; 2³
     sta    WSYNC                 ; 3
 ;---------------------------------------
     bpl    LFAF8                 ; 3+1   always branch
@@ -8283,7 +8283,7 @@ LFB47 SUBROUTINE ;x2
     lda    scoreBig              ; 3
     cmp    #$99+1                ; 2
     lda    #0                    ; 2
-    bcs    LFB59                 ; 2ï¿½
+    bcs    LFB59                 ; 2³
     sta    scoreBig              ; 3
     sta    scoreSmall            ; 3
 LFB59:
@@ -8295,7 +8295,7 @@ LFB59:
 LFB5C SUBROUTINE ;x4
     lda    ram_C3                ; 3
     and    #$02                  ; 2
-    beq    LFB75                 ; 2ï¿½
+    beq    LFB75                 ; 2³
     lda    ram_C3                ; 3
     eor    #$01                  ; 2
     sta    ram_C3                ; 3
@@ -8306,7 +8306,7 @@ LFB6A:
     sta    otherPlayerStats,X    ; 4
     sty    playerStats,X         ; 4
     dex                          ; 2
-    bpl    LFB6A                 ; 2ï¿½
+    bpl    LFB6A                 ; 2³
 LFB75:
     rts                          ; 6
 
@@ -8316,7 +8316,7 @@ LFB76 SUBROUTINE ;x2
     lda    ram_C3                ; 3
     lsr                          ; 2
     lda    SWCHA                 ; 4
-    bcs    LFB82                 ; 2ï¿½
+    bcs    LFB82                 ; 2³
     lsr                          ; 2
     lsr                          ; 2
     lsr                          ; 2
@@ -8372,7 +8372,7 @@ UpdateScore SUBROUTINE ;x2
 
 LFBBB SUBROUTINE ;x2
     tya                          ; 2
-    beq    LFBD0                 ; 2ï¿½
+    beq    LFBD0                 ; 2³
     lda    ram_9C,X              ; 4
     and    #$BF                  ; 2
     ora    LFE13,Y               ; 4
@@ -9076,7 +9076,7 @@ LFE4F:
 
 SetSoundEvent SUBROUTINE ;x6
     cmp    soundIndex            ; 3
-    bcc    .soundAlreadyStarted  ; 2ï¿½
+    bcc    .soundAlreadyStarted  ; 2³
     sta    soundIndex            ; 3
 .soundAlreadyStarted:
     rts                          ; 6
@@ -9329,8 +9329,8 @@ LFF5F:
     tay                          ; 2
     lda    LFE43,Y               ; 4
     cmp    #$01                  ; 2
-    bcc    LFF7F                 ; 2ï¿½  bankswitch, goto LD000
-    beq    LFF76                 ; 2ï¿½  bankswitch, goto LB000
+    bcc    LFF7F                 ; 2³  bankswitch, goto LD000
+    beq    LFF76                 ; 2³  bankswitch, goto LB000
     bit    BANK_0                ; 4   bankswitch, goto L9000
 
     .byte $00   ; $FF70
@@ -9367,8 +9367,8 @@ LFF88:
     tay                          ; 2
     lda    LFE43,Y               ; 4
     cmp    #$01                  ; 2
-    bcc    LFFAB                 ; 2ï¿½  bankswitch, goto LDE00
-    beq    LFFA1                 ; 2ï¿½  bankswitch, goto LBD40
+    bcc    LFFAB                 ; 2³  bankswitch, goto LDE00
+    beq    LFFA1                 ; 2³  bankswitch, goto LBD40
     pla                          ; 4
     bit    BANK_0                ; 4   bankswitch, goto L9D40
 
