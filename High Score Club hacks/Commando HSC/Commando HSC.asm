@@ -182,6 +182,11 @@ TIM64T  =  $0296
 ;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+PLUSROM     = 1
+PAL50       = 0
+PAL_COLORS  = 0
+
+
 DATAEAST = 0
 CAPCOM   = 1
 
@@ -238,6 +243,13 @@ RIGHT_8         = $80
 TIME_VBLANK     = 55
 TIME_OVERSCAN   = 39
 
+   IF PLUSROM = 1
+WriteToBuffer     = $1ff0
+WriteSendBuffer   = $1ff1
+ReceiveBuffer     = $1ff2
+ReceiveBufferSize = $1ff3
+HIGHSCORE_ID      = 53	 ; Commando game ID in Highscore DB
+   ENDIF
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;
@@ -337,7 +349,11 @@ ram_F7             ds 9  ; x3
   MAC MAIN_KERNEL
 
 ;this label is outside this block of code
+  IF PLUSROM = 1
+.mxFEB = $0FE5
+  ELSE
 .mxFEB = $0FEB
+  ENDIF
 
 .mx000:
     lda    ram_C2                ; 3
@@ -2906,7 +2922,11 @@ LDAC4:
   MAC COMMON_ROUTINE
 
 ;this label is outside this block of code
+  IF PLUSROM = 1
+.mxFEB = $0FE5
+  ELSE
 .mxFEB = $0FEB
+  ENDIF
 
 .mxD40:
     ldy    ram_D6                ; 3
@@ -3938,6 +3958,10 @@ Copyright:
     .byte $78 ; | XXXX   | $9EBB
     .byte $00 ; |        | $9EBC
 
+  IF PLUSROM = 1
+PlusROM_API:
+    .byte "a", 0, "h.firmaplus.de", 0
+  ELSE
     .byte $FF ; |XXXXXXXX| $9EBD  free bytes
     .byte $FF ; |XXXXXXXX| $9EBE
     .byte $FF ; |XXXXXXXX| $9EBF
@@ -3955,6 +3979,8 @@ Copyright:
     .byte $FF ; |XXXXXXXX| $9ECB
     .byte $FF ; |XXXXXXXX| $9ECC
     .byte $FF ; |XXXXXXXX| $9ECD
+  ENDIF
+
     .byte $FF ; |XXXXXXXX| $9ECE
     .byte $FF ; |XXXXXXXX| $9ECF
     .byte $FF ; |XXXXXXXX| $9ED0
@@ -4105,12 +4131,15 @@ Copyright:
        ORG $0F60
       RORG $9F60
 
+  IF PLUSROM = 0
     .byte $FF ; |XXXXXXXX| $9F60
     .byte $FF ; |XXXXXXXX| $9F61
     .byte $FF ; |XXXXXXXX| $9F62
     .byte $FF ; |XXXXXXXX| $9F63
     .byte $FF ; |XXXXXXXX| $9F64
     .byte $FF ; |XXXXXXXX| $9F65
+  ENDIF
+
     .byte $FF ; |XXXXXXXX| $9F66
     .byte $FF ; |XXXXXXXX| $9F67
     .byte $FF ; |XXXXXXXX| $9F68
@@ -4263,8 +4292,12 @@ START_0:
     .byte $EA   ; $9FF7
     .byte $EA   ; $9FF8
     .byte $EA   ; $9FF9
+  IF PLUSROM = 1
+    .word   ( PlusROM_API - $8000)
+  ELSE
     .byte $EA   ; $9FFA
     .byte $EA   ; $9FFB
+  ENDIF
 
     .word START_0
     .word START_0
@@ -5265,12 +5298,15 @@ LBF54:
        ORG $1F60
       RORG $BF60
 
+  IF PLUSROM = 0
     .byte $FF ; |XXXXXXXX| $BF60
     .byte $FF ; |XXXXXXXX| $BF61
     .byte $FF ; |XXXXXXXX| $BF62
     .byte $FF ; |XXXXXXXX| $BF63
     .byte $FF ; |XXXXXXXX| $BF64
     .byte $FF ; |XXXXXXXX| $BF65
+  ENDIF
+
     .byte $FF ; |XXXXXXXX| $BF66
     .byte $FF ; |XXXXXXXX| $BF67
     .byte $FF ; |XXXXXXXX| $BF68
@@ -5424,8 +5460,12 @@ START_1:
     .byte $EA   ; $BFF7
     .byte $EA   ; $BFF8
     .byte $EA   ; $BFF9
+  IF PLUSROM = 1
+    .word   ( PlusROM_API - $8000)
+  ELSE
     .byte $EA   ; $BFFA
     .byte $EA   ; $BFFB
+  ENDIF
 
     .word START_1
     .word START_1
@@ -6396,13 +6436,15 @@ LDF2B:
 
        ORG $2F60
       RORG $DF60
-
+  IF PLUSROM = 0
     .byte $FF ; |XXXXXXXX| $DF60
     .byte $FF ; |XXXXXXXX| $DF61
     .byte $FF ; |XXXXXXXX| $DF62
     .byte $FF ; |XXXXXXXX| $DF63
     .byte $FF ; |XXXXXXXX| $DF64
     .byte $FF ; |XXXXXXXX| $DF65
+  ENDIF
+
     .byte $FF ; |XXXXXXXX| $DF66
     .byte $FF ; |XXXXXXXX| $DF67
     .byte $FF ; |XXXXXXXX| $DF68
@@ -6555,8 +6597,12 @@ START_2:
     .byte $EA   ; $DFF7
     .byte $EA   ; $DFF8
     .byte $EA   ; $DFF9
+  IF PLUSROM = 1
+    .word   ( PlusROM_API - $8000)
+  ELSE
     .byte $EA   ; $DFFA
     .byte $EA   ; $DFFB
+  ENDIF
 
     .word START_2
     .word START_2
@@ -6712,7 +6758,7 @@ LF0E5:
     jsr    LFB5C                 ; 6
     lda    livesLevelNum         ; 3
     bpl    LF103                 ; 2³+1
-    jsr    LFB5C                 ; 6
+    jsr    SendPlusROMScore      ; 6
     lda    livesLevelNum         ; 3
     bpl    LF103                 ; 2³+1
     lda    ram_D6                ; 3
@@ -9286,6 +9332,21 @@ LFF0E:
     .word BlankDigit     ; $FF3A
     .word BlankDigit     ; $FF3C
 
+  IF PLUSROM = 1
+SendPlusROMScore:
+    lda scoreBig
+    sta WriteToBuffer
+    lda scoreSmall
+    sta WriteToBuffer
+    lda #0                          ; last two BCD digits are always 00
+    sta WriteToBuffer
+    lda #HIGHSCORE_ID               ; game id in Highscore DB
+    sta WriteSendBuffer             ; send request to backend..
+    jmp LFB5C
+
+       ORG $3F59
+      RORG $FF59
+  ELSE
     .byte $FF ; |XXXXXXXX| $FF3E   free bytes
     .byte $FF ; |XXXXXXXX| $FF3F
     .byte $FF ; |XXXXXXXX| $FF40
@@ -9322,6 +9383,7 @@ LFF0E:
 
        ORG $3F5F
       RORG $FF5F
+  ENDIF
 
 LFF5F:
     lda    livesLevelNum         ; 3
@@ -9479,8 +9541,12 @@ START_3:
     .byte $EA   ; $FFF7
     .byte $EA   ; $FFF8
     .byte $EA   ; $FFF9
+  IF PLUSROM = 1
+    .word   ( PlusROM_API - $8000 )
+  ELSE
     .byte $EA   ; $FFFA
     .byte $EA   ; $FFFB
+  ENDIF
 
     .word START_3
     .word START_3
