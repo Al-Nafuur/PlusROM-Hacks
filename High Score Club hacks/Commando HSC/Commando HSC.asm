@@ -212,9 +212,9 @@ LDADC         =  $DADC
 ;breakif pc==FE5E         *address pushed on stack
 SOUND_NEW_LIFE    = $C0 ; *$FBB1  highest priority
 SOUND_80          = $80 ; *$F0AE
-SOUND_80_2        = $80 ; *$F52B  gernade explosion
+SOUND_80_2        = $80 ; *$F52B  grenade explosion
 SOUND_ENEMY_DEAD  = $60 ; *$FB93
-SOUND_BULLET      = $40 ; *$F35B  might be start of gernade too
+SOUND_BULLET      = $40 ; *$F35B  might be start of grenade too
 SOUND_20          = $20 ; *$F782
 
 MOVE_UP     = $01
@@ -240,16 +240,21 @@ RIGHT_6         = $A0
 RIGHT_7         = $90
 RIGHT_8         = $80
 
+  IF PAL50 = 1
+TIME_VBLANK     = 82
+TIME_OVERSCAN   = 70
+  ELSE
 TIME_VBLANK     = 55
 TIME_OVERSCAN   = 39
+  ENDIF
 
-   IF PLUSROM = 1
+  IF PLUSROM = 1
 WriteToBuffer     = $1ff0
 WriteSendBuffer   = $1ff1
 ReceiveBuffer     = $1ff2
 ReceiveBufferSize = $1ff3
 HIGHSCORE_ID      = 53	 ; Commando game ID in Highscore DB
-   ENDIF
+  ENDIF
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;
@@ -290,7 +295,7 @@ ram_C3             ds 1  ; x27
 ;-----------------------------------------------
 playerStats        ds 5
 distanceMarker     equ  playerStats    ;$C4  x17  how far up the level the player has proceeded
-numOfGernades      equ  playerStats+1  ;$C5  x8
+numOfGrenades      equ  playerStats+1  ;$C5  x8
 livesLevelNum      equ  playerStats+2  ;$C6  x17  lives high nibble, level low nibble
 scoreBig           equ  playerStats+3  ;$C7  x9   100,000 and 10,000 digits (BCD)
 scoreSmall         equ  playerStats+4  ;$C8  x4   1,000 and 100 digits (BCD)
@@ -1820,118 +1825,61 @@ ram_F7             ds 9  ; x3
     .byte $00 ; |        | $x7A5
     .byte $00 ; |        | $x7A6
     .byte $00 ; |        | $x7A7
-    .byte $86 ; |X    XX | $x7A8
-    .byte $86 ; |X    XX | $x7A9
-    .byte $86 ; |X    XX | $x7AA
-    .byte $86 ; |X    XX | $x7AB
-    .byte $86 ; |X    XX | $x7AC
-    .byte $86 ; |X    XX | $x7AD
-    .byte $82 ; |X     X | $x7AE
-    .byte $84 ; |X    X  | $x7AF
-    .byte $84 ; |X    X  | $x7B0
-    .byte $86 ; |X    XX | $x7B1
-    .byte $86 ; |X    XX | $x7B2
-    .byte $86 ; |X    XX | $x7B3
-    .byte $80 ; |X       | $x7B4
-    .byte $EE ; |XXX XXX | $x7B5
-    .byte $84 ; |X    X  | $x7B6
-    .byte $88 ; |X   X   | $x7B7
-    .byte $80 ; |X       | $x7B8
-    .byte $80 ; |X       | $x7B9
-    .byte $80 ; |X       | $x7BA
-    .byte $86 ; |X    XX | $x7BB
-    .byte $86 ; |X    XX | $x7BC
-    .byte $86 ; |X    XX | $x7BD
-    .byte $86 ; |X    XX | $x7BE
-    .byte $86 ; |X    XX | $x7BF
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-  IF {1} = BK_9000
-    .byte $28 ; |  X X   | $97C0
-    .byte $26 ; |  X  XX | $97C1
-    .byte $28 ; |  X X   | $97C2
-    .byte $28 ; |  X X   | $97C3
-  ENDIF
-  IF {1} = BK_B000
-    .byte $C8 ; |XX  X   | $B7C0
-    .byte $C6 ; |XX   XX | $B7C1
-    .byte $C8 ; |XX  X   | $B7C2
-    .byte $C8 ; |XX  X   | $B7C3
-  ENDIF
-  IF {1} = BK_D000
-    .byte $18 ; |   XX   | $D7C0
-    .byte $16 ; |   X XX | $D7C1
-    .byte $18 ; |   XX   | $D7C2
-    .byte $18 ; |   XX   | $D7C3
-  ENDIF
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-    .byte $A0 ; |X X     | $x7C4
-    .byte $A0 ; |X X     | $x7C5
-    .byte $A6 ; |X X  XX | $x7C6
-    .byte $A6 ; |X X  XX | $x7C7
-    .byte $A6 ; |X X  XX | $x7C8
-    .byte $A6 ; |X X  XX | $x7C9
-    .byte $A0 ; |X X     | $x7CA
-    .byte $A6 ; |X X  XX | $x7CB
-    .byte $A6 ; |X X  XX | $x7CC
-    .byte $A6 ; |X X  XX | $x7CD
-    .byte $A6 ; |X X  XX | $x7CE
-    .byte $A6 ; |X X  XX | $x7CF
-    .byte $A6 ; |X X  XX | $x7D0
-    .byte $A6 ; |X X  XX | $x7D1
-    .byte $B0 ; |X XX    | $x7D2
-    .byte $EE ; |XXX XXX | $x7D3
-    .byte $B0 ; |X XX    | $x7D4
-    .byte $B4 ; |X XX X  | $x7D5
-    .byte $B8 ; |X XXX   | $x7D6
-    .byte $B0 ; |X XX    | $x7D7
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-  IF {1} = BK_9000
-    .byte $28 ; |  X X   | $97D8
-    .byte $26 ; |  X  XX | $97D9
-    .byte $28 ; |  X X   | $97DA
-    .byte $28 ; |  X X   | $97DB
-  ENDIF
-  IF {1} = BK_B000
-    .byte $C8 ; |XX  X   | $B7D8
-    .byte $C6 ; |XX   XX | $B7D9
-    .byte $C8 ; |XX  X   | $B7DA
-    .byte $C8 ; |XX  X   | $B7DB
-  ENDIF
-  IF {1} = BK_D000
+  IF PAL_COLORS = 1
+    .byte $B6, $B6, $B6, $B6, $B6, $B6, $B2, $B4, $B4, $B6, $B6, $B6, $B0, $2E, $B4, $B8, $B0, $B0, $B0, $B6, $B6, $B6, $B6, $B6
+    IF {1} = BK_9000
+        .byte $48, $46, $48, $48
+    ENDIF
+    IF {1} = BK_B000
+        .byte $58, $56, $58, $58
+    ENDIF
+    IF {1} = BK_D000
+        .byte $28, $26, $28, $28
+    ENDIF
+    
+    .byte $50, $50, $56, $56, $56, $56, $50, $56, $56, $56, $56, $56, $56, $56, $70, $2E, $70, $74, $78, $70
+    
+    IF {1} = BK_9000
+        .byte $48, $46, $48, $48
+    ENDIF
+    IF {1} = BK_B000
+        .byte $58, $56, $58, $58
+    ENDIF
+    IF {1} = BK_D000
 LD7D8:
-    .byte $18 ; |   XX   | $D7D8
-    .byte $16 ; |   X XX | $D7D9
-    .byte $18 ; |   XX   | $D7DA
-    .byte $18 ; |   XX   | $D7DB
-  ENDIF
+        .byte $28, $26, $28, $28
+    ENDIF
+    
+    .byte $B0, $B0, $B6, $B6, $B6, $B6, $B0, $B6, $B6, $B6, $B6, $B6, $B6, $B6, $D0, $2E, $D0, $D4, $D8, $D0
+  ELSE
+    .byte $86, $86, $86, $86, $86, $86, $82, $84, $84, $86, $86, $86, $80, $EE, $84, $88, $80, $80, $80, $86, $86, $86, $86, $86
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-    .byte $80 ; |X       | $x7DC
-    .byte $80 ; |X       | $x7DD
-    .byte $86 ; |X    XX | $x7DE
-    .byte $86 ; |X    XX | $x7DF
-    .byte $86 ; |X    XX | $x7E0
-    .byte $86 ; |X    XX | $x7E1
-    .byte $80 ; |X       | $x7E2
-    .byte $86 ; |X    XX | $x7E3
-    .byte $86 ; |X    XX | $x7E4
-    .byte $86 ; |X    XX | $x7E5
-    .byte $86 ; |X    XX | $x7E6
-    .byte $86 ; |X    XX | $x7E7
-    .byte $86 ; |X    XX | $x7E8
-    .byte $86 ; |X    XX | $x7E9
-    .byte $A0 ; |X X     | $x7EA
-    .byte $EE ; |XXX XXX | $x7EB
-    .byte $A0 ; |X X     | $x7EC
-    .byte $A4 ; |X X  X  | $x7ED
-    .byte $A8 ; |X X X   | $x7EE
-    .byte $A0 ; |X X     | $x7EF
+    IF {1} = BK_9000
+        .byte $28, $26, $28, $28
+    ENDIF
+    IF {1} = BK_B000
+        .byte $C8, $C6, $C8, $C8
+    ENDIF
+    IF {1} = BK_D000
+        .byte $18, $16, $18, $18
+    ENDIF
+
+    .byte $A0, $A0, $A6, $A6, $A6, $A6, $A0, $A6, $A6, $A6, $A6, $A6, $A6, $A6, $B0, $EE, $B0, $B4, $B8, $B0
+
+    IF {1} = BK_9000
+        .byte $28, $26, $28, $28
+    ENDIF
+    IF {1} = BK_B000
+        .byte $C8, $C6, $C8, $C8
+    ENDIF
+    IF {1} = BK_D000
+LD7D8:
+        .byte $18, $16, $18, $18
+    ENDIF
+
+    .byte $80, $80, $86, $86, $86, $86, $80, $86, $86, $86, $86, $86, $86, $86, $A0, $EE, $A0, $A4, $A8, $A0
+  ENDIF
 
     .byte $FF ; |XXXXXXXX| $x7F0  free bytes
     .byte $FF ; |XXXXXXXX| $x7F1
@@ -2094,70 +2042,12 @@ LD7D8:
     .byte $02 ; |      X | $x88D
     .byte $02 ; |      X | $x88E
     .byte $02 ; |      X | $x88F
-    .byte $C4 ; |XX   X  | $x890
-    .byte $C6 ; |XX   XX | $x891
-    .byte $C8 ; |XX  X   | $x892
-    .byte $C6 ; |XX   XX | $x893
-    .byte $C6 ; |XX   XX | $x894
-    .byte $C6 ; |XX   XX | $x895
-    .byte $C6 ; |XX   XX | $x896
-    .byte $C6 ; |XX   XX | $x897
-    .byte $C6 ; |XX   XX | $x898
-    .byte $C6 ; |XX   XX | $x899
-    .byte $C8 ; |XX  X   | $x89A
-    .byte $C8 ; |XX  X   | $x89B
-    .byte $02 ; |      X | $x89C
-    .byte $02 ; |      X | $x89D
-    .byte $02 ; |      X | $x89E
-    .byte $02 ; |      X | $x89F
-    .byte $A0 ; |X X     | $x8A0
-    .byte $A0 ; |X X     | $x8A1
-    .byte $A0 ; |X X     | $x8A2
-    .byte $A0 ; |X X     | $x8A3
-    .byte $A0 ; |X X     | $x8A4
-    .byte $A6 ; |X X  XX | $x8A5
-    .byte $A6 ; |X X  XX | $x8A6
-    .byte $A6 ; |X X  XX | $x8A7
-    .byte $A6 ; |X X  XX | $x8A8
-    .byte $A6 ; |X X  XX | $x8A9
-    .byte $A0 ; |X X     | $x8AA
-    .byte $A6 ; |X X  XX | $x8AB
-    .byte $A6 ; |X X  XX | $x8AC
-    .byte $A6 ; |X X  XX | $x8AD
-    .byte $A6 ; |X X  XX | $x8AE
-    .byte $A6 ; |X X  XX | $x8AF
-    .byte $A6 ; |X X  XX | $x8B0
-    .byte $A6 ; |X X  XX | $x8B1
-    .byte $B0 ; |X XX    | $x8B2
-    .byte $EE ; |XXX XXX | $x8B3
-    .byte $B0 ; |X XX    | $x8B4
-    .byte $B4 ; |X XX X  | $x8B5
-    .byte $B8 ; |X XXX   | $x8B6
-    .byte $B0 ; |X XX    | $x8B7
-    .byte $80 ; |X       | $x8B8
-    .byte $80 ; |X       | $x8B9
-    .byte $80 ; |X       | $x8BA
-    .byte $80 ; |X       | $x8BB
-    .byte $80 ; |X       | $x8BC
-    .byte $86 ; |X    XX | $x8BD
-    .byte $86 ; |X    XX | $x8BE
-    .byte $86 ; |X    XX | $x8BF
-    .byte $86 ; |X    XX | $x8C0
-    .byte $86 ; |X    XX | $x8C1
-    .byte $80 ; |X       | $x8C2
-    .byte $86 ; |X    XX | $x8C3
-    .byte $86 ; |X    XX | $x8C4
-    .byte $86 ; |X    XX | $x8C5
-    .byte $86 ; |X    XX | $x8C6
-    .byte $86 ; |X    XX | $x8C7
-    .byte $86 ; |X    XX | $x8C8
-    .byte $86 ; |X    XX | $x8C9
-    .byte $80 ; |X       | $x8CA
-    .byte $EE ; |XXX XXX | $x8CB
-    .byte $80 ; |X       | $x8CC
-    .byte $84 ; |X    X  | $x8CD
-    .byte $88 ; |X   X   | $x8CE
-    .byte $80 ; |X       | $x8CF
+
+  IF PAL_COLORS =  1
+    .byte $54, $56, $58, $56, $56, $56, $56, $56, $56, $56, $58, $58, $02, $02, $02, $02, $50, $50, $50, $50, $50, $56, $56, $56, $56, $56, $50, $56, $56, $56, $56, $56, $56, $56, $70, $2E, $70, $74, $78, $70, $B0, $B0, $B0, $B0, $B0, $B6, $B6, $B6, $B6, $B6, $B0, $B6, $B6, $B6, $B6, $B6, $B6, $B6, $B0, $2E, $B0, $B4, $B8, $B0
+  ELSE
+    .byte $C4, $C6, $C8, $C6, $C6, $C6, $C6, $C6, $C6, $C6, $C8, $C8, $02, $02, $02, $02, $A0, $A0, $A0, $A0, $A0, $A6, $A6, $A6, $A6, $A6, $A0, $A6, $A6, $A6, $A6, $A6, $A6, $A6, $B0, $EE, $B0, $B4, $B8, $B0, $80, $80, $80, $80, $80, $86, $86, $86, $86, $86, $80, $86, $86, $86, $86, $86, $86, $86, $80, $EE, $80, $84, $88, $80
+  ENDIF
 
     .byte $FF ; |XXXXXXXX| $x8D0  free bytes
     .byte $FF ; |XXXXXXXX| $x8D1
@@ -2352,130 +2242,84 @@ LD7D8:
     .byte $00 ; |        | $x98D
     .byte $00 ; |        | $x98E
     .byte $00 ; |        | $x98F
-    .byte $16 ; |   X XX | $x990
-    .byte $14 ; |   X X  | $x991
-    .byte $16 ; |   X XX | $x992
-    .byte $14 ; |   X X  | $x993
-    .byte $14 ; |   X X  | $x994
-    .byte $16 ; |   X XX | $x995
-    .byte $14 ; |   X X  | $x996
-    .byte $16 ; |   X XX | $x997
-    .byte $14 ; |   X X  | $x998
-    .byte $16 ; |   X XX | $x999
-    .byte $14 ; |   X X  | $x99A
-    .byte $16 ; |   X XX | $x99B
-    .byte $14 ; |   X X  | $x99C
-    .byte $14 ; |   X X  | $x99D
-    .byte $16 ; |   X XX | $x99E
-    .byte $14 ; |   X X  | $x99F
-    .byte $16 ; |   X XX | $x9A0
-    .byte $14 ; |   X X  | $x9A1
-    .byte $16 ; |   X XX | $x9A2
-    .byte $14 ; |   X X  | $x9A3
-    .byte $16 ; |   X XX | $x9A4
-    .byte $14 ; |   X X  | $x9A5
-    .byte $14 ; |   X X  | $x9A6
-    .byte $B6 ; |X XX XX | $x9A7
-    .byte $B6 ; |X XX XX | $x9A8
-    .byte $B6 ; |X XX XX | $x9A9
-    .byte $B6 ; |X XX XX | $x9AA
-    .byte $B6 ; |X XX XX | $x9AB
-    .byte $B4 ; |X XX X  | $x9AC
-    .byte $B4 ; |X XX X  | $x9AD
-    .byte $00 ; |        | $x9AE
-    .byte $00 ; |        | $x9AF
+.ColorTable3
+  IF PAL_COLORS = 1
+    .byte $26, $24, $26, $24, $24, $26, $24, $26, $24, $26, $24, $26, $24, $24, $26, $24, $26, $24, $26, $24, $26, $24, $24, $76, $76, $76, $76, $76, $74, $74, $00, $00
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+    IF {1} = BK_9000
+        .byte $46 ; $99B0
+    ENDIF
+    IF {1} = BK_B000
+        .byte $56 ; $B9B0
+    ENDIF
+    IF {1} = BK_D000
+        .byte $26 ; $D9B0
+    ENDIF
+    
+    .byte $50, $50, $50, $50, $50, $56, $56, $56, $56, $50, $54, $56, $58, $56, $56, $56, $56, $70, $2E, $70, $74, $78, $70
 
-  IF {1} = BK_9000
-    .byte $26 ; |  X  XX | $99B0
-  ENDIF
-  IF {1} = BK_B000
-    .byte $C6 ; |XX   XX | $B9B0
-  ENDIF
-  IF {1} = BK_D000
-    .byte $16 ; |   X XX | $D9B0
-  ENDIF
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-    .byte $A0 ; |X X     | $x9B1
-    .byte $A0 ; |X X     | $x9B2
-    .byte $A0 ; |X X     | $x9B3
-    .byte $A0 ; |X X     | $x9B4
-    .byte $A0 ; |X X     | $x9B5
-    .byte $A6 ; |X X  XX | $x9B6
-    .byte $A6 ; |X X  XX | $x9B7
-    .byte $A6 ; |X X  XX | $x9B8
-    .byte $A6 ; |X X  XX | $x9B9
-    .byte $A0 ; |X X     | $x9BA
-    .byte $A4 ; |X X  X  | $x9BB
-    .byte $A6 ; |X X  XX | $x9BC
-    .byte $A8 ; |X X X   | $x9BD
-    .byte $A6 ; |X X  XX | $x9BE
-    .byte $A6 ; |X X  XX | $x9BF
-    .byte $A6 ; |X X  XX | $x9C0
-    .byte $A6 ; |X X  XX | $x9C1
-    .byte $B0 ; |X XX    | $x9C2
-    .byte $EE ; |XXX XXX | $x9C3
-    .byte $B0 ; |X XX    | $x9C4
-    .byte $B4 ; |X XX X  | $x9C5
-    .byte $B8 ; |X XXX   | $x9C6
-    .byte $B0 ; |X XX    | $x9C7
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-  IF {1} = BK_9000
-    .byte $26 ; |  X  XX | $99C8
-  ENDIF
-  IF {1} = BK_B000
-    .byte $C6 ; |XX   XX | $B9C8
-  ENDIF
-  IF {1} = BK_D000
+    IF {1} = BK_9000
+        .byte $46 ; $99C8
+    ENDIF
+    IF {1} = BK_B000
+        .byte $56 ; $B9C8
+    ENDIF
+    IF {1} = BK_D000
 LD9C8:
-    .byte $16 ; |   X XX | $D9C8
+        .byte $26 ; $D9C8
 LD9C9:
+    ENDIF
+    
+    .byte $B0, $B0, $B0, $B0, $B0, $B6, $B6, $B6, $B6, $B0, $B4, $B6, $B8, $B6, $B6, $B6, $B6, $B0, $2E, $B0, $B4, $B8, $B0
+     
+    IF {1} = BK_9000
+        .byte $4A ; $99E0
+    ENDIF
+    IF {1} = BK_B000
+        .byte $5A ; $B9E0
+    ENDIF
+    IF {1} = BK_D000
+        .byte $2A ; $D9E0
+    ENDIF
+  ELSE
+    .byte $16, $14, $16, $14, $14, $16, $14, $16, $14, $16, $14, $16, $14, $14, $16, $14, $16, $14, $16, $14, $16, $14, $14, $B6, $B6, $B6, $B6, $B6, $B4, $B4, $00, $00
+
+    IF {1} = BK_9000
+        .byte $26 ; $99B0
+    ENDIF
+    IF {1} = BK_B000
+        .byte $C6 ; $B9B0
+    ENDIF
+    IF {1} = BK_D000
+        .byte $16 ; $D9B0
+    ENDIF
+
+    .byte $A0, $A0, $A0, $A0, $A0, $A6, $A6, $A6, $A6, $A0, $A4, $A6, $A8, $A6, $A6, $A6, $A6, $B0, $EE, $B0, $B4, $B8, $B0
+
+    IF {1} = BK_9000
+        .byte $26 ; $99C8
+    ENDIF
+    IF {1} = BK_B000
+        .byte $C6 ; $B9C8
+    ENDIF
+    IF {1} = BK_D000
+LD9C8:
+        .byte $16 ; $D9C8
+LD9C9:
+    ENDIF
+
+    .byte $80, $80, $80, $80, $80, $86, $86, $86, $86, $80, $84, $86, $88, $86, $86, $86, $86, $80, $EE, $80, $84, $88, $80
+
+    IF {1} = BK_9000
+        .byte $2A ; $99E0
+    ENDIF
+    IF {1} = BK_B000
+        .byte $CA ; $B9E0
+    ENDIF
+    IF {1} = BK_D000
+        .byte $1A ; $D9E0
+    ENDIF
   ENDIF
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-    .byte $80 ; |X       | $x9C9
-    .byte $80 ; |X       | $x9CA
-    .byte $80 ; |X       | $x9CB
-    .byte $80 ; |X       | $x9CC
-    .byte $80 ; |X       | $x9CD
-    .byte $86 ; |X    XX | $x9CE
-    .byte $86 ; |X    XX | $x9CF
-    .byte $86 ; |X    XX | $x9D0
-    .byte $86 ; |X    XX | $x9D1
-    .byte $80 ; |X       | $x9D2
-    .byte $84 ; |X    X  | $x9D3
-    .byte $86 ; |X    XX | $x9D4
-    .byte $88 ; |X   X   | $x9D5
-    .byte $86 ; |X    XX | $x9D6
-    .byte $86 ; |X    XX | $x9D7
-    .byte $86 ; |X    XX | $x9D8
-    .byte $86 ; |X    XX | $x9D9
-    .byte $80 ; |X       | $x9DA
-    .byte $EE ; |XXX XXX | $x9DB
-    .byte $80 ; |X       | $x9DC
-    .byte $84 ; |X    X  | $x9DD
-    .byte $88 ; |X   X   | $x9DE
-    .byte $80 ; |X       | $x9DF
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-  IF {1} = BK_9000
-    .byte $2A ; |  X X X | $99E0
-  ENDIF
-  IF {1} = BK_B000
-    .byte $CA ; |XX  X X | $B9E0
-  ENDIF
-  IF {1} = BK_D000
-    .byte $1A ; |   XX X | $D9E0
-  ENDIF
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
     .byte $FF ; |XXXXXXXX| $x9E1  free bytes
     .byte $FF ; |XXXXXXXX| $x9E2
@@ -2562,7 +2406,7 @@ LD9C9:
     .byte $00 ; |        | $xA32
     .byte $00 ; |        | $xA33
     .byte $00 ; |        | $xA34
-    .byte $F8 ; |XXXXX   | $xA35  gernades
+    .byte $F8 ; |XXXXX   | $xA35  grenades
     .byte $F8 ; |XXXXX   | $xA36
     .byte $F8 ; |XXXXX   | $xA37
     .byte $F8 ; |XXXXX   | $xA38
@@ -2644,258 +2488,45 @@ LD9C9:
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-  IF {1} = BK_9000
-    .byte $2A ; |  X X X | $9A84
-    .byte $86 ; |X    XX | $9A85
-    .byte $86 ; |X    XX | $9A86
-    .byte $86 ; |X    XX | $9A87
-    .byte $86 ; |X    XX | $9A88
-    .byte $86 ; |X    XX | $9A89
-    .byte $86 ; |X    XX | $9A8A
-    .byte $88 ; |X   X   | $9A8B
-    .byte $88 ; |X   X   | $9A8C
-    .byte $86 ; |X    XX | $9A8D
-    .byte $86 ; |X    XX | $9A8E
-    .byte $86 ; |X    XX | $9A8F
-    .byte $86 ; |X    XX | $9A90
-    .byte $86 ; |X    XX | $9A91
-    .byte $86 ; |X    XX | $9A92
-    .byte $86 ; |X    XX | $9A93
-    .byte $86 ; |X    XX | $9A94
-    .byte $86 ; |X    XX | $9A95
-    .byte $86 ; |X    XX | $9A96
-    .byte $86 ; |X    XX | $9A97
-    .byte $86 ; |X    XX | $9A98
-    .byte $86 ; |X    XX | $9A99
-    .byte $86 ; |X    XX | $9A9A
-    .byte $86 ; |X    XX | $9A9B
-    .byte $86 ; |X    XX | $9A9C
-    .byte $86 ; |X    XX | $9A9D
-    .byte $86 ; |X    XX | $9A9E
-    .byte $84 ; |X    X  | $9A9F
-    .byte $84 ; |X    X  | $9AA0
-    .byte $86 ; |X    XX | $9AA1
-    .byte $86 ; |X    XX | $9AA2
-    .byte $86 ; |X    XX | $9AA3
-    .byte $86 ; |X    XX | $9AA4
-    .byte $8E ; |X   XXX | $9AA5
-    .byte $8C ; |X   XX  | $9AA6
-    .byte $8C ; |X   XX  | $9AA7
-    .byte $8C ; |X   XX  | $9AA8
-    .byte $8A ; |X   X X | $9AA9
-    .byte $04 ; |     X  | $9AAA
-    .byte $04 ; |     X  | $9AAB
-    .byte $04 ; |     X  | $9AAC
-    .byte $04 ; |     X  | $9AAD
-    .byte $04 ; |     X  | $9AAE
-    .byte $04 ; |     X  | $9AAF
-    .byte $04 ; |     X  | $9AB0
-    .byte $04 ; |     X  | $9AB1
-    .byte $04 ; |     X  | $9AB2
-    .byte $04 ; |     X  | $9AB3
-    .byte $04 ; |     X  | $9AB4
-    .byte $86 ; |X    XX | $9AB5
-    .byte $88 ; |X   X   | $9AB6
-    .byte $86 ; |X    XX | $9AB7
-    .byte $86 ; |X    XX | $9AB8
-    .byte $86 ; |X    XX | $9AB9
-    .byte $86 ; |X    XX | $9ABA
-    .byte $86 ; |X    XX | $9ABB
-    .byte $86 ; |X    XX | $9ABC
-    .byte $8C ; |X   XX  | $9ABD
-    .byte $8A ; |X   X X | $9ABE
-    .byte $8A ; |X   X X | $9ABF
-    .byte $8A ; |X   X X | $9AC0
-    .byte $88 ; |X   X   | $9AC1
-    .byte $2A ; |  X X X | $9AC2
-    .byte $2A ; |  X X X | $9AC3
-  ENDIF
-  IF {1} = BK_B000
-    .byte $CA ; |XX  X X | $BA84
-    .byte $28 ; |  X X   | $BA85
-    .byte $28 ; |  X X   | $BA86
-    .byte $28 ; |  X X   | $BA87
-    .byte $28 ; |  X X   | $BA88
-    .byte $28 ; |  X X   | $BA89
-    .byte $28 ; |  X X   | $BA8A
-    .byte $2A ; |  X X X | $BA8B
-    .byte $2A ; |  X X X | $BA8C
-    .byte $28 ; |  X X   | $BA8D
-    .byte $28 ; |  X X   | $BA8E
-    .byte $28 ; |  X X   | $BA8F
-    .byte $28 ; |  X X   | $BA90
-    .byte $28 ; |  X X   | $BA91
-    .byte $28 ; |  X X   | $BA92
-    .byte $28 ; |  X X   | $BA93
-    .byte $28 ; |  X X   | $BA94
-    .byte $28 ; |  X X   | $BA95
-    .byte $28 ; |  X X   | $BA96
-    .byte $28 ; |  X X   | $BA97
-    .byte $28 ; |  X X   | $BA98
-    .byte $28 ; |  X X   | $BA99
-    .byte $28 ; |  X X   | $BA9A
-    .byte $28 ; |  X X   | $BA9B
-    .byte $28 ; |  X X   | $BA9C
-    .byte $28 ; |  X X   | $BA9D
-    .byte $28 ; |  X X   | $BA9E
-    .byte $26 ; |  X  XX | $BA9F
-    .byte $26 ; |  X  XX | $BAA0
-    .byte $28 ; |  X X   | $BAA1
-    .byte $28 ; |  X X   | $BAA2
-    .byte $28 ; |  X X   | $BAA3
-    .byte $28 ; |  X X   | $BAA4
-    .byte $2E ; |  X XXX | $BAA5
-    .byte $2C ; |  X XX  | $BAA6
-    .byte $2C ; |  X XX  | $BAA7
-    .byte $2C ; |  X XX  | $BAA8
-    .byte $2A ; |  X X X | $BAA9
-    .byte $06 ; |     XX | $BAAA
-    .byte $06 ; |     XX | $BAAB
-    .byte $06 ; |     XX | $BAAC
-    .byte $06 ; |     XX | $BAAD
-    .byte $06 ; |     XX | $BAAE
-    .byte $06 ; |     XX | $BAAF
-    .byte $06 ; |     XX | $BAB0
-    .byte $06 ; |     XX | $BAB1
-    .byte $06 ; |     XX | $BAB2
-    .byte $06 ; |     XX | $BAB3
-    .byte $06 ; |     XX | $BAB4
-    .byte $28 ; |  X X   | $BAB5
-    .byte $2A ; |  X X X | $BAB6
-    .byte $28 ; |  X X   | $BAB7
-    .byte $28 ; |  X X   | $BAB8
-    .byte $28 ; |  X X   | $BAB9
-    .byte $28 ; |  X X   | $BABA
-    .byte $28 ; |  X X   | $BABB
-    .byte $28 ; |  X X   | $BABC
-    .byte $2E ; |  X XXX | $BABD
-    .byte $2C ; |  X XX  | $BABE
-    .byte $2C ; |  X XX  | $BABF
-    .byte $2C ; |  X XX  | $BAC0
-    .byte $2A ; |  X X X | $BAC1
-    .byte $CA ; |XX  X X | $BAC2
-    .byte $CA ; |XX  X X | $BAC3
-  ENDIF
-  IF {1} = BK_D000
+  IF PAL_COLORS = 1
+
+    IF {1} = BK_9000
+        .byte $4A, $B6, $B6, $B6, $B6, $B6, $B6, $B8, $B8, $B6, $B6, $B6, $B6, $B6, $B6, $B6, $B6, $B6, $B6, $B6, $B6, $B6, $B6, $B6, $B6, $B6, $B6, $B4, $B4, $B6, $B6, $B6, $B6, $BE, $BC, $BC, $BC, $BA, $04, $04, $04, $04, $04, $04, $04, $04, $04, $04, $04, $B6, $B8, $B6, $B6, $B6, $B6, $B6, $B6, $BC, $BA, $BA, $BA, $B8, $4A, $4A
+    ENDIF
+    IF {1} = BK_B000
+        .byte $5A, $48, $48, $48, $48, $48, $48, $4A, $4A, $48, $48, $48, $48, $48, $48, $48, $48, $48, $48, $48, $48, $48, $48, $48, $48, $48, $48, $46, $46, $48, $48, $48, $48, $4E, $4C, $4C, $4C, $4A, $06, $06, $06, $06, $06, $06, $06, $06, $06, $06, $06, $48, $4A, $48, $48, $48, $48, $48, $48, $4E, $4C, $4C, $4C, $4A, $5A, $5A
+    ENDIF
+    IF {1} = BK_D000
 LDA84:
-    .byte $1A ; |   XX X | $DA84  bridge colors LV 1
-    .byte $06 ; |     XX | $DA85
-    .byte $06 ; |     XX | $DA86
-    .byte $06 ; |     XX | $DA87
-    .byte $06 ; |     XX | $DA88
-    .byte $06 ; |     XX | $DA89
-    .byte $06 ; |     XX | $DA8A
-    .byte $08 ; |    X   | $DA8B
-    .byte $08 ; |    X   | $DA8C
-    .byte $06 ; |     XX | $DA8D
-    .byte $06 ; |     XX | $DA8E
-    .byte $06 ; |     XX | $DA8F
-    .byte $06 ; |     XX | $DA90
-    .byte $06 ; |     XX | $DA91
-    .byte $06 ; |     XX | $DA92
-    .byte $06 ; |     XX | $DA93
-    .byte $06 ; |     XX | $DA94
-    .byte $06 ; |     XX | $DA95
-    .byte $06 ; |     XX | $DA96
-    .byte $06 ; |     XX | $DA97
-    .byte $06 ; |     XX | $DA98
-    .byte $06 ; |     XX | $DA99
-    .byte $06 ; |     XX | $DA9A
-    .byte $06 ; |     XX | $DA9B
-    .byte $06 ; |     XX | $DA9C
-    .byte $06 ; |     XX | $DA9D
-    .byte $06 ; |     XX | $DA9E
-    .byte $04 ; |     X  | $DA9F
-    .byte $04 ; |     X  | $DAA0
-    .byte $06 ; |     XX | $DAA1
-    .byte $06 ; |     XX | $DAA2
-    .byte $06 ; |     XX | $DAA3
+        ; $DA84  bridge colors LV 1
+        .byte $2A, $06, $06, $06, $06, $06, $06, $08, $08, $06, $06, $06, $06, $06, $06, $06, $06, $06, $06, $06, $06, $06, $06, $06, $06, $06, $06, $04, $04, $06, $06, $06
 LDAA4:
-    .byte $06 ; |     XX | $DAA4
-    .byte $0E ; |    XXX | $DAA5
-    .byte $0C ; |    XX  | $DAA6
-    .byte $0C ; |    XX  | $DAA7
-    .byte $0C ; |    XX  | $DAA8
-    .byte $0A ; |    X X | $DAA9
-    .byte $04 ; |     X  | $DAAA
-    .byte $04 ; |     X  | $DAAB
-    .byte $04 ; |     X  | $DAAC
-    .byte $04 ; |     X  | $DAAD
-    .byte $04 ; |     X  | $DAAE
-    .byte $04 ; |     X  | $DAAF
-    .byte $04 ; |     X  | $DAB0
-    .byte $04 ; |     X  | $DAB1
-    .byte $04 ; |     X  | $DAB2
-    .byte $04 ; |     X  | $DAB3
-    .byte $04 ; |     X  | $DAB4
-    .byte $06 ; |     XX | $DAB5
-    .byte $08 ; |    X   | $DAB6
-    .byte $06 ; |     XX | $DAB7
-    .byte $06 ; |     XX | $DAB8
-    .byte $06 ; |     XX | $DAB9
-    .byte $06 ; |     XX | $DABA
-    .byte $06 ; |     XX | $DABB
-    .byte $06 ; |     XX | $DABC
-    .byte $0C ; |    XX  | $DABD
-    .byte $0A ; |    X X | $DABE
-    .byte $0A ; |    X X | $DABF
-    .byte $0A ; |    X X | $DAC0
-    .byte $08 ; |    X   | $DAC1
-    .byte $1A ; |   XX X | $DAC2
-    .byte $1A ; |   XX X | $DAC3
+        .byte $06, $0E, $0C, $0C, $0C, $0A, $04, $04, $04, $04, $04, $04, $04, $04, $04, $04, $04, $06, $08, $06, $06, $06, $06, $06, $06, $0C, $0A, $0A, $0A, $08, $2A, $2A
 LDAC4:
+    ENDIF
+
+    .byte $B6, $B6, $B6, $B6, $B6, $B6, $B2, $B4, $B4, $B6, $B6, $B6, $B0, $2E, $B4, $B8, $B0, $B0, $B0, $B6, $B6, $B6, $B6, $B6, $02, $08, $08, $08, $08, $C4, $C4, $C4, $C8, $C6, $C6, $00, $C4, $C4, $C4, $C8, $C6, $C6, $02, $02, $02, $00, $00, $00
+
+  ELSE
+
+    IF {1} = BK_9000
+        .byte $2A, $86, $86, $86, $86, $86, $86, $88, $88, $86, $86, $86, $86, $86, $86, $86, $86, $86, $86, $86, $86, $86, $86, $86, $86, $86, $86, $84, $84, $86, $86, $86, $86, $8E, $8C, $8C, $8C, $8A, $04, $04, $04, $04, $04, $04, $04, $04, $04, $04, $04, $86, $88, $86, $86, $86, $86, $86, $86, $8C, $8A, $8A, $8A, $88, $2A, $2A
+    ENDIF
+    IF {1} = BK_B000
+        .byte $CA, $28, $28, $28, $28, $28, $28, $2A, $2A, $28, $28, $28, $28, $28, $28, $28, $28, $28, $28, $28, $28, $28, $28, $28, $28, $28, $28, $26, $26, $28, $28, $28, $28, $2E, $2C, $2C, $2C, $2A, $06, $06, $06, $06, $06, $06, $06, $06, $06, $06, $06, $28, $2A, $28, $28, $28, $28, $28, $28, $2E, $2C, $2C, $2C, $2A, $CA, $CA
+    ENDIF
+    IF {1} = BK_D000
+LDA84:
+        ; $DA84  bridge colors LV 1
+        .byte $1A, $06, $06, $06, $06, $06, $06, $08, $08, $06, $06, $06, $06, $06, $06, $06, $06, $06, $06, $06, $06, $06, $06, $06, $06, $06, $06, $04, $04, $06, $06, $06
+LDAA4:
+        .byte $06, $0E, $0C, $0C, $0C, $0A, $04, $04, $04, $04, $04, $04, $04, $04, $04, $04, $04, $06, $08, $06, $06, $06, $06, $06, $06, $0C, $0A, $0A, $0A, $08, $1A, $1A
+LDAC4:
+    ENDIF
+
+    .byte $86, $86, $86, $86, $86, $86, $82, $84, $84, $86, $86, $86, $80, $EE, $84, $88, $80, $80, $80, $86, $86, $86, $86, $86, $02, $08, $08, $08, $08, $64, $64, $64, $68, $66, $66, $00, $64, $64, $64, $68, $66, $66, $02, $02, $02, $00, $00, $00
+
   ENDIF
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-    .byte $86 ; |X    XX | $xAC4
-    .byte $86 ; |X    XX | $xAC5
-    .byte $86 ; |X    XX | $xAC6
-    .byte $86 ; |X    XX | $xAC7
-    .byte $86 ; |X    XX | $xAC8
-    .byte $86 ; |X    XX | $xAC9
-    .byte $82 ; |X     X | $xACA
-    .byte $84 ; |X    X  | $xACB
-    .byte $84 ; |X    X  | $xACC
-    .byte $86 ; |X    XX | $xACD
-    .byte $86 ; |X    XX | $xACE
-    .byte $86 ; |X    XX | $xACF
-    .byte $80 ; |X       | $xAD0
-    .byte $EE ; |XXX XXX | $xAD1
-    .byte $84 ; |X    X  | $xAD2
-    .byte $88 ; |X   X   | $xAD3
-    .byte $80 ; |X       | $xAD4
-    .byte $80 ; |X       | $xAD5
-    .byte $80 ; |X       | $xAD6
-    .byte $86 ; |X    XX | $xAD7
-    .byte $86 ; |X    XX | $xAD8
-    .byte $86 ; |X    XX | $xAD9
-    .byte $86 ; |X    XX | $xADA
-    .byte $86 ; |X    XX | $xADB
-    .byte $02 ; |      X | $xADC
-    .byte $08 ; |    X   | $xADD
-    .byte $08 ; |    X   | $xADE
-    .byte $08 ; |    X   | $xADF
-    .byte $08 ; |    X   | $xAE0
-    .byte $64 ; | XX  X  | $xAE1
-    .byte $64 ; | XX  X  | $xAE2
-    .byte $64 ; | XX  X  | $xAE3
-    .byte $68 ; | XX X   | $xAE4
-    .byte $66 ; | XX  XX | $xAE5
-    .byte $66 ; | XX  XX | $xAE6
-    .byte $00 ; |        | $xAE7
-    .byte $64 ; | XX  X  | $xAE8
-    .byte $64 ; | XX  X  | $xAE9
-    .byte $64 ; | XX  X  | $xAEA
-    .byte $68 ; | XX X   | $xAEB
-    .byte $66 ; | XX  XX | $xAEC
-    .byte $66 ; | XX  XX | $xAED
-    .byte $02 ; |      X | $xAEE
-    .byte $02 ; |      X | $xAEF
-    .byte $02 ; |      X | $xAF0
-    .byte $00 ; |        | $xAF1
-    .byte $00 ; |        | $xAF2
-    .byte $00 ; |        | $xAF3
 
     .byte $FF ; |XXXXXXXX| $xAF4  free bytes
     .byte $FF ; |XXXXXXXX| $xAF5
@@ -3077,38 +2708,11 @@ L9000:
     .byte $00 ; |        | $9B1E
     .byte $00 ; |        | $9B1F
 
-    .byte $98 ; |X  XX   | $9B20
-    .byte $20 ; |  X     | $9B21
-    .byte $20 ; |  X     | $9B22
-    .byte $20 ; |  X     | $9B23
-    .byte $20 ; |  X     | $9B24
-    .byte $20 ; |  X     | $9B25
-    .byte $20 ; |  X     | $9B26
-    .byte $20 ; |  X     | $9B27
-    .byte $20 ; |  X     | $9B28
-    .byte $20 ; |  X     | $9B29
-    .byte $20 ; |  X     | $9B2A
-    .byte $20 ; |  X     | $9B2B
-    .byte $20 ; |  X     | $9B2C
-    .byte $20 ; |  X     | $9B2D
-    .byte $20 ; |  X     | $9B2E
-    .byte $20 ; |  X     | $9B2F
-    .byte $20 ; |  X     | $9B30
-    .byte $20 ; |  X     | $9B31
-    .byte $22 ; |  X   X | $9B32
-    .byte $22 ; |  X   X | $9B33
-    .byte $24 ; |  X  X  | $9B34
-    .byte $24 ; |  X  X  | $9B35
-    .byte $26 ; |  X  XX | $9B36
-    .byte $26 ; |  X  XX | $9B37
-    .byte $28 ; |  X X   | $9B38
-    .byte $28 ; |  X X   | $9B39
-    .byte $98 ; |X  XX   | $9B3A
-    .byte $98 ; |X  XX   | $9B3B
-    .byte $98 ; |X  XX   | $9B3C
-    .byte $98 ; |X  XX   | $9B3D
-    .byte $98 ; |X  XX   | $9B3E
-    .byte $0E ; |    XXX | $9B3F
+  IF PAL_COLORS = 1
+    .byte $D8, $40, $40, $40, $40, $40, $40, $40, $40, $40, $40, $40, $40, $40, $40, $40, $40, $40, $42, $42, $44, $44, $46, $46, $48, $48, $D8, $D8, $D8, $D8, $D8, $0E
+  ELSE
+    .byte $98, $20, $20, $20, $20, $20, $20, $20, $20, $20, $20, $20, $20, $20, $20, $20, $20, $20, $22, $22, $24, $24, $26, $26, $28, $28, $98, $98, $98, $98, $98, $0E
+  ENDIF
 
     .byte $00 ; |        | $9B40
     .byte $00 ; |        | $9B41
@@ -3143,38 +2747,11 @@ L9000:
     .byte $00 ; |        | $9B5E
     .byte $00 ; |        | $9B5F
 
-    .byte $0E ; |    XXX | $9B60
-    .byte $0E ; |    XXX | $9B61
-    .byte $0E ; |    XXX | $9B62
-    .byte $0E ; |    XXX | $9B63
-    .byte $0E ; |    XXX | $9B64
-    .byte $0E ; |    XXX | $9B65
-    .byte $0E ; |    XXX | $9B66
-    .byte $20 ; |  X     | $9B67
-    .byte $20 ; |  X     | $9B68
-    .byte $20 ; |  X     | $9B69
-    .byte $20 ; |  X     | $9B6A
-    .byte $20 ; |  X     | $9B6B
-    .byte $22 ; |  X   X | $9B6C
-    .byte $22 ; |  X   X | $9B6D
-    .byte $24 ; |  X  X  | $9B6E
-    .byte $24 ; |  X  X  | $9B6F
-    .byte $26 ; |  X  XX | $9B70
-    .byte $26 ; |  X  XX | $9B71
-    .byte $28 ; |  X X   | $9B72
-    .byte $0E ; |    XXX | $9B73
-    .byte $0E ; |    XXX | $9B74
-    .byte $0E ; |    XXX | $9B75
-    .byte $0E ; |    XXX | $9B76
-    .byte $0E ; |    XXX | $9B77
-    .byte $0E ; |    XXX | $9B78
-    .byte $0E ; |    XXX | $9B79
-    .byte $0E ; |    XXX | $9B7A
-    .byte $0E ; |    XXX | $9B7B
-    .byte $0E ; |    XXX | $9B7C
-    .byte $0E ; |    XXX | $9B7D
-    .byte $0E ; |    XXX | $9B7E
-    .byte $0E ; |    XXX | $9B7F
+  IF PAL_COLORS = 1
+    .byte $0E, $0E, $0E, $0E, $0E, $0E, $0E, $40, $40, $40, $40, $40, $42, $42, $44, $44, $46, $46, $48, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E
+  ELSE
+    .byte $0E, $0E, $0E, $0E, $0E, $0E, $0E, $20, $20, $20, $20, $20, $22, $22, $24, $24, $26, $26, $28, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E ; |    XXX | $9B7F
+  ENDIF
 
     .byte $00 ; |        | $9B80
     .byte $00 ; |        | $9B81
@@ -3209,38 +2786,11 @@ L9000:
     .byte $00 ; |        | $9B9E
     .byte $00 ; |        | $9B9F
 
-    .byte $0E ; |    XXX | $9BA0
-    .byte $0E ; |    XXX | $9BA1
-    .byte $0E ; |    XXX | $9BA2
-    .byte $0E ; |    XXX | $9BA3
-    .byte $0E ; |    XXX | $9BA4
-    .byte $0E ; |    XXX | $9BA5
-    .byte $0E ; |    XXX | $9BA6
-    .byte $20 ; |  X     | $9BA7
-    .byte $20 ; |  X     | $9BA8
-    .byte $20 ; |  X     | $9BA9
-    .byte $20 ; |  X     | $9BAA
-    .byte $20 ; |  X     | $9BAB
-    .byte $22 ; |  X   X | $9BAC
-    .byte $22 ; |  X   X | $9BAD
-    .byte $24 ; |  X  X  | $9BAE
-    .byte $24 ; |  X  X  | $9BAF
-    .byte $26 ; |  X  XX | $9BB0
-    .byte $26 ; |  X  XX | $9BB1
-    .byte $28 ; |  X X   | $9BB2
-    .byte $0E ; |    XXX | $9BB3
-    .byte $0E ; |    XXX | $9BB4
-    .byte $0E ; |    XXX | $9BB5
-    .byte $0E ; |    XXX | $9BB6
-    .byte $0E ; |    XXX | $9BB7
-    .byte $0E ; |    XXX | $9BB8
-    .byte $0E ; |    XXX | $9BB9
-    .byte $0E ; |    XXX | $9BBA
-    .byte $0E ; |    XXX | $9BBB
-    .byte $0E ; |    XXX | $9BBC
-    .byte $0E ; |    XXX | $9BBD
-    .byte $0E ; |    XXX | $9BBE
-    .byte $0E ; |    XXX | $9BBF
+  IF PAL_COLORS = 1
+    .byte $0E, $0E, $0E, $0E, $0E, $0E, $0E, $40, $40, $40, $40, $40, $42, $42, $44, $44, $46, $46, $48, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E
+  ELSE
+    .byte $0E, $0E, $0E, $0E, $0E, $0E, $0E, $20, $20, $20, $20, $20, $22, $22, $24, $24, $26, $26, $28, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E
+  ENDIF
 
     .byte $00 ; |        | $9BC0
     .byte $00 ; |        | $9BC1
@@ -3275,38 +2825,11 @@ L9000:
     .byte $1E ; |   XXXX | $9BDE
     .byte $0E ; |    XXX | $9BDF
 
-    .byte $2A ; |  X X X | $9BE0
-    .byte $20 ; |  X     | $9BE1
-    .byte $20 ; |  X     | $9BE2
-    .byte $20 ; |  X     | $9BE3
-    .byte $20 ; |  X     | $9BE4
-    .byte $20 ; |  X     | $9BE5
-    .byte $20 ; |  X     | $9BE6
-    .byte $20 ; |  X     | $9BE7
-    .byte $20 ; |  X     | $9BE8
-    .byte $20 ; |  X     | $9BE9
-    .byte $20 ; |  X     | $9BEA
-    .byte $20 ; |  X     | $9BEB
-    .byte $20 ; |  X     | $9BEC
-    .byte $20 ; |  X     | $9BED
-    .byte $20 ; |  X     | $9BEE
-    .byte $20 ; |  X     | $9BEF
-    .byte $20 ; |  X     | $9BF0
-    .byte $20 ; |  X     | $9BF1
-    .byte $20 ; |  X     | $9BF2
-    .byte $20 ; |  X     | $9BF3
-    .byte $20 ; |  X     | $9BF4
-    .byte $20 ; |  X     | $9BF5
-    .byte $20 ; |  X     | $9BF6
-    .byte $20 ; |  X     | $9BF7
-    .byte $22 ; |  X   X | $9BF8
-    .byte $22 ; |  X   X | $9BF9
-    .byte $24 ; |  X  X  | $9BFA
-    .byte $24 ; |  X  X  | $9BFB
-    .byte $26 ; |  X  XX | $9BFC
-    .byte $26 ; |  X  XX | $9BFD
-    .byte $28 ; |  X X   | $9BFE
-    .byte $28 ; |  X X   | $9BFF
+  IF PAL_COLORS = 1
+    .byte $4A, $40, $40, $40, $40, $40, $40, $40, $40, $40, $40, $40, $40, $40, $40, $40, $40, $40, $40, $40, $40, $40, $40, $40, $42, $42, $44, $44, $46, $46, $48, $48
+  ELSE
+    .byte $2A, $20, $20, $20, $20, $20, $20, $20, $20, $20, $20, $20, $20, $20, $20, $20, $20, $20, $20, $20, $20, $20, $20, $20, $22, $22, $24, $24, $26, $26, $28, $28
+  ENDIF
 
     .byte $00 ; |        | $9C00
     .byte $00 ; |        | $9C01
@@ -3341,38 +2864,11 @@ L9000:
     .byte $FF ; |XXXXXXXX| $9C1E
     .byte $FF ; |XXXXXXXX| $9C1F
 
-    .byte $0E ; |    XXX | $9C20
-    .byte $2A ; |  X X X | $9C21
-    .byte $86 ; |X    XX | $9C22
-    .byte $86 ; |X    XX | $9C23
-    .byte $86 ; |X    XX | $9C24
-    .byte $86 ; |X    XX | $9C25
-    .byte $86 ; |X    XX | $9C26
-    .byte $86 ; |X    XX | $9C27
-    .byte $88 ; |X   X   | $9C28
-    .byte $88 ; |X   X   | $9C29
-    .byte $86 ; |X    XX | $9C2A
-    .byte $86 ; |X    XX | $9C2B
-    .byte $86 ; |X    XX | $9C2C
-    .byte $86 ; |X    XX | $9C2D
-    .byte $86 ; |X    XX | $9C2E
-    .byte $86 ; |X    XX | $9C2F
-    .byte $86 ; |X    XX | $9C30
-    .byte $86 ; |X    XX | $9C31
-    .byte $86 ; |X    XX | $9C32
-    .byte $86 ; |X    XX | $9C33
-    .byte $86 ; |X    XX | $9C34
-    .byte $86 ; |X    XX | $9C35
-    .byte $86 ; |X    XX | $9C36
-    .byte $86 ; |X    XX | $9C37
-    .byte $86 ; |X    XX | $9C38
-    .byte $86 ; |X    XX | $9C39
-    .byte $86 ; |X    XX | $9C3A
-    .byte $86 ; |X    XX | $9C3B
-    .byte $84 ; |X    X  | $9C3C
-    .byte $84 ; |X    X  | $9C3D
-    .byte $86 ; |X    XX | $9C3E
-    .byte $86 ; |X    XX | $9C3F
+  IF PAL_COLORS = 1
+    .byte $0E, $4A, $B6, $B6, $B6, $B6, $B6, $B6, $B8, $B8, $B6, $B6, $B6, $B6, $B6, $B6, $B6, $B6, $B6, $B6, $B6, $B6, $B6, $B6, $B6, $B6, $B6, $B6, $B4, $B4, $B6, $B6
+  ELSE
+    .byte $0E, $2A, $86, $86, $86, $86, $86, $86, $88, $88, $86, $86, $86, $86, $86, $86, $86, $86, $86, $86, $86, $86, $86, $86, $86, $86, $86, $86, $84, $84, $86, $86
+  ENDIF
 
     .byte $FF ; |XXXXXXXX| $9C40
     .byte $FF ; |XXXXXXXX| $9C41
@@ -3407,38 +2903,11 @@ L9000:
     .byte $FF ; |XXXXXXXX| $9C5E
     .byte $FF ; |XXXXXXXX| $9C5F
 
-    .byte $86 ; |X    XX | $9C60
-    .byte $86 ; |X    XX | $9C61
-    .byte $8E ; |X   XXX | $9C62
-    .byte $8C ; |X   XX  | $9C63
-    .byte $8C ; |X   XX  | $9C64
-    .byte $8C ; |X   XX  | $9C65
-    .byte $8A ; |X   X X | $9C66
-    .byte $04 ; |     X  | $9C67
-    .byte $04 ; |     X  | $9C68
-    .byte $04 ; |     X  | $9C69
-    .byte $04 ; |     X  | $9C6A
-    .byte $04 ; |     X  | $9C6B
-    .byte $04 ; |     X  | $9C6C
-    .byte $04 ; |     X  | $9C6D
-    .byte $04 ; |     X  | $9C6E
-    .byte $04 ; |     X  | $9C6F
-    .byte $04 ; |     X  | $9C70
-    .byte $04 ; |     X  | $9C71
-    .byte $86 ; |X    XX | $9C72
-    .byte $88 ; |X   X   | $9C73
-    .byte $86 ; |X    XX | $9C74
-    .byte $86 ; |X    XX | $9C75
-    .byte $86 ; |X    XX | $9C76
-    .byte $86 ; |X    XX | $9C77
-    .byte $86 ; |X    XX | $9C78
-    .byte $86 ; |X    XX | $9C79
-    .byte $8C ; |X   XX  | $9C7A
-    .byte $8A ; |X   X X | $9C7B
-    .byte $8A ; |X   X X | $9C7C
-    .byte $8A ; |X   X X | $9C7D
-    .byte $88 ; |X   X   | $9C7E
-    .byte $2A ; |  X X X | $9C7F
+  IF PAL_COLORS = 1
+    .byte $B6, $B6, $BE, $BC, $BC, $BC, $BA, $04, $04, $04, $04, $04, $04, $04, $04, $04, $04, $04, $B6, $B8, $B6, $B6, $B6, $B6, $B6, $B6, $BC, $BA, $BA, $BA, $B8, $4A
+  ELSE
+    .byte $86, $86, $8E, $8C, $8C, $8C, $8A, $04, $04, $04, $04, $04, $04, $04, $04, $04, $04, $04, $86, $88, $86, $86, $86, $86, $86, $86, $8C, $8A, $8A, $8A, $88, $2A
+  ENDIF
 
     .byte $00 ; |        | $9C80
     .byte $00 ; |        | $9C81
@@ -3473,38 +2942,11 @@ L9000:
     .byte $00 ; |        | $9C9E
     .byte $00 ; |        | $9C9F
 
-    .byte $2A ; |  X X X | $9CA0
-    .byte $0E ; |    XXX | $9CA1
-    .byte $0E ; |    XXX | $9CA2
-    .byte $0E ; |    XXX | $9CA3
-    .byte $0E ; |    XXX | $9CA4
-    .byte $0E ; |    XXX | $9CA5
-    .byte $0E ; |    XXX | $9CA6
-    .byte $0E ; |    XXX | $9CA7
-    .byte $0E ; |    XXX | $9CA8
-    .byte $0E ; |    XXX | $9CA9
-    .byte $0E ; |    XXX | $9CAA
-    .byte $0E ; |    XXX | $9CAB
-    .byte $0E ; |    XXX | $9CAC
-    .byte $0E ; |    XXX | $9CAD
-    .byte $0E ; |    XXX | $9CAE
-    .byte $0E ; |    XXX | $9CAF
-    .byte $0E ; |    XXX | $9CB0
-    .byte $0E ; |    XXX | $9CB1
-    .byte $0E ; |    XXX | $9CB2
-    .byte $0E ; |    XXX | $9CB3
-    .byte $0E ; |    XXX | $9CB4
-    .byte $0E ; |    XXX | $9CB5
-    .byte $0E ; |    XXX | $9CB6
-    .byte $0E ; |    XXX | $9CB7
-    .byte $0E ; |    XXX | $9CB8
-    .byte $0E ; |    XXX | $9CB9
-    .byte $0E ; |    XXX | $9CBA
-    .byte $0E ; |    XXX | $9CBB
-    .byte $0E ; |    XXX | $9CBC
-    .byte $0E ; |    XXX | $9CBD
-    .byte $28 ; |  X X   | $9CBE
-    .byte $28 ; |  X X   | $9CBF
+  IF PAL_COLORS = 1
+    .byte $4A, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $48, $48
+  ELSE
+    .byte $2A, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $28, $28
+  ENDIF
 
     .byte $00 ; |        | $9CC0
     .byte $00 ; |        | $9CC1
@@ -3539,38 +2981,11 @@ L9000:
     .byte $FF ; |XXXXXXXX| $9CDE
     .byte $FF ; |XXXXXXXX| $9CDF
 
-    .byte $28 ; |  X X   | $9CE0
-    .byte $2A ; |  X X X | $9CE1
-    .byte $28 ; |  X X   | $9CE2
-    .byte $26 ; |  X  XX | $9CE3
-    .byte $24 ; |  X  X  | $9CE4
-    .byte $22 ; |  X   X | $9CE5
-    .byte $06 ; |     XX | $9CE6
-    .byte $08 ; |    X   | $9CE7
-    .byte $08 ; |    X   | $9CE8
-    .byte $08 ; |    X   | $9CE9
-    .byte $08 ; |    X   | $9CEA
-    .byte $08 ; |    X   | $9CEB
-    .byte $08 ; |    X   | $9CEC
-    .byte $08 ; |    X   | $9CED
-    .byte $08 ; |    X   | $9CEE
-    .byte $08 ; |    X   | $9CEF
-    .byte $08 ; |    X   | $9CF0
-    .byte $08 ; |    X   | $9CF1
-    .byte $08 ; |    X   | $9CF2
-    .byte $08 ; |    X   | $9CF3
-    .byte $08 ; |    X   | $9CF4
-    .byte $08 ; |    X   | $9CF5
-    .byte $08 ; |    X   | $9CF6
-    .byte $08 ; |    X   | $9CF7
-    .byte $08 ; |    X   | $9CF8
-    .byte $08 ; |    X   | $9CF9
-    .byte $08 ; |    X   | $9CFA
-    .byte $08 ; |    X   | $9CFB
-    .byte $08 ; |    X   | $9CFC
-    .byte $06 ; |     XX | $9CFD
-    .byte $04 ; |     X  | $9CFE
-    .byte $02 ; |      X | $9CFF
+  IF PAL_COLORS = 1
+    .byte $48, $4A, $48, $46, $44, $42, $06, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $06, $04, $02
+  ELSE
+    .byte $28, $2A, $28, $26, $24, $22, $06, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $06, $04, $02
+  ENDIF
 
     .byte $FF ; |XXXXXXXX| $9D00
     .byte $FF ; |XXXXXXXX| $9D01
@@ -3605,38 +3020,11 @@ L9000:
     .byte $FF ; |XXXXXXXX| $9D1E
     .byte $00 ; |        | $9D1F
 
-    .byte $04 ; |     X  | $9D20
-    .byte $06 ; |     XX | $9D21
-    .byte $08 ; |    X   | $9D22
-    .byte $0A ; |    X X | $9D23
-    .byte $08 ; |    X   | $9D24
-    .byte $06 ; |     XX | $9D25
-    .byte $08 ; |    X   | $9D26
-    .byte $0A ; |    X X | $9D27
-    .byte $08 ; |    X   | $9D28
-    .byte $06 ; |     XX | $9D29
-    .byte $08 ; |    X   | $9D2A
-    .byte $0A ; |    X X | $9D2B
-    .byte $08 ; |    X   | $9D2C
-    .byte $06 ; |     XX | $9D2D
-    .byte $08 ; |    X   | $9D2E
-    .byte $0A ; |    X X | $9D2F
-    .byte $08 ; |    X   | $9D30
-    .byte $06 ; |     XX | $9D31
-    .byte $08 ; |    X   | $9D32
-    .byte $0A ; |    X X | $9D33
-    .byte $08 ; |    X   | $9D34
-    .byte $06 ; |     XX | $9D35
-    .byte $08 ; |    X   | $9D36
-    .byte $0A ; |    X X | $9D37
-    .byte $08 ; |    X   | $9D38
-    .byte $06 ; |     XX | $9D39
-    .byte $08 ; |    X   | $9D3A
-    .byte $08 ; |    X   | $9D3B
-    .byte $0A ; |    X X | $9D3C
-    .byte $06 ; |     XX | $9D3D
-    .byte $2A ; |  X X X | $9D3E
-    .byte $2A ; |  X X X | $9D3F
+  IF PAL_COLORS = 1
+    .byte $04, $06, $08, $0A, $08, $06, $08, $0A, $08, $06, $08, $0A, $08, $06, $08, $0A, $08, $06, $08, $0A, $08, $06, $08, $0A, $08, $06, $08, $08, $0A, $06, $4A, $4A
+  ELSE
+    .byte $04, $06, $08, $0A, $08, $06, $08, $0A, $08, $06, $08, $0A, $08, $06, $08, $0A, $08, $06, $08, $0A, $08, $06, $08, $0A, $08, $06, $08, $08, $0A, $06, $2A, $2A
+  ENDIF
 
 L9D40:
   COMMON_ROUTINE  BK_9000
@@ -4347,38 +3735,11 @@ LB000:
     .byte $00 ; |        | $BB1E
     .byte $00 ; |        | $BB1F
 
-    .byte $0E ; |    XXX | $BB20
-    .byte $98 ; |X  XX   | $BB21
-    .byte $20 ; |  X     | $BB22
-    .byte $20 ; |  X     | $BB23
-    .byte $20 ; |  X     | $BB24
-    .byte $20 ; |  X     | $BB25
-    .byte $20 ; |  X     | $BB26
-    .byte $20 ; |  X     | $BB27
-    .byte $20 ; |  X     | $BB28
-    .byte $20 ; |  X     | $BB29
-    .byte $20 ; |  X     | $BB2A
-    .byte $20 ; |  X     | $BB2B
-    .byte $22 ; |  X   X | $BB2C
-    .byte $22 ; |  X   X | $BB2D
-    .byte $22 ; |  X   X | $BB2E
-    .byte $22 ; |  X   X | $BB2F
-    .byte $24 ; |  X  X  | $BB30
-    .byte $24 ; |  X  X  | $BB31
-    .byte $24 ; |  X  X  | $BB32
-    .byte $24 ; |  X  X  | $BB33
-    .byte $24 ; |  X  X  | $BB34
-    .byte $26 ; |  X  XX | $BB35
-    .byte $26 ; |  X  XX | $BB36
-    .byte $26 ; |  X  XX | $BB37
-    .byte $28 ; |  X X   | $BB38
-    .byte $98 ; |X  XX   | $BB39
-    .byte $98 ; |X  XX   | $BB3A
-    .byte $98 ; |X  XX   | $BB3B
-    .byte $98 ; |X  XX   | $BB3C
-    .byte $98 ; |X  XX   | $BB3D
-    .byte $98 ; |X  XX   | $BB3E
-    .byte $98 ; |X  XX   | $BB3F
+  IF PAL_COLORS = 1
+    .byte $0E, $D8, $40, $40, $40, $40, $40, $40, $40, $40, $40, $40, $42, $42, $42, $42, $44, $44, $44, $44, $44, $46, $46, $46, $48, $D8, $D8, $D8, $D8, $D8, $D8, $D8
+  ELSE
+    .byte $0E, $98, $20, $20, $20, $20, $20, $20, $20, $20, $20, $20, $22, $22, $22, $22, $24, $24, $24, $24, $24, $26, $26, $26, $28, $98, $98, $98, $98, $98, $98, $98
+  ENDIF
 
     .byte $00 ; |        | $BB40
     .byte $00 ; |        | $BB41
@@ -4413,38 +3774,11 @@ LB000:
     .byte $00 ; |        | $BB5E
     .byte $00 ; |        | $BB5F
 
-    .byte $0E ; |    XXX | $BB60
-    .byte $0E ; |    XXX | $BB61
-    .byte $0E ; |    XXX | $BB62
-    .byte $0E ; |    XXX | $BB63
-    .byte $0E ; |    XXX | $BB64
-    .byte $0E ; |    XXX | $BB65
-    .byte $0E ; |    XXX | $BB66
-    .byte $20 ; |  X     | $BB67
-    .byte $20 ; |  X     | $BB68
-    .byte $20 ; |  X     | $BB69
-    .byte $20 ; |  X     | $BB6A
-    .byte $20 ; |  X     | $BB6B
-    .byte $22 ; |  X   X | $BB6C
-    .byte $22 ; |  X   X | $BB6D
-    .byte $24 ; |  X  X  | $BB6E
-    .byte $24 ; |  X  X  | $BB6F
-    .byte $26 ; |  X  XX | $BB70
-    .byte $26 ; |  X  XX | $BB71
-    .byte $28 ; |  X X   | $BB72
-    .byte $0E ; |    XXX | $BB73
-    .byte $0E ; |    XXX | $BB74
-    .byte $0E ; |    XXX | $BB75
-    .byte $0E ; |    XXX | $BB76
-    .byte $0E ; |    XXX | $BB77
-    .byte $0E ; |    XXX | $BB78
-    .byte $0E ; |    XXX | $BB79
-    .byte $0E ; |    XXX | $BB7A
-    .byte $0E ; |    XXX | $BB7B
-    .byte $0E ; |    XXX | $BB7C
-    .byte $0E ; |    XXX | $BB7D
-    .byte $0E ; |    XXX | $BB7E
-    .byte $0E ; |    XXX | $BB7F
+  IF PAL_COLORS = 1
+    .byte $0E, $0E, $0E, $0E, $0E, $0E, $0E, $40, $40, $40, $40, $40, $42, $42, $44, $44, $46, $46, $48, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E
+  ELSE
+    .byte $0E, $0E, $0E, $0E, $0E, $0E, $0E, $20, $20, $20, $20, $20, $22, $22, $24, $24, $26, $26, $28, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E
+  ENDIF
 
     .byte $00 ; |        | $BB80
     .byte $00 ; |        | $BB81
@@ -4479,38 +3813,11 @@ LB000:
     .byte $00 ; |        | $BB9E
     .byte $00 ; |        | $BB9F
 
-    .byte $0E ; |    XXX | $BBA0
-    .byte $0E ; |    XXX | $BBA1
-    .byte $0E ; |    XXX | $BBA2
-    .byte $0E ; |    XXX | $BBA3
-    .byte $0E ; |    XXX | $BBA4
-    .byte $0E ; |    XXX | $BBA5
-    .byte $0E ; |    XXX | $BBA6
-    .byte $20 ; |  X     | $BBA7
-    .byte $20 ; |  X     | $BBA8
-    .byte $20 ; |  X     | $BBA9
-    .byte $20 ; |  X     | $BBAA
-    .byte $20 ; |  X     | $BBAB
-    .byte $22 ; |  X   X | $BBAC
-    .byte $22 ; |  X   X | $BBAD
-    .byte $24 ; |  X  X  | $BBAE
-    .byte $24 ; |  X  X  | $BBAF
-    .byte $26 ; |  X  XX | $BBB0
-    .byte $26 ; |  X  XX | $BBB1
-    .byte $28 ; |  X X   | $BBB2
-    .byte $0E ; |    XXX | $BBB3
-    .byte $0E ; |    XXX | $BBB4
-    .byte $0E ; |    XXX | $BBB5
-    .byte $0E ; |    XXX | $BBB6
-    .byte $0E ; |    XXX | $BBB7
-    .byte $0E ; |    XXX | $BBB8
-    .byte $0E ; |    XXX | $BBB9
-    .byte $0E ; |    XXX | $BBBA
-    .byte $0E ; |    XXX | $BBBB
-    .byte $0E ; |    XXX | $BBBC
-    .byte $0E ; |    XXX | $BBBD
-    .byte $0E ; |    XXX | $BBBE
-    .byte $0E ; |    XXX | $BBBF
+  IF PAL_COLORS = 1
+    .byte $0E, $0E, $0E, $0E, $0E, $0E, $0E, $40, $40, $40, $40, $40, $42, $42, $44, $44, $46, $46, $48, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E
+  ELSE
+    .byte $0E, $0E, $0E, $0E, $0E, $0E, $0E, $20, $20, $20, $20, $20, $22, $22, $24, $24, $26, $26, $28, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E
+  ENDIF
 
     .byte $00 ; |        | $BBC0
     .byte $00 ; |        | $BBC1
@@ -4545,38 +3852,11 @@ LB000:
     .byte $00 ; |        | $BBDE
     .byte $00 ; |        | $BBDF
 
-    .byte $0E ; |    XXX | $BBE0
-    .byte $0E ; |    XXX | $BBE1
-    .byte $0E ; |    XXX | $BBE2
-    .byte $0E ; |    XXX | $BBE3
-    .byte $0E ; |    XXX | $BBE4
-    .byte $0E ; |    XXX | $BBE5
-    .byte $0E ; |    XXX | $BBE6
-    .byte $0E ; |    XXX | $BBE7
-    .byte $CA ; |XX  X X | $BBE8
-    .byte $CA ; |XX  X X | $BBE9
-    .byte $20 ; |  X     | $BBEA
-    .byte $20 ; |  X     | $BBEB
-    .byte $20 ; |  X     | $BBEC
-    .byte $20 ; |  X     | $BBED
-    .byte $20 ; |  X     | $BBEE
-    .byte $20 ; |  X     | $BBEF
-    .byte $22 ; |  X   X | $BBF0
-    .byte $22 ; |  X   X | $BBF1
-    .byte $24 ; |  X  X  | $BBF2
-    .byte $24 ; |  X  X  | $BBF3
-    .byte $26 ; |  X  XX | $BBF4
-    .byte $26 ; |  X  XX | $BBF5
-    .byte $CA ; |XX  X X | $BBF6
-    .byte $0E ; |    XXX | $BBF7
-    .byte $0E ; |    XXX | $BBF8
-    .byte $0E ; |    XXX | $BBF9
-    .byte $0E ; |    XXX | $BBFA
-    .byte $0E ; |    XXX | $BBFB
-    .byte $0E ; |    XXX | $BBFC
-    .byte $0E ; |    XXX | $BBFD
-    .byte $0E ; |    XXX | $BBFE
-    .byte $0E ; |    XXX | $BBFF
+  IF PAL_COLORS = 1
+    .byte $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $5A, $5A, $40, $40, $40, $40, $40, $40, $42, $42, $44, $44, $46, $46, $5A, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E
+  ELSE
+    .byte $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $CA, $CA, $20, $20, $20, $20, $20, $20, $22, $22, $24, $24, $26, $26, $CA, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E
+  ENDIF
 
     .byte $00 ; |        | $BC00
     .byte $00 ; |        | $BC01
@@ -4611,38 +3891,11 @@ LB000:
     .byte $FF ; |XXXXXXXX| $BC1E
     .byte $FF ; |XXXXXXXX| $BC1F
 
-    .byte $0E ; |    XXX | $BC20
-    .byte $CA ; |XX  X X | $BC21
-    .byte $28 ; |  X X   | $BC22
-    .byte $28 ; |  X X   | $BC23
-    .byte $28 ; |  X X   | $BC24
-    .byte $28 ; |  X X   | $BC25
-    .byte $28 ; |  X X   | $BC26
-    .byte $28 ; |  X X   | $BC27
-    .byte $2A ; |  X X X | $BC28
-    .byte $2A ; |  X X X | $BC29
-    .byte $28 ; |  X X   | $BC2A
-    .byte $28 ; |  X X   | $BC2B
-    .byte $28 ; |  X X   | $BC2C
-    .byte $28 ; |  X X   | $BC2D
-    .byte $28 ; |  X X   | $BC2E
-    .byte $28 ; |  X X   | $BC2F
-    .byte $28 ; |  X X   | $BC30
-    .byte $28 ; |  X X   | $BC31
-    .byte $28 ; |  X X   | $BC32
-    .byte $28 ; |  X X   | $BC33
-    .byte $28 ; |  X X   | $BC34
-    .byte $28 ; |  X X   | $BC35
-    .byte $28 ; |  X X   | $BC36
-    .byte $28 ; |  X X   | $BC37
-    .byte $28 ; |  X X   | $BC38
-    .byte $28 ; |  X X   | $BC39
-    .byte $28 ; |  X X   | $BC3A
-    .byte $28 ; |  X X   | $BC3B
-    .byte $26 ; |  X  XX | $BC3C
-    .byte $26 ; |  X  XX | $BC3D
-    .byte $28 ; |  X X   | $BC3E
-    .byte $28 ; |  X X   | $BC3F
+  IF PAL_COLORS = 1
+    .byte $0E, $5A, $48, $48, $48, $48, $48, $48, $4A, $4A, $48, $48, $48, $48, $48, $48, $48, $48, $48, $48, $48, $48, $48, $48, $48, $48, $48, $48, $46, $46, $48, $48
+  ELSE
+    .byte $0E, $CA, $28, $28, $28, $28, $28, $28, $2A, $2A, $28, $28, $28, $28, $28, $28, $28, $28, $28, $28, $28, $28, $28, $28, $28, $28, $28, $28, $26, $26, $28, $28
+  ENDIF
 
     .byte $FF ; |XXXXXXXX| $BC40
     .byte $FF ; |XXXXXXXX| $BC41
@@ -4677,38 +3930,11 @@ LB000:
     .byte $FF ; |XXXXXXXX| $BC5E
     .byte $FF ; |XXXXXXXX| $BC5F
 
-    .byte $28 ; |  X X   | $BC60
-    .byte $28 ; |  X X   | $BC61
-    .byte $2E ; |  X XXX | $BC62
-    .byte $2C ; |  X XX  | $BC63
-    .byte $2C ; |  X XX  | $BC64
-    .byte $2C ; |  X XX  | $BC65
-    .byte $2A ; |  X X X | $BC66
-    .byte $06 ; |     XX | $BC67
-    .byte $06 ; |     XX | $BC68
-    .byte $06 ; |     XX | $BC69
-    .byte $06 ; |     XX | $BC6A
-    .byte $06 ; |     XX | $BC6B
-    .byte $06 ; |     XX | $BC6C
-    .byte $06 ; |     XX | $BC6D
-    .byte $06 ; |     XX | $BC6E
-    .byte $06 ; |     XX | $BC6F
-    .byte $06 ; |     XX | $BC70
-    .byte $06 ; |     XX | $BC71
-    .byte $28 ; |  X X   | $BC72
-    .byte $2A ; |  X X X | $BC73
-    .byte $28 ; |  X X   | $BC74
-    .byte $28 ; |  X X   | $BC75
-    .byte $28 ; |  X X   | $BC76
-    .byte $28 ; |  X X   | $BC77
-    .byte $28 ; |  X X   | $BC78
-    .byte $28 ; |  X X   | $BC79
-    .byte $2E ; |  X XXX | $BC7A
-    .byte $2C ; |  X XX  | $BC7B
-    .byte $2C ; |  X XX  | $BC7C
-    .byte $2C ; |  X XX  | $BC7D
-    .byte $2A ; |  X X X | $BC7E
-    .byte $CA ; |XX  X X | $BC7F
+  IF PAL_COLORS = 1
+    .byte $48, $48, $4E, $4C, $4C, $4C, $4A, $06, $06, $06, $06, $06, $06, $06, $06, $06, $06, $06, $48, $4A, $48, $48, $48, $48, $48, $48, $4E, $4C, $4C, $4C, $4A, $5A
+  ELSE
+    .byte $28, $28, $2E, $2C, $2C, $2C, $2A, $06, $06, $06, $06, $06, $06, $06, $06, $06, $06, $06, $28, $2A, $28, $28, $28, $28, $28, $28, $2E, $2C, $2C, $2C, $2A, $CA
+  ENDIF
 
     .byte $00 ; |        | $BC80
     .byte $00 ; |        | $BC81
@@ -4743,38 +3969,11 @@ LB000:
     .byte $00 ; |        | $BC9E
     .byte $00 ; |        | $BC9F
 
-    .byte $0E ; |    XXX | $BCA0
-    .byte $0E ; |    XXX | $BCA1
-    .byte $0E ; |    XXX | $BCA2
-    .byte $0E ; |    XXX | $BCA3
-    .byte $0E ; |    XXX | $BCA4
-    .byte $0E ; |    XXX | $BCA5
-    .byte $0E ; |    XXX | $BCA6
-    .byte $0E ; |    XXX | $BCA7
-    .byte $0E ; |    XXX | $BCA8
-    .byte $0E ; |    XXX | $BCA9
-    .byte $0E ; |    XXX | $BCAA
-    .byte $0E ; |    XXX | $BCAB
-    .byte $0E ; |    XXX | $BCAC
-    .byte $0E ; |    XXX | $BCAD
-    .byte $0E ; |    XXX | $BCAE
-    .byte $0E ; |    XXX | $BCAF
-    .byte $0E ; |    XXX | $BCB0
-    .byte $0E ; |    XXX | $BCB1
-    .byte $0E ; |    XXX | $BCB2
-    .byte $0E ; |    XXX | $BCB3
-    .byte $0E ; |    XXX | $BCB4
-    .byte $0E ; |    XXX | $BCB5
-    .byte $0E ; |    XXX | $BCB6
-    .byte $0E ; |    XXX | $BCB7
-    .byte $0E ; |    XXX | $BCB8
-    .byte $0E ; |    XXX | $BCB9
-    .byte $0E ; |    XXX | $BCBA
-    .byte $0E ; |    XXX | $BCBB
-    .byte $0E ; |    XXX | $BCBC
-    .byte $0E ; |    XXX | $BCBD
-    .byte $28 ; |  X X   | $BCBE
-    .byte $28 ; |  X X   | $BCBF
+  IF PAL_COLORS = 1
+    .byte $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $48, $48
+  ELSE
+    .byte $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $28, $28
+  ENDIF
 
     .byte $00 ; |        | $BCC0
     .byte $00 ; |        | $BCC1
@@ -4809,38 +4008,11 @@ LB000:
     .byte $FF ; |XXXXXXXX| $BCDE
     .byte $FF ; |XXXXXXXX| $BCDF
 
-    .byte $28 ; |  X X   | $BCE0
-    .byte $CA ; |XX  X X | $BCE1
-    .byte $C8 ; |XX  X   | $BCE2
-    .byte $C6 ; |XX   XX | $BCE3
-    .byte $C4 ; |XX   X  | $BCE4
-    .byte $C2 ; |XX    X | $BCE5
-    .byte $16 ; |   X XX | $BCE6
-    .byte $16 ; |   X XX | $BCE7
-    .byte $16 ; |   X XX | $BCE8
-    .byte $16 ; |   X XX | $BCE9
-    .byte $16 ; |   X XX | $BCEA
-    .byte $16 ; |   X XX | $BCEB
-    .byte $16 ; |   X XX | $BCEC
-    .byte $16 ; |   X XX | $BCED
-    .byte $16 ; |   X XX | $BCEE
-    .byte $16 ; |   X XX | $BCEF
-    .byte $16 ; |   X XX | $BCF0
-    .byte $16 ; |   X XX | $BCF1
-    .byte $16 ; |   X XX | $BCF2
-    .byte $16 ; |   X XX | $BCF3
-    .byte $16 ; |   X XX | $BCF4
-    .byte $16 ; |   X XX | $BCF5
-    .byte $16 ; |   X XX | $BCF6
-    .byte $16 ; |   X XX | $BCF7
-    .byte $16 ; |   X XX | $BCF8
-    .byte $16 ; |   X XX | $BCF9
-    .byte $16 ; |   X XX | $BCFA
-    .byte $16 ; |   X XX | $BCFB
-    .byte $16 ; |   X XX | $BCFC
-    .byte $16 ; |   X XX | $BCFD
-    .byte $14 ; |   X X  | $BCFE
-    .byte $12 ; |   X  X | $BCFF
+  IF PAL_COLORS = 1
+    .byte $48, $5A, $58, $56, $54, $52, $26, $26, $26, $26, $26, $26, $26, $26, $26, $26, $26, $26, $26, $26, $26, $26, $26, $26, $26, $26, $26, $26, $26, $26, $24, $22
+  ELSE
+    .byte $28, $CA, $C8, $C6, $C4, $C2, $16, $16, $16, $16, $16, $16, $16, $16, $16, $16, $16, $16, $16, $16, $16, $16, $16, $16, $16, $16, $16, $16, $16, $16, $14, $12
+  ENDIF
 
     .byte $FF ; |XXXXXXXX| $BD00
     .byte $FF ; |XXXXXXXX| $BD01
@@ -4875,38 +4047,11 @@ LB000:
     .byte $FF ; |XXXXXXXX| $BD1E
     .byte $00 ; |        | $BD1F
 
-    .byte $04 ; |     X  | $BD20
-    .byte $06 ; |     XX | $BD21
-    .byte $08 ; |    X   | $BD22
-    .byte $0A ; |    X X | $BD23
-    .byte $08 ; |    X   | $BD24
-    .byte $06 ; |     XX | $BD25
-    .byte $08 ; |    X   | $BD26
-    .byte $0A ; |    X X | $BD27
-    .byte $08 ; |    X   | $BD28
-    .byte $06 ; |     XX | $BD29
-    .byte $08 ; |    X   | $BD2A
-    .byte $0A ; |    X X | $BD2B
-    .byte $08 ; |    X   | $BD2C
-    .byte $06 ; |     XX | $BD2D
-    .byte $08 ; |    X   | $BD2E
-    .byte $0A ; |    X X | $BD2F
-    .byte $08 ; |    X   | $BD30
-    .byte $06 ; |     XX | $BD31
-    .byte $08 ; |    X   | $BD32
-    .byte $0A ; |    X X | $BD33
-    .byte $08 ; |    X   | $BD34
-    .byte $06 ; |     XX | $BD35
-    .byte $08 ; |    X   | $BD36
-    .byte $0A ; |    X X | $BD37
-    .byte $08 ; |    X   | $BD38
-    .byte $06 ; |     XX | $BD39
-    .byte $08 ; |    X   | $BD3A
-    .byte $08 ; |    X   | $BD3B
-    .byte $0A ; |    X X | $BD3C
-    .byte $06 ; |     XX | $BD3D
-    .byte $CA ; |XX  X X | $BD3E
-    .byte $CA ; |XX  X X | $BD3F
+  IF PAL_COLORS = 1
+    .byte $04, $06, $08, $0A, $08, $06, $08, $0A, $08, $06, $08, $0A, $08, $06, $08, $0A, $08, $06, $08, $0A, $08, $06, $08, $0A, $08, $06, $08, $08, $0A, $06, $5A, $5A
+  ELSE
+    .byte $04, $06, $08, $0A, $08, $06, $08, $0A, $08, $06, $08, $0A, $08, $06, $08, $0A, $08, $06, $08, $0A, $08, $06, $08, $0A, $08, $06, $08, $08, $0A, $06, $CA, $CA
+  ENDIF
 
 LBD40:
   COMMON_ROUTINE  BK_B000
@@ -5516,39 +4661,12 @@ LDB00:
     .byte $00 ; |        | $DB1E
     .byte $00 ; |        | $DB1F
 
-
-    .byte $0E ; |    XXX | $DB20  PF1 colors
-    .byte $0E ; |    XXX | $DB21
-    .byte $0E ; |    XXX | $DB22
-    .byte $00 ; |        | $DB23
-    .byte $18 ; |   XX   | $DB24
-    .byte $16 ; |   X XX | $DB25
-    .byte $16 ; |   X XX | $DB26
-    .byte $14 ; |   X X  | $DB27
-    .byte $14 ; |   X X  | $DB28
-    .byte $12 ; |   X  X | $DB29
-    .byte $14 ; |   X X  | $DB2A
-    .byte $14 ; |   X X  | $DB2B
-    .byte $14 ; |   X X  | $DB2C
-    .byte $14 ; |   X X  | $DB2D
-    .byte $14 ; |   X X  | $DB2E
-    .byte $14 ; |   X X  | $DB2F
-    .byte $14 ; |   X X  | $DB30
-    .byte $14 ; |   X X  | $DB31
-    .byte $14 ; |   X X  | $DB32
-    .byte $14 ; |   X X  | $DB33
-    .byte $14 ; |   X X  | $DB34
-    .byte $16 ; |   X XX | $DB35
-    .byte $16 ; |   X XX | $DB36
-    .byte $16 ; |   X XX | $DB37
-    .byte $0E ; |    XXX | $DB38
-    .byte $0E ; |    XXX | $DB39
-    .byte $0E ; |    XXX | $DB3A
-    .byte $0E ; |    XXX | $DB3B
-    .byte $0E ; |    XXX | $DB3C
-    .byte $0E ; |    XXX | $DB3D
-    .byte $0E ; |    XXX | $DB3E
-    .byte $0E ; |    XXX | $DB3F
+    ; PF1 colors
+  IF PAL_COLORS = 1
+    .byte $0E, $0E, $0E, $00, $28, $26, $26, $24, $24, $22, $24, $24, $24, $24, $24, $24, $24, $24, $24, $24, $24, $26, $26, $26, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E
+  ELSE
+    .byte $0E, $0E, $0E, $00, $18, $16, $16, $14, $14, $12, $14, $14, $14, $14, $14, $14, $14, $14, $14, $14, $14, $16, $16, $16, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E
+  ENDIF
 
 LDB40:
     .byte $00 ; |        | $DB40  PF2 gfx
@@ -5584,38 +4702,12 @@ LDB40:
     .byte $00 ; |        | $DB5E
     .byte $00 ; |        | $DB5F
 
-    .byte $0E ; |    XXX | $DB60  PF2 colors
-    .byte $1A ; |   XX X | $DB61
-    .byte $18 ; |   XX   | $DB62
-    .byte $18 ; |   XX   | $DB63
-    .byte $16 ; |   X XX | $DB64
-    .byte $14 ; |   X X  | $DB65
-    .byte $14 ; |   X X  | $DB66
-    .byte $12 ; |   X  X | $DB67
-    .byte $10 ; |   X    | $DB68
-    .byte $FF ; |XXXXXXXX| $DB69
-    .byte $16 ; |   X XX | $DB6A
-    .byte $14 ; |   X X  | $DB6B
-    .byte $14 ; |   X X  | $DB6C
-    .byte $14 ; |   X X  | $DB6D
-    .byte $14 ; |   X X  | $DB6E
-    .byte $14 ; |   X X  | $DB6F
-    .byte $14 ; |   X X  | $DB70
-    .byte $14 ; |   X X  | $DB71
-    .byte $12 ; |   X  X | $DB72
-    .byte $14 ; |   X X  | $DB73
-    .byte $16 ; |   X XX | $DB74
-    .byte $16 ; |   X XX | $DB75
-    .byte $18 ; |   XX   | $DB76
-    .byte $18 ; |   XX   | $DB77
-    .byte $1A ; |   XX X | $DB78
-    .byte $0E ; |    XXX | $DB79
-    .byte $0E ; |    XXX | $DB7A
-    .byte $0E ; |    XXX | $DB7B
-    .byte $0E ; |    XXX | $DB7C
-    .byte $0E ; |    XXX | $DB7D
-    .byte $0E ; |    XXX | $DB7E
-    .byte $0E ; |    XXX | $DB7F
+    ; PF2 colors
+  IF PAL_COLORS = 1
+    .byte $0E, $2A, $28, $28, $26, $24, $24, $22, $20, $4F, $26, $24, $24, $24, $24, $24, $24, $24, $22, $24, $26, $26, $28, $28, $2A, $0E, $0E, $0E, $0E, $0E, $0E, $0E
+  ELSE
+    .byte $0E, $1A, $18, $18, $16, $14, $14, $12, $10, $FF, $16, $14, $14, $14, $14, $14, $14, $14, $12, $14, $16, $16, $18, $18, $1A, $0E, $0E, $0E, $0E, $0E, $0E, $0E
+  ENDIF
 
 LDB80:
     .byte $00 ; |        | $DB80
@@ -5651,38 +4743,12 @@ LDB80:
     .byte $00 ; |        | $DB9E
     .byte $00 ; |        | $DB9F
 
-    .byte $00 ; |        | $DBA0
-    .byte $00 ; |        | $DBA1
-    .byte $0E ; |    XXX | $DBA2
-    .byte $C4 ; |XX   X  | $DBA3
-    .byte $C6 ; |XX   XX | $DBA4
-    .byte $C8 ; |XX  X   | $DBA5
-    .byte $C6 ; |XX   XX | $DBA6
-    .byte $C4 ; |XX   X  | $DBA7
-    .byte $C6 ; |XX   XX | $DBA8
-    .byte $C8 ; |XX  X   | $DBA9
-    .byte $C6 ; |XX   XX | $DBAA
-    .byte $C4 ; |XX   X  | $DBAB
-    .byte $C6 ; |XX   XX | $DBAC
-    .byte $C8 ; |XX  X   | $DBAD
-    .byte $C6 ; |XX   XX | $DBAE
-    .byte $0E ; |    XXX | $DBAF
-    .byte $0E ; |    XXX | $DBB0
-    .byte $0E ; |    XXX | $DBB1
-    .byte $0E ; |    XXX | $DBB2
-    .byte $0E ; |    XXX | $DBB3
-    .byte $0E ; |    XXX | $DBB4
-    .byte $0E ; |    XXX | $DBB5
-    .byte $0E ; |    XXX | $DBB6
-    .byte $0E ; |    XXX | $DBB7
-    .byte $0E ; |    XXX | $DBB8
-    .byte $0E ; |    XXX | $DBB9
-    .byte $0E ; |    XXX | $DBBA
-    .byte $0E ; |    XXX | $DBBB
-    .byte $0E ; |    XXX | $DBBC
-    .byte $0E ; |    XXX | $DBBD
-    .byte $0E ; |    XXX | $DBBE
-    .byte $0E ; |    XXX | $DBBF
+  IF PAL_COLORS = 1
+    .byte $00, $00, $0E, $54, $56, $58, $56, $54, $56, $58, $56, $54, $56, $58, $56, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E
+  ELSE
+    .byte $00, $00, $0E, $C4, $C6, $C8, $C6, $C4, $C6, $C8, $C6, $C4, $C6, $C8, $C6, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E ; |    XXX | $DBBF
+  ENDIF
+
 LDBC0:
     .byte $00 ; |        | $DBC0
     .byte $00 ; |        | $DBC1
@@ -5717,38 +4783,12 @@ LDBC0:
     .byte $00 ; |        | $DBDE
     .byte $00 ; |        | $DBDF
 
-    .byte $00 ; |        | $DBE0
-    .byte $00 ; |        | $DBE1
-    .byte $0E ; |    XXX | $DBE2
-    .byte $1A ; |   XX X | $DBE3
-    .byte $C4 ; |XX   X  | $DBE4
-    .byte $C6 ; |XX   XX | $DBE5
-    .byte $C8 ; |XX  X   | $DBE6
-    .byte $C6 ; |XX   XX | $DBE7
-    .byte $C4 ; |XX   X  | $DBE8
-    .byte $C6 ; |XX   XX | $DBE9
-    .byte $C8 ; |XX  X   | $DBEA
-    .byte $C6 ; |XX   XX | $DBEB
-    .byte $C4 ; |XX   X  | $DBEC
-    .byte $C6 ; |XX   XX | $DBED
-    .byte $C8 ; |XX  X   | $DBEE
-    .byte $C6 ; |XX   XX | $DBEF
-    .byte $1A ; |   XX X | $DBF0
-    .byte $0E ; |    XXX | $DBF1
-    .byte $0E ; |    XXX | $DBF2
-    .byte $0E ; |    XXX | $DBF3
-    .byte $0E ; |    XXX | $DBF4
-    .byte $0E ; |    XXX | $DBF5
-    .byte $0E ; |    XXX | $DBF6
-    .byte $0E ; |    XXX | $DBF7
-    .byte $0E ; |    XXX | $DBF8
-    .byte $0E ; |    XXX | $DBF9
-    .byte $0E ; |    XXX | $DBFA
-    .byte $0E ; |    XXX | $DBFB
-    .byte $0E ; |    XXX | $DBFC
-    .byte $0E ; |    XXX | $DBFD
-    .byte $0E ; |    XXX | $DBFE
-    .byte $0E ; |    XXX | $DBFF
+  IF PAL_COLORS = 1
+    .byte $00, $00, $0E, $2A, $54, $56, $58, $56, $54, $56, $58, $56, $54, $56, $58, $56, $2A, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E
+  ELSE
+    .byte $00, $00, $0E, $1A, $C4, $C6, $C8, $C6, $C4, $C6, $C8, $C6, $C4, $C6, $C8, $C6, $1A, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E
+  ENDIF
+
 LDC00:
     .byte $00 ; |        | $DC00
     .byte $00 ; |        | $DC01
@@ -5783,38 +4823,12 @@ LDC00:
     .byte $FF ; |XXXXXXXX| $DC1E
     .byte $FF ; |XXXXXXXX| $DC1F
 
-    .byte $0E ; |    XXX | $DC20
-    .byte $1A ; |   XX X | $DC21
-    .byte $06 ; |     XX | $DC22
-    .byte $06 ; |     XX | $DC23
-    .byte $06 ; |     XX | $DC24
-    .byte $06 ; |     XX | $DC25
-    .byte $06 ; |     XX | $DC26
-    .byte $06 ; |     XX | $DC27
-    .byte $08 ; |    X   | $DC28
-    .byte $08 ; |    X   | $DC29
-    .byte $06 ; |     XX | $DC2A
-    .byte $06 ; |     XX | $DC2B
-    .byte $06 ; |     XX | $DC2C
-    .byte $06 ; |     XX | $DC2D
-    .byte $06 ; |     XX | $DC2E
-    .byte $06 ; |     XX | $DC2F
-    .byte $06 ; |     XX | $DC30
-    .byte $06 ; |     XX | $DC31
-    .byte $06 ; |     XX | $DC32
-    .byte $06 ; |     XX | $DC33
-    .byte $06 ; |     XX | $DC34
-    .byte $06 ; |     XX | $DC35
-    .byte $06 ; |     XX | $DC36
-    .byte $06 ; |     XX | $DC37
-    .byte $06 ; |     XX | $DC38
-    .byte $06 ; |     XX | $DC39
-    .byte $06 ; |     XX | $DC3A
-    .byte $06 ; |     XX | $DC3B
-    .byte $04 ; |     X  | $DC3C
-    .byte $04 ; |     X  | $DC3D
-    .byte $06 ; |     XX | $DC3E
-    .byte $06 ; |     XX | $DC3F
+  IF PAL_COLORS = 1
+    .byte $0E, $2A, $06, $06, $06, $06, $06, $06, $08, $08, $06, $06, $06, $06, $06, $06, $06, $06, $06, $06, $06, $06, $06, $06, $06, $06, $06, $06, $04, $04, $06, $06
+  ELSE
+    .byte $0E, $1A, $06, $06, $06, $06, $06, $06, $08, $08, $06, $06, $06, $06, $06, $06, $06, $06, $06, $06, $06, $06, $06, $06, $06, $06, $06, $06, $04, $04, $06, $06 ; |     XX | $DC3F
+  ENDIF
+
 LDC40:
     .byte $FF ; |XXXXXXXX| $DC40
     .byte $FF ; |XXXXXXXX| $DC41
@@ -5849,38 +4863,12 @@ LDC40:
     .byte $FF ; |XXXXXXXX| $DC5E
     .byte $FF ; |XXXXXXXX| $DC5F
 
-    .byte $06 ; |     XX | $DC60
-    .byte $06 ; |     XX | $DC61
-    .byte $0E ; |    XXX | $DC62
-    .byte $0C ; |    XX  | $DC63
-    .byte $0C ; |    XX  | $DC64
-    .byte $0C ; |    XX  | $DC65
-    .byte $0A ; |    X X | $DC66
-    .byte $04 ; |     X  | $DC67
-    .byte $04 ; |     X  | $DC68
-    .byte $04 ; |     X  | $DC69
-    .byte $04 ; |     X  | $DC6A
-    .byte $04 ; |     X  | $DC6B
-    .byte $04 ; |     X  | $DC6C
-    .byte $04 ; |     X  | $DC6D
-    .byte $04 ; |     X  | $DC6E
-    .byte $04 ; |     X  | $DC6F
-    .byte $04 ; |     X  | $DC70
-    .byte $04 ; |     X  | $DC71
-    .byte $06 ; |     XX | $DC72
-    .byte $08 ; |    X   | $DC73
-    .byte $06 ; |     XX | $DC74
-    .byte $06 ; |     XX | $DC75
-    .byte $06 ; |     XX | $DC76
-    .byte $06 ; |     XX | $DC77
-    .byte $06 ; |     XX | $DC78
-    .byte $06 ; |     XX | $DC79
-    .byte $0C ; |    XX  | $DC7A
-    .byte $0A ; |    X X | $DC7B
-    .byte $0A ; |    X X | $DC7C
-    .byte $0A ; |    X X | $DC7D
-    .byte $08 ; |    X   | $DC7E
-    .byte $1A ; |   XX X | $DC7F
+  IF PAL_COLORS = 1
+    .byte $06, $06, $0E, $0C, $0C, $0C, $0A, $04, $04, $04, $04, $04, $04, $04, $04, $04, $04, $04, $06, $08, $06, $06, $06, $06, $06, $06, $0C, $0A, $0A, $0A, $08, $2A
+  ELSE
+    .byte $06, $06, $0E, $0C, $0C, $0C, $0A, $04, $04, $04, $04, $04, $04, $04, $04, $04, $04, $04, $06, $08, $06, $06, $06, $06, $06, $06, $0C, $0A, $0A, $0A, $08, $1A ; |   XX X | $DC7F
+  ENDIF
+
 LDC80:
     .byte $00 ; |        | $DC80
     .byte $00 ; |        | $DC81
@@ -5915,38 +4903,12 @@ LDC80:
     .byte $00 ; |        | $DC9E
     .byte $00 ; |        | $DC9F
 
-    .byte $2A ; |  X X X | $DCA0
-    .byte $0E ; |    XXX | $DCA1
-    .byte $0E ; |    XXX | $DCA2
-    .byte $0E ; |    XXX | $DCA3
-    .byte $0E ; |    XXX | $DCA4
-    .byte $0E ; |    XXX | $DCA5
-    .byte $0E ; |    XXX | $DCA6
-    .byte $0E ; |    XXX | $DCA7
-    .byte $0E ; |    XXX | $DCA8
-    .byte $0E ; |    XXX | $DCA9
-    .byte $0E ; |    XXX | $DCAA
-    .byte $0E ; |    XXX | $DCAB
-    .byte $0E ; |    XXX | $DCAC
-    .byte $0E ; |    XXX | $DCAD
-    .byte $0E ; |    XXX | $DCAE
-    .byte $0E ; |    XXX | $DCAF
-    .byte $0E ; |    XXX | $DCB0
-    .byte $0E ; |    XXX | $DCB1
-    .byte $0E ; |    XXX | $DCB2
-    .byte $0E ; |    XXX | $DCB3
-    .byte $0E ; |    XXX | $DCB4
-    .byte $0E ; |    XXX | $DCB5
-    .byte $0E ; |    XXX | $DCB6
-    .byte $0E ; |    XXX | $DCB7
-    .byte $0E ; |    XXX | $DCB8
-    .byte $0E ; |    XXX | $DCB9
-    .byte $0E ; |    XXX | $DCBA
-    .byte $0E ; |    XXX | $DCBB
-    .byte $0E ; |    XXX | $DCBC
-    .byte $0E ; |    XXX | $DCBD
-    .byte $28 ; |  X X   | $DCBE
-    .byte $28 ; |  X X   | $DCBF
+  IF PAL_COLORS = 1
+    .byte $4A, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $48, $48
+  ELSE
+    .byte $2A, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $0E, $28, $28 ; |  X X   | $DCBF
+  ENDIF
+
 LDCC0:
     .byte $00 ; |        | $DCC0
     .byte $00 ; |        | $DCC1
@@ -5981,38 +4943,12 @@ LDCC0:
     .byte $FF ; |XXXXXXXX| $DCDE
     .byte $FF ; |XXXXXXXX| $DCDF
 
-    .byte $28 ; |  X X   | $DCE0
-    .byte $1A ; |   XX X | $DCE1
-    .byte $18 ; |   XX   | $DCE2
-    .byte $16 ; |   X XX | $DCE3
-    .byte $14 ; |   X X  | $DCE4
-    .byte $12 ; |   X  X | $DCE5
-    .byte $C6 ; |XX   XX | $DCE6
-    .byte $C8 ; |XX  X   | $DCE7
-    .byte $C8 ; |XX  X   | $DCE8
-    .byte $C8 ; |XX  X   | $DCE9
-    .byte $C8 ; |XX  X   | $DCEA
-    .byte $C8 ; |XX  X   | $DCEB
-    .byte $C8 ; |XX  X   | $DCEC
-    .byte $C8 ; |XX  X   | $DCED
-    .byte $C8 ; |XX  X   | $DCEE
-    .byte $C8 ; |XX  X   | $DCEF
-    .byte $C8 ; |XX  X   | $DCF0
-    .byte $C8 ; |XX  X   | $DCF1
-    .byte $C8 ; |XX  X   | $DCF2
-    .byte $C8 ; |XX  X   | $DCF3
-    .byte $C8 ; |XX  X   | $DCF4
-    .byte $C8 ; |XX  X   | $DCF5
-    .byte $C8 ; |XX  X   | $DCF6
-    .byte $C8 ; |XX  X   | $DCF7
-    .byte $C8 ; |XX  X   | $DCF8
-    .byte $C8 ; |XX  X   | $DCF9
-    .byte $C8 ; |XX  X   | $DCFA
-    .byte $C8 ; |XX  X   | $DCFB
-    .byte $C8 ; |XX  X   | $DCFC
-    .byte $C6 ; |XX   XX | $DCFD
-    .byte $C4 ; |XX   X  | $DCFE
-    .byte $C2 ; |XX    X | $DCFF
+  IF PAL_COLORS = 1
+    .byte $48, $2A, $28, $26, $24, $22, $56, $58, $58, $58, $58, $58, $58, $58, $58, $58, $58, $58, $58, $58, $58, $58, $58, $58, $58, $58, $58, $58, $58, $56, $54, $52
+  ELSE
+    .byte $28, $1A, $18, $16, $14, $12, $C6, $C8, $C8, $C8, $C8, $C8, $C8, $C8, $C8, $C8, $C8, $C8, $C8, $C8, $C8, $C8, $C8, $C8, $C8, $C8, $C8, $C8, $C8, $C6, $C4, $C2 ; |XX    X | $DCFF
+  ENDIF
+
 LDD00:
     .byte $FF ; |XXXXXXXX| $DD00
     .byte $FF ; |XXXXXXXX| $DD01
@@ -6047,38 +4983,11 @@ LDD00:
     .byte $FF ; |XXXXXXXX| $DD1E
     .byte $00 ; |        | $DD1F
 
-    .byte $04 ; |     X  | $DD20
-    .byte $06 ; |     XX | $DD21
-    .byte $08 ; |    X   | $DD22
-    .byte $0A ; |    X X | $DD23
-    .byte $08 ; |    X   | $DD24
-    .byte $06 ; |     XX | $DD25
-    .byte $08 ; |    X   | $DD26
-    .byte $0A ; |    X X | $DD27
-    .byte $08 ; |    X   | $DD28
-    .byte $06 ; |     XX | $DD29
-    .byte $08 ; |    X   | $DD2A
-    .byte $0A ; |    X X | $DD2B
-    .byte $08 ; |    X   | $DD2C
-    .byte $06 ; |     XX | $DD2D
-    .byte $08 ; |    X   | $DD2E
-    .byte $0A ; |    X X | $DD2F
-    .byte $08 ; |    X   | $DD30
-    .byte $06 ; |     XX | $DD31
-    .byte $08 ; |    X   | $DD32
-    .byte $0A ; |    X X | $DD33
-    .byte $08 ; |    X   | $DD34
-    .byte $06 ; |     XX | $DD35
-    .byte $08 ; |    X   | $DD36
-    .byte $0A ; |    X X | $DD37
-    .byte $08 ; |    X   | $DD38
-    .byte $06 ; |     XX | $DD39
-    .byte $08 ; |    X   | $DD3A
-    .byte $08 ; |    X   | $DD3B
-    .byte $0A ; |    X X | $DD3C
-    .byte $06 ; |     XX | $DD3D
-    .byte $1A ; |   XX X | $DD3E
-    .byte $1A ; |   XX X | $DD3F
+  IF PAL_COLORS = 1
+    .byte $04, $06, $08, $0A, $08, $06, $08, $0A, $08, $06, $08, $0A, $08, $06, $08, $0A, $08, $06, $08, $0A, $08, $06, $08, $0A, $08, $06, $08, $08, $0A, $06, $2A, $2A
+  ELSE
+    .byte $04, $06, $08, $0A, $08, $06, $08, $0A, $08, $06, $08, $0A, $08, $06, $08, $0A, $08, $06, $08, $0A, $08, $06, $08, $0A, $08, $06, $08, $08, $0A, $06, $1A, $1A ; |   XX X | $DD3F
+  ENDIF
 
     .byte $FF ; |XXXXXXXX| $DD40  free bytes
     .byte $FF ; |XXXXXXXX| $DD41
@@ -6758,7 +5667,11 @@ LF0E5:
     jsr    LFB5C                 ; 6
     lda    livesLevelNum         ; 3
     bpl    LF103                 ; 2³+1
+  IF PLUSROM = 1
     jsr    SendPlusROMScore      ; 6
+  ELSE
+    jsr    LFB5C                 ; 6
+  ENDIF
     lda    livesLevelNum         ; 3
     bpl    LF103                 ; 2³+1
     lda    ram_D6                ; 3
@@ -6981,12 +5894,12 @@ LF25E:
     inc    ram_D7                ; 5
     bne    LF286                 ; 2³
 LF276:
-    lda    numOfGernades         ; 3
+    lda    numOfGrenades         ; 3
     sed                          ; 2
     clc                          ; 2
     adc    #$04                  ; 2
     cld                          ; 2
-    sta    numOfGernades         ; 3
+    sta    numOfGrenades         ; 3
     lda    #$10                  ; 2
     ldy    #$A0                  ; 2
     jsr    LFB8D                 ; 6
@@ -7096,14 +6009,14 @@ LF315:
     beq    LF34D                 ; 2³
     cmp    #$E0                  ; 2
     bne    LF379                 ; 2³
-    lda    numOfGernades         ; 3
+    lda    numOfGrenades         ; 3
     beq    LF379                 ; 2³
-    lda    numOfGernades         ; 3
+    lda    numOfGrenades         ; 3
     sed                          ; 2
     sec                          ; 2
     sbc    #$01                  ; 2
     cld                          ; 2
-    sta    numOfGernades         ; 3
+    sta    numOfGrenades         ; 3
     ldx    #$01                  ; 2
     ldy    #$01                  ; 2
 LF34D:
@@ -7714,7 +6627,11 @@ LF720:
 LF73D:
     jsr    LFE65                 ; 6
     and    #$1F                  ; 2
+  IF PAL50
+    cmp    #$04                  ; 2
+  ELSE
     cmp    #$05                  ; 2
+  ENDIF
     bcs    LF74F                 ; 2³
     lda    frameCounter          ; 3
     and    #$03                  ; 2
@@ -8124,7 +7041,7 @@ LF9D6:
     cpx    #$9A                  ; 2
     rol                          ; 2
     tax                          ; 2
-    lda    LFD80,X               ; 4
+    lda    ColScoreGfx,X               ; 4
     sta.w  COLUP0                ; 4
     sta    COLUP1                ; 3
     lda    #$B0                  ; 2
@@ -8207,9 +7124,9 @@ LFA86:
     lda    ColLevelGfx,Y         ; 4
     sta    ram_D8                ; 3
     ldx    ColLivesGfx,Y         ; 4
-    lda    GernadeGfx,Y          ; 4
+    lda    GrenadeGfx,Y          ; 4
     sta    GRP1                  ; 3
-    lda    ColGernadeGfx,Y       ; 4
+    lda    ColGrenadeGfx,Y       ; 4
     sta    COLUP1                ; 3
     lda    LivesGfx,Y            ; 4
     sta.w  GRP1                  ; 4
@@ -8227,12 +7144,12 @@ LFA86:
     iny                          ; 2
     sty    GRP0                  ; 3
     sty    GRP1                  ; 3
-    lda    numOfGernades         ; 3
+    lda    numOfGrenades         ; 3
     and    #$F0                  ; 2
     lsr                          ; 2
     adc    #$72                  ; 2
     sta    ram_ED                ; 3
-    lda    numOfGernades         ; 3
+    lda    numOfGrenades         ; 3
     and    #$0F                  ; 2
     asl                          ; 2
     asl                          ; 2
@@ -8262,7 +7179,7 @@ LFAE4:
     and    #$01                  ; 2
     asl                          ; 2
     tay                          ; 2
-    lda    LFD80,Y               ; 4
+    lda    ColScoreGfx,Y               ; 4
     sta    COLUP0                ; 3
     sta    COLUP1                ; 3
     ldy    #$07                  ; 2
@@ -8325,7 +7242,7 @@ LFB3A:
 LFB47 SUBROUTINE ;x2
     sta    livesLevelNum         ; 3
     lda    #3                    ; 2
-    sta    numOfGernades         ; 3
+    sta    numOfGrenades         ; 3
     lda    scoreBig              ; 3
     cmp    #$99+1                ; 2
     lda    #0                    ; 2
@@ -8566,7 +7483,7 @@ LFC50:
 ;1 = enemy soldier
 ;2 = palm tree
 ;3 = machine gunner
-;4 = gernades
+;4 = grenades
 ;5 = truck
 ;6 = enemy solder... again?
 ;7 = bridge... or fortress?
@@ -8828,20 +7745,13 @@ LevelGfx:
     .byte $7E ; | XXXXXX | $FD42
     .byte $7E ; | XXXXXX | $FD43
 ColLevelGfx:
-    .byte $18            ; $FD44
-    .byte $1A            ; $FD45
-    .byte $1C            ; $FD46
-    .byte $1C            ; $FD47
-    .byte $1A            ; $FD48
-    .byte $18            ; $FD49
-    .byte $54            ; $FD4A
-    .byte $54            ; $FD4B
-    .byte $72            ; $FD4C
-    .byte $72            ; $FD4D
-    .byte $24            ; $FD4E
-    .byte $24            ; $FD4F
+  IF PAL_COLORS = 1
+    .byte $28, $2A, $2C, $2C, $2A, $28, $A4, $A4, $C2, $C2, $44, $44
+  ELSE
+    .byte $18, $1A, $1C, $1C, $1A, $18, $54, $54, $72, $72, $24, $24
+  ENDIF
 
-GernadeGfx:
+GrenadeGfx:
     .byte $1C ; |   XXX  | $FD50
     .byte $1C ; |   XXX  | $FD51
     .byte $BE ; |X XXXXX | $FD52
@@ -8854,19 +7764,12 @@ GernadeGfx:
     .byte $7C ; | XXXXX  | $FD59
     .byte $3C ; |  XXXX  | $FD5A
     .byte $08 ; |    X   | $FD5B
-ColGernadeGfx:
-    .byte $C2            ; $FD5C
-    .byte $C4            ; $FD5D
-    .byte $C4            ; $FD5E
-    .byte $C2            ; $FD5F
-    .byte $C4            ; $FD60
-    .byte $C4            ; $FD61
-    .byte $C2            ; $FD62
-    .byte $C4            ; $FD63
-    .byte $C4            ; $FD64
-    .byte $C2            ; $FD65
-    .byte $C2            ; $FD66
-    .byte $C2            ; $FD67
+ColGrenadeGfx:
+  IF PAL_COLORS = 1
+    .byte $52, $54, $54, $52, $54, $54, $52, $54, $54, $52, $52, $52
+  ELSE
+    .byte $C2, $C4, $C4, $C2, $C4, $C4, $C2, $C4, $C4, $C2, $C2, $C2
+  ENDIF
 
 LivesGfx:
     .byte $1C ; |   XXX  | $FD68
@@ -8883,24 +7786,18 @@ LivesGfx:
     .byte $08 ; |    X   | $FD73
 
 ColLivesGfx:
-    .byte $C2            ; $FD74
-    .byte $C2            ; $FD75
-    .byte $C4            ; $FD76
-    .byte $C4            ; $FD77
-    .byte $C2            ; $FD78
-    .byte $C4            ; $FD79
-    .byte $C4            ; $FD7A
-    .byte $C2            ; $FD7B
-    .byte $46            ; $FD7C
-    .byte $C4            ; $FD7D
-    .byte $C4            ; $FD7E
-    .byte $C4            ; $FD7F
+  IF PAL_COLORS = 1
+    .byte $52, $52, $54, $54, $52, $54, $54, $52, $66, $54, $54, $54
+  ELSE
+    .byte $C2, $C2, $C4, $C4, $C2, $C4, $C4, $C2, $46, $C4, $C4, $C4
+  ENDIF
 
-LFD80:
-    .byte $0C ; |    XX  | $FD80
-    .byte $0E ; |    XXX | $FD81  colors for score
-    .byte $00 ; |        | $FD82
-    .byte $0E ; |    XXX | $FD83
+ColScoreGfx:
+  IF PAL_COLORS = 1
+    .byte $0C, $0E, $00, $0E
+  ELSE
+    .byte $0C, $0E, $00, $0E
+  ENDIF
 
 LFD84:
     .byte <LFD92         ; $FD84  cover up dead soldier?
@@ -8945,7 +7842,7 @@ LFDA1:
 LFDA9:
     .byte $01 ; |       X| $FDA9
     .byte $00 ; |        | $FDAA  NUSIZ1
-    .byte $30 ; |  XX    | $FDAB  gernade pointer
+    .byte $30 ; |  XX    | $FDAB  grenade pointer
     .word LDADC          ; $FDAC
 LFDAE:
     .byte $04 ; |     X  | $FDAE
@@ -9096,10 +7993,11 @@ HighAddressTab:
     .byte $90 ; |X  X    | $FE49
     .byte $B0 ; |X XX    | $FE4A
 LFE4B:
-    .byte $1A ; |   XX X | $FE4B
-    .byte $CA ; |XX  X X | $FE4C
-    .byte $2A ; |  X X X | $FE4D
-    .byte $CA ; |XX  X X | $FE4E
+  IF PAL_COLORS = 1
+    .byte $2A, $5A, $4A, $5A
+  ELSE
+    .byte $1A, $CA, $2A, $CA
+  ENDIF
 
 LFE4F:
     .byte LEFT_6         ; $FE4F
