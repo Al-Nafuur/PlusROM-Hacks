@@ -57,6 +57,7 @@
 ;09/27/05 High score routine moved, additional title display color tables, markers altered,
 ;         original SI lives bug (that displays 1 life left in 2-player attract mode) corrected,
 ;         title screen and intermission screen skip routines added.
+;06/04/22 PlusROM HSC Support added by Wolfgang(Al_Nafuur)Stubig.
 ;
 ;Instructions:
 ; Game variations follow the original manual with these exceptions:
@@ -277,6 +278,15 @@ ShipWaits    =  $9A
 
 
 ;constants:
+PLUSROM     = 1
+
+   IF PLUSROM
+WriteToBuffer     = $1ff0
+WriteSendBuffer   = $1ff1
+ReceiveBuffer     = $1ff2
+ReceiveBufferSize = $1ff3
+HIGHSCORE_ID      = 54	 ; Space Invaders Deluxe game ID in Highscore DB
+   ENDIF
 ;colors
 YEAR     =  $98
 SKY      =  $00
@@ -2059,6 +2069,7 @@ LDAF6:
        jmp    LD68D                   ;3
 
 
+  IF PLUSROM = 0
        ORG $1AF9
        RORG $DAF9
 ;extra bytes...use to give kudos
@@ -2073,6 +2084,29 @@ LDAF6:
        .byte ";for giving us a place to show off ;)"
        .byte ";And the members of AtariAge.com for playtesting and support!"
        .byte ";"
+  ELSE
+PlusROM_API:
+    .byte "a", 0, "h.firmaplus.de", 0
+
+MothershipPointsTbl:
+       .byte $05 ; |     X X| $DFE2
+       .byte $05 ; |     X X| $DFE3
+       .byte $10 ; |   X    | $DFE4
+       .byte $10 ; |   X    | $DFE5
+       .byte $15 ; |   X X X| $DFE6
+       .byte $20 ; |  X     | $DFE7
+       .byte $25 ; |  X  X X| $DFE8
+       .byte $30 ; |  XX    | $DFE9
+       .byte $50 ; | X X    | $DFEA
+
+SoundTbl:
+       .byte <ThumpSound      ; |X      X| $DFEB
+       .byte <DeathSound      ; |XX XXXXX| $DFEC
+       .byte <MissileSound    ; |XX  X  X| $DFED
+       .byte <MothershipSound ; |X  X XXX| $DFEE
+       .byte <Sound           ; |XXX    X| $DFEF
+       .byte <DeathSound      ; |XX XXXXX| $DFF0
+  ENDIF
 
        ORG $1CCA
        RORG $DCCA
@@ -2948,7 +2982,7 @@ LDFDB:
        .byte $24 ; |  X  X  | $DFDF
        .byte $2D ; |  X XX X| $DFE0
        .byte $36 ; |  XX XX | $DFE1
-
+  IF PLUSROM = 0
 MothershipPointsTbl:
        .byte $05 ; |     X X| $DFE2
        .byte $05 ; |     X X| $DFE3
@@ -2967,6 +3001,7 @@ SoundTbl:
        .byte <MothershipSound ; |X  X XXX| $DFEE
        .byte <Sound           ; |XXX    X| $DFEF
        .byte <DeathSound      ; |XX XXXXX| $DFF0
+  ENDIF
 
 START1:
        sta    $1FF9                   ;4 switch to bank2 and boot game
@@ -2977,10 +3012,18 @@ LDFF5:
        .byte $B4 ; |X XX X  | $DFF6
        .byte $AB ; |X X X XX| $DFF7
 
+  IF PLUSROM = 1
+       ORG $1FF0
+       RORG $DFF0
+
+       .byte " HSC 2022 "             ; Keep PlusROM hotspots free
+       .word ( PlusROM_API - $c000 )
+  ELSE
        ORG $1FF8
        RORG $DFF8
 
        .byte "2005"
+  ENDIF
        .word START1,0
 
 
@@ -3309,6 +3352,11 @@ LF1D3:
        and    #$03                    ;2
        beq    LF1DB                   ;2 skip if lives already zero (bugfix)
        dec    Lives                   ;5 lose life
+  IF PLUSROM = 1
+       tay
+       dey
+       beq    GAME_OVER
+  ENDIF
 LF1DB:
        lda    #$40                    ;2
        sta    Framecount              ;3
@@ -3346,6 +3394,11 @@ LF20E:
        lsr                            ;2
        bcs    LF216                   ;2
        jmp    LF384                   ;3
+
+  IF PLUSROM = 1
+GAME_OVER:
+       jmp SendPlusROMScore
+  ENDIF
 
 ;console switches...
 LF216:
@@ -5054,6 +5107,7 @@ LFC9E:
        jmp    LF2EA                   ;3
 
 
+  IF PLUSROM = 0
        ORG $2CAC
        RORG $FCAC
 
@@ -5079,6 +5133,44 @@ LFC9E:
        .byte ";09/25/05"
        .byte ";09/26/05"
        .byte ";09/27/05"
+  ELSE
+SendPlusROMScore:
+       lda Variation
+       sta WriteToBuffer
+       lda P1scoreHi
+       sta WriteToBuffer
+       lda P1scoreLo
+       sta WriteToBuffer
+       lda #HIGHSCORE_ID               ; game id in Highscore DB
+       sta WriteSendBuffer             ; send request to backend..
+       jmp LF1DB
+
+IntermissionColorTbl:
+;NTSC
+       .byte $34 ; |  XX X  | $FFDD
+       .byte $56 ; | X X XX | $FFDE
+       .byte $98 ; |X  XX   | $FFDF
+       .byte $C6 ; |XX   XX | $FFE0
+;PAL
+       .byte $64 ; | XX  X  | $FFE1
+       .byte $86 ; |X    XX | $FFE2
+       .byte $B8 ; |X XXX   | $FFE3
+       .byte $56 ; | X X XX | $FFE4
+
+TextTbl:
+       .byte <SOS1     ; |  XX  X | $FFE5
+       .byte <SOS2     ; |  XXX XX| $FFE6
+       .byte <SOS3     ; | X   X  | $FFE7
+       .byte <SOS4     ; |  XXX XX| $FFE8
+       .byte <SOS5     ; |  XX  X | $FFE9
+       .byte <SOS6     ; | X  XX X| $FFEA
+       .byte <TROUBLE1 ; | X XX   | $FFEB
+       .byte <TROUBLE2 ; | XX X  X| $FFEC
+       .byte <TROUBLE3 ; | XXX X  | $FFED
+       .byte <TROUBLE4 ; | XXXXXXX| $FFEE
+       .byte <TROUBLE5 ; |X   X X | $FFEF
+       .byte <TROUBLE6 ; | X XXXX | $FFF0
+  ENDIF
 
        ORG $2D7C
        RORG $FD7C
@@ -5760,6 +5852,7 @@ LFFD4:
        .byte $07 ; |     XXX| $FFDB
        .byte $04 ; |     X  | $FFDC
 
+  IF PLUSROM = 0
 IntermissionColorTbl:
 ;NTSC
        .byte $34 ; |  XX X  | $FFDD
@@ -5786,6 +5879,11 @@ TextTbl:
        .byte <TROUBLE5 ; |X   X X | $FFEF
        .byte <TROUBLE6 ; | X XXXX | $FFF0
 
+  ELSE
+       ORG $2FE2
+       RORG $FFE2
+
+  ENDIF
 START2:
 ;filler
        NOP                            ;2
@@ -5795,8 +5893,16 @@ START2:
        NOP                            ;2
        jmp    START                   ;3 boot game
 
+  IF PLUSROM = 1
+       ORG $2FF0
+       RORG $FFF0
+
+       .byte " HSC 2022 "             ; Keep PlusROM hotspots free
+       .word ( PlusROM_API - $c000 )
+  ELSE
        ORG $2FF8
        RORG $FFF8
 
        .byte "2005"
+  ENDIF
        .word START2,0
