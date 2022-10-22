@@ -78,7 +78,7 @@ PLUSROM                 = 1
 
    IFNCONST COMPILE_REGION
 
-COMPILE_REGION         = PAL50       ; change to compile for different regions
+COMPILE_REGION         = NTSC       ; change to compile for different regions
 
    ENDIF
 
