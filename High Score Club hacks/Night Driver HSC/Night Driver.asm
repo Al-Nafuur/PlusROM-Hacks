@@ -40,11 +40,11 @@ COMPILE_REGION         = NTSC       ; change to compile for different regions
 
    ENDIF
 
-   IF !(COMPILE_REGION = NTSC || COMPILE_REGION = PAL50 || COMPILE_REGION = PAL60)
+   IF !(COMPILE_REGION = NTSC || COMPILE_REGION = PAL)
 
       echo ""
       echo "*** ERROR: Invalid COMPILE_REGION value"
-      echo "*** Valid values: NTSC = 0, PAL50 = 1, PAL60 = 2"
+      echo "*** Valid values: NTSC = 0, PAL = 1"
       echo ""
       err
 
@@ -120,14 +120,28 @@ RESET_MASK        = %01
 
 ROMTOP                  = $F000
 
+   IF COMPILE_REGION = NTSC
+
 VBLANK_TIME             = $30
 OVERSCAN_TIME           = $1C
+
+   ELSE
+
+VBLANK_TIME             = $31
+OVERSCAN_TIME           = $2B
+
+   ENDIF
 
 ; color constants
 BLACK          =  $00
 WHITE          =  $0E
 
-; NTSC color constants
+;-----------------------------------------------------------
+;      Color constants
+;-----------------------------------------------------------
+
+   IF COMPILE_REGION = NTSC
+
 YELLOW         = $10
 ORANGE         = $20
 BRICK_RED      = $30
@@ -138,6 +152,21 @@ BRIGHT_GREEN   = $C0
 GREEN          = $D0
 GREEN_BROWN    = $E0
 BROWN          = $F0
+
+   ELSE
+
+YELLOW         = $60
+ORANGE         = $40
+BRICK_RED      = $30
+RED            = $60
+BLUE_PURPLE    = $A0
+BLUE           = $D0
+BRIGHT_GREEN   = $50
+GREEN          = $50
+GREEN_BROWN    = $30
+BROWN          = $40
+
+   ENDIF
 
 H_FONT                  = 5
 H_OBSTACLE              = 8
@@ -375,6 +404,13 @@ ReadConsoleSwitches
    sta gameTimer
    lda #BLUE+3
    sta carColor
+   
+   IF COMPILE_REGION = PAL
+
+   lda #$83
+
+   ENDIF
+
    sta obstacleStatus
    lda #MAX_VELOCITY                ; assume EXPERT velocity setting
    bit SWCHB                        ; read the right difficulty switch
@@ -677,7 +713,7 @@ LF2A4:
    IF PLUSROM
 
    jmp SendPlusROMScore
-   org $f2ce
+   .byte $ff
 
    ELSE
 
@@ -746,8 +782,14 @@ DisplayKernel SUBROUTINE
    stx WSYNC                        ; wait for next scan line
    stx HMP0
    stx VBLANK                       ; enable TIA (D1 = 0)
+
+   IF COMPILE_REGION = NTSC
+
    lda #$E5
    sta TIM64T
+
+   ENDIF
+
    stx CTRLPF
    stx scoreGraphic1                ; clear score graphics for score kernel
    stx scoreGraphic2
@@ -795,6 +837,15 @@ ScoreKernel
        
 LF383:
    stx PF1                    ; 3 = @20   clear PF1 register (x = 0)
+
+   IF COMPILE_REGION = PAL
+
+   ldy #$24                   ; 2
+   sta WSYNC                  ; 3
+   .byte $88, $10, $FB
+
+   ENDIF
+
    ldy #$B0                   ; 2
    lda #%00000001             ; 2
    sta CTRLPF                 ; 3 = @27
@@ -909,6 +960,12 @@ CarKernel
    jmp Overscan               ; 3
        
 PylonKernel
+   IF COMPILE_REGION = PAL
+
+   .byte $A9,$D6,$8D,$96,$02
+
+   ENDIF
+
    lda pylonColor             ; 3
    bit colorMode              ; 3
    bpl .colorPylons           ; 2³
@@ -1023,7 +1080,16 @@ Overscan SUBROUTINE
 LF4CE:
    bcs LF4D3
 LF4D0:
+
+   IF COMPILE_REGION = NTSC
+
    jmp LF555
+
+   ELSE
+
+   jmp LF51F
+
+   ENDIF
 
 LF4D3:
    lda $9B
@@ -1073,15 +1139,37 @@ LF502:
    adc LF7B0,y
    sta initLeftPylonXPos
 LF51F:
+
+   IF COMPILE_REGION = NTSC
+
    lda $9B
    bne LF555
+
+   ELSE
+
+   ldx $9B
+   bne LF587
+
+   ENDIF
+
    inc $B7
    lda fireButtonValue
    eor SWCHA
    bpl LF532
+
+   IF COMPILE_REGION = NTSC
+
    lda #0
    sta $B7
    sta $9E
+
+   ELSE
+
+   stx $B7
+   stx $9E
+
+   ENDIF
+
 LF532:
    lda SWCHA                        ; read paddle button (accelerator)
    sta fireButtonValue              ; save for later (D7 = 0 when pressed)
@@ -1101,11 +1189,27 @@ LF532:
    beq LF551                        ; branch if maximum velocity reached
    inc carVelocity                  ; increase player's velocity
 LF551:
+
+   IF COMPILE_REGION = NTSC
+
    lda #0
    sta $B7
+
+   ELSE
+
+   stx $B7
+
+   ENDIF
+
 LF555:
+
+   IF COMPILE_REGION = NTSC
+
    ldx $9B
    bne LF587
+
+   ENDIF
+
    lda $C5
    bmi LF565
    cmp #72
@@ -1262,7 +1366,18 @@ InitPylonVariables
    lda #START_LEFT_PYLON_XPOS
    sta initLeftPylonXPos
    sta leftPylonHorizPos
+
+   IF COMPILE_REGION = NTSC
+
    lda #START_RIGHT_PLYON_XPOS
+
+   ELSE
+
+   clc
+   adc #$04
+
+   ENDIF
+
    sta rightPylonHorizPos
    ldx #1
    lda #XMAX+1
@@ -1391,7 +1506,13 @@ ExpertDifficultySettings
    .byte $C2, 10
    .byte $81, 10
    .byte $01, 10
+
+   IF COMPILE_REGION = NTSC
+
    .byte $81, 20
+
+   ENDIF
+
    .byte $C2, 12, 0
        
 CarGraphics
@@ -1567,7 +1688,16 @@ LF7ED
    .byte YELLOW+2
    .byte BRIGHT_GREEN+4
    .byte GREEN_BROWN+6
+
+   IF COMPILE_REGION = NTSC
+
    .byte RED+2
+
+   ELSE
+   
+   .byte RED+4
+
+   ENDIF
    .byte BLUE+4
 LF7F5: .byte $00 ; |        | $F7F5
        .byte $0C ; |    XX  | $F7F6
