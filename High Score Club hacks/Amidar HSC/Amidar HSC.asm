@@ -2022,6 +2022,10 @@ SkipSendScore
 
     ENDIF
 
+Waste10AndFixEarlyExit
+       lda SWCHA                    ;4
+       jmp LFD8B                    ;3
+
 
        ORG $FA84
 
@@ -2854,8 +2858,10 @@ LFD82:
 ;       nop                            ;2
 ;       nop                            ;2
 ;       jmp    LFD8B                   ;3 waste 3
-       dec    $2E                     ;5 waste 5
-       dec    $2E                     ;5 waste 5
+;       dec    $2E                     ;5 waste 5
+;       dec    $2E                     ;5 waste 5
+       jmp Waste10AndFixEarlyExit      ;3 waste 10
+       nop
 LFD8B:
        nop                            ;2
        nop                            ;2
