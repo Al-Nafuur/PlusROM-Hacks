@@ -1855,7 +1855,7 @@ LFFF8:
        .byte $08 ; |    X   | $FFFA
        .byte $09 ; |    X  X| $FFFB
 
-
+       .ds 9,0
 
 
 
