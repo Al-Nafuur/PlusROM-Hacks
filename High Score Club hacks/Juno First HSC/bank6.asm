@@ -83,8 +83,8 @@ SkipContinue
   ; Write Scores
   jsr WriteScores
 
-  ; Wait ~20 frames for highscore request to be sent
-  ldy #20
+  ; Wait ~60 frames for highscore request to be sent
+  ldy #60
 SendWaitLoop
   jsr StartScreen
   jsr NextFrame
