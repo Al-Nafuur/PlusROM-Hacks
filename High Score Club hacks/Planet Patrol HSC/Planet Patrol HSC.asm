@@ -7,7 +7,7 @@
 ;Landing strip border fixed
 ;Score repositioning fixed
 
-PLUSROM = 0
+PLUSROM = 1
 PAL60 = 0
 
 ; Disassembly of PlantPat.bin
@@ -1426,9 +1426,9 @@ LF63B:
        stx    VSYNC                   ;3
 
 
-       stx    WSYNC                   ;3 removed ?why?
+;;       stx    WSYNC                   ;3 removed
 
-       lda    #$30                    ;2
+       lda    #$31                    ;2
        sta    TIM64T                  ;4
        lda    $D9                     ;3
        beq    LF660                   ;2
