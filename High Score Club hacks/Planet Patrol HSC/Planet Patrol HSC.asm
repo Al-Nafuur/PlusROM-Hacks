@@ -1,10 +1,13 @@
 ;PLANET PATROL...corrections by Kurt (Nukey Shay) Howe, 3/25/2008
+;PlusROM HSC Added by Wolfgang Stubig (Al_Nafuur) 7/2023
 ;Sprite positioning corrections (HMOVE's)
 ;Light/Dark scanline correction (LF2D9)
 ;Logo routine rewritten
 ;End-of-display bounce fixed
 ;Landing strip border fixed
 ;Score repositioning fixed
+
+PLUSROM = 0
 PAL60 = 0
 
 ; Disassembly of PlantPat.bin
@@ -64,6 +67,17 @@ SWCHB   =  $0282
 SWBCNT  =  $0283
 INTIM   =  $0284
 TIM64T  =  $0296
+
+   IF PLUSROM = 1
+
+WriteToBuffer           = $1FF0
+WriteSendBuffer         = $1FF1
+ReceiveBuffer           = $1FF2
+ReceiveBufferSize       = $1FF3
+
+HIGHSCORE_ID            = 67         ; Planet Patrol game ID in Highscore DB
+
+   ENDIF
 
        ORG $F000
 
@@ -191,10 +205,10 @@ LF0A5:
 ;       lda    #$00                    ;2 ...for INY here
 ;LF0B5:
 ;       sta    $9A,X                   ;4 ...(here)
-       ldy    #$FF                    ;2
-       sty    $A2                     ;3
        ldy    #$04                    ;2
        sty    $A3                     ;3
+       ldy    #$FF                    ;2
+       sty    $A2                     ;3
        ldx    #$06                    ;2
        iny                            ;2
 LF0B5:
@@ -250,7 +264,7 @@ LF0D7:
        sty    COLUPF                  ;3
 ;       dey                            ;2
 ;       sty    TIM64T                  ;4
-       ldy    #$F2                    ;2
+       ldy    #$FF                    ;2
        sty    TIM64T                  ;4
 
 
@@ -506,9 +520,11 @@ LF1F6:
        asl                            ;2
        and    #$0F                    ;2
   IF PAL60
-       eor    #$24                    ;2 sun color
+;       eor    #$24                    ;2 sun color
+       lda    #$46                    ;2 sun color no flicker!
   ELSE
-       eor    #$14                    ;2 sun color
+;       eor    #$14                    ;2 sun color
+       lda    #$36                    ;2 sun color no flicker!
   ENDIF
 
        sta    $D8                     ;3
@@ -1218,13 +1234,14 @@ LF587: ;waste 34
 
        sta    WSYNC                   ;3
 LF599:
-       lda    #$0F                    ;2
+;       lda    #$0F                    ;2
 
-LF59B:
-       ldx    INTIM                   ;4
-       bne    LF59B                   ;2
+;LF59B:
+;       ldx    INTIM                   ;4 (Fix visible scanline issue?)
+;       bne    LF59B                   ;2
+       ldx    #$00                     ;2
        stx    COLUBK                  ;3
-       sta    TIM64T                  ;4
+;       sta    TIM64T                  ;4
        lda    $8C                     ;3
        bne    LF5A4                   ;2
        jmp    LF631                   ;3
@@ -1409,7 +1426,7 @@ LF63B:
        stx    VSYNC                   ;3
 
 
-;;       stx    WSYNC                   ;3 removed
+       stx    WSYNC                   ;3 removed ?why?
 
        lda    #$30                    ;2
        sta    TIM64T                  ;4
@@ -2363,7 +2380,13 @@ LFC04:
        bpl    LFC2A                   ;2
        lda    #$06                    ;2
        ldx    #$F9                    ;2
+
+    IF PLUSROM = 1
+       jsr    SendPlusROMScore        ;6
+    ELSE
        jsr    LFD61                   ;6
+    ENDIF
+
        bne    LFC2A                   ;2
 LFC11:
        ldx    #$05                    ;2
@@ -2625,6 +2648,45 @@ LFD74:
 
 ;       ORG $FCF7
 ;       rts                            ;6
+
+    IF PLUSROM = 1
+
+PlusROM_API
+       .byte "a", 0, "h.firmaplus.de", 0
+
+SendPlusROMScore
+       lda $AA                       ; Game variant
+       and #1
+       bne SkipSendScore             ; Don't send scores for 2 player variants
+       lda $AA                       ; Game variant
+       clc                           ; usually we don't
+       ror                           ; transform here
+       sta WriteToBuffer             ; 
+       lda SWCHB
+       sta WriteToBuffer             ; 
+       lda $CE                       ; Score Hi BCD
+       sta WriteToBuffer             ; 
+       lda $CF                       ; Score Mid BCD
+       sta WriteToBuffer             ; 
+       lda $D0                       ; Score Lo BCD
+       sta WriteToBuffer             ; 
+       lda #HIGHSCORE_ID             ; game id in Highscore DB
+       sta WriteSendBuffer
+SkipSendScore
+       lda #$06                      ; restore Accumulator, X don't needs to be restored
+       jmp LFD61
+
+ShipShadow: ;6 bytes
+       .byte $00 ; |        | $FFEF
+       .byte $1E ; |   XXXX | $FFF0
+       .byte $3F ; |  XXXXXX| $FFF1
+       .byte $FF ; |XXXXXXXX| $FFF2
+       .byte $7E ; | XXXXXX | $FFF3
+       .byte $3C ; |  XXXX  | $FFF4
+
+    ENDIF
+
+
 
        ORG $FD89,0
 
@@ -3381,6 +3443,16 @@ FuelTruck:
        .byte $00 ; |        | $FFEC
        .byte $00 ; |        | $FFED
        .byte $00 ; |        | $FFEE
+
+    IF PLUSROM = 1
+
+       .byte $00 ; |        | $FFEF
+
+       ORG $FFFA
+        .word (PlusROM_API - $E000)      ; PlusRom API pointer
+
+    ELSE
+
 ShipShadow: ;6 bytes
        .byte $00 ; |        | $FFEF shared
        .byte $1E ; |   XXXX | $FFF0
@@ -3392,4 +3464,7 @@ ShipShadow: ;6 bytes
 
        ORG $FFF5
        .byte "KH-2008"
+
+    ENDIF
+
        .word START,0
