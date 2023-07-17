@@ -1,4 +1,5 @@
-;Chopper Command: Supercharger hack
+; Chopper Command: Supercharger hack by Kurt (Nukey Shay) Howe, 2006
+; PlusROM HSC hack added by Wolfgang Stubig (Al_Nafuur) 7/2023
 ; Disassembly of Choprcmd.bin
 ; Disassembled Tue Mar 28 17:22:01 2006
 ; Using DiStella v2.0
@@ -8,6 +9,9 @@
 ;      GFX FDF0 FF40
 ;      CODE FF41 FFA0
 ;      GFX FFA1 FFFF
+
+PLUSROM = 1
+PAL = 0
 
       processor 6502
 VSYNC   =  $00
@@ -51,6 +55,17 @@ SWCHA   =  $0280
 SWCHB   =  $0282
 INTIM   =  $0284
 TIM64T  =  $0296
+
+   IF PLUSROM = 1
+
+WriteToBuffer           = $1FF0
+WriteSendBuffer         = $1FF1
+ReceiveBuffer           = $1FF2
+ReceiveBufferSize       = $1FF3
+
+HIGHSCORE_ID            = 68         ; Chopper Command game ID in Highscore DB
+
+   ENDIF
 
        ORG $F000
 
@@ -676,7 +691,11 @@ LF3C3:
        STX    COLUPF                  ;3
        BNE    LF3C3                   ;2
        LDA    SWCHB                   ;4
+    IF PAL = 1
+       LDY    #$52                    ;2
+    ELSE
        LDY    #$3A                    ;2
+    ENDIF
        LSR                            ;2
        STA    WSYNC                   ;3
        STX    VSYNC                   ;3
@@ -757,6 +776,9 @@ LF441:
        LDA    #$01                    ;2
        DEC    $E4,X                   ;6
        BNE    LF46B                   ;2
+    IF PLUSROM = 1
+       JSR SendPlusROMScoreCheck
+    ENDIF
 LF457:
        LDA    $CF                     ;3
        BNE    LF441                   ;2
@@ -1479,7 +1501,11 @@ LF8CF:
        JSR    LF253                   ;6
        LDA    $F8                     ;3
        STA    COLUPF                  ;3
+    IF PAL = 1
+       LDA    #$44                    ;2
+    ELSE
        LDA    #$34                    ;2
+    ENDIF
        EOR    $F5                     ;3
        AND    $F4                     ;3
        STA    COLUP0                  ;3
@@ -1595,7 +1621,11 @@ LF979:
        STA    COLUBK                  ;3
        LDA    $AD                     ;3
        CLC                            ;2
+    IF PAL = 1
+       ADC    #$BF                    ;2
+    ELSE
        ADC    #$6F                    ;2
+    ENDIF
        EOR    #$0F                    ;2
        AND    $F4                     ;3
        STA    COLUPF                  ;3
@@ -1606,7 +1636,11 @@ LF9C0:
        STA    $82                     ;3
        LDY    #$03                    ;2
        LDA    $F8                     ;3
+    IF PAL = 1
+       EOR    #$04                    ;2
+    ELSE
        EOR    #$06                    ;2
+    ENDIF
        STX    ENAM0                   ;3
        STA    COLUPF                  ;3
        JSR    LF265                   ;6
@@ -1726,7 +1760,11 @@ LFA90:
        BCC    LFA76                   ;2 always branch
 
 LFA9F:
+    IF PAL = 1
+       LDA    #$04                    ;2
+    ELSE
        LDA    #$06                    ;2
+    ENDIF
        JSR    LF265                   ;6
        EOR    $F8                     ;3
        STA    COLUBK                  ;3
@@ -1750,6 +1788,11 @@ LFA9F:
        JSR    LF265                   ;6
        STA    $CA                     ;3
        STA    $CC                     ;3
+
+   IF PLUSROM = 1
+       LDA    #$10                    ;2
+   ELSE
+
        LDA    $A9                     ;3
        BEQ    LFAD9                   ;2
 LFAD5:
@@ -1767,6 +1810,8 @@ LFAE3:
        LSR                            ;2
        LSR                            ;2
        LSR                            ;2
+   ENDIF
+
        STA    $CF                     ;3
        STA    HMCLR                   ;3
 ;copyright message
@@ -1798,7 +1843,13 @@ LFAEA:
        STA    GRP0                    ;3
        STA    HMOVE                   ;3
        STA    GRP1                    ;3
+
+    IF PAL = 1
+       LDA    #$45                    ;2
+    ELSE
        LDA    #$21                    ;2
+    ENDIF
+
        STA    TIM64T                  ;4
        JSR    LF265                   ;6
        STX    VBLANK                  ;3
@@ -2355,11 +2406,16 @@ LFFA0:
 
 
 
+    IF PLUSROM = 1
+PlusROM_API
+       .byte "a", 0, "h.firmaplus.de", 0
+    ELSE
 
 ;       ORG $FE49
 ;       .byte 0
 
        ORG $FE49
+    ENDIF
 
 LFDF6:
        .byte $40 ; | X      | $FDF6
@@ -2431,6 +2487,16 @@ LFF1A:
        .byte $36 ; |  XX XX | $FF1B
        .byte $56 ; | X X XX | $FF1C
 LFF17:
+    IF PAL = 1
+       .byte $2E, $2C, $2A, $28, $48, $68
+LFF1D:
+LFF23:
+       .byte $88, $88
+LFF25:
+       .byte $A8, $A8
+LFF27:
+       .byte $C8, $C8
+    ELSE
        .byte $1E ; |   XXXX | $FF1D
        .byte $1C ; |   XXX  | $FF1E
        .byte $1A ; |   XX X | $FF1F
@@ -2447,6 +2513,8 @@ LFF25:
 LFF27:
        .byte $78 ; | XXXX   | $FF27
        .byte $78 ; | XXXX   | $FF28
+    ENDIF
+
 LFF29:
        .byte $FE ; |XXXXXXX | $FF29
        .byte $02 ; |      X | $FF2A
@@ -2486,6 +2554,7 @@ Copyright2gfx:
        .byte $41 ; | X     X| $FFA6
        .byte $0F ; |    XXXX| $FFA7
        .byte $00 ; |        | $FFA8
+   IF PLUSROM = 0
        .byte $47 ; | X   XXX| $FFA9
        .byte $41 ; | X     X| $FFAA
        .byte $77 ; | XXX XXX| $FFAB
@@ -2508,6 +2577,8 @@ Copyright1gfx:
        .byte $80 ; |X       | $FFBB
        .byte $90 ; |X  X    | $FFBC
        .byte $F0 ; |XXXX    | $FFBD
+   ENDIF
+
 Copyright3gfx:
        .byte $50 ; | X X    | $FFBE
        .byte $58 ; | X XX   | $FFBF
@@ -2517,6 +2588,7 @@ Copyright3gfx:
        .byte $11 ; |   X   X| $FFC3
        .byte $F0 ; |XXXX    | $FFC4
        .byte $00 ; |        | $FFC5
+   IF PLUSROM = 0
        .byte $03 ; |      XX| $FFC6
        .byte $00 ; |        | $FFC7
        .byte $4B ; | X  X XX| $FFC8
@@ -2524,6 +2596,8 @@ Copyright3gfx:
        .byte $6B ; | XX X XX| $FFCA
        .byte $00 ; |        | $FFCB
        .byte $08 ; |    X   | $FFCC
+   ENDIF
+
 LFFCD:
        .byte $00 ; |        | $FFCD shared
        .byte $F7 ; |XXXX XXX| $FFCE
@@ -2566,6 +2640,7 @@ Copyright5gfx:
        .byte $00 ; |        | $FFF2
        .byte $00 ; |        | $FFF3
        .byte $00 ; |        | $FFF4
+   IF PLUSROM = 0
        .byte $00 ; |        | $FFF5
        .byte $00 ; |        | $FFF6
        .byte $11 ; |   X   X| $FFF7
@@ -2574,7 +2649,26 @@ Copyright5gfx:
        .byte $15 ; |   X X X| $FFFA
        .byte $17 ; |   X XXX| $FFFB
        .byte $00 ; |        |
+   ELSE
 
+SendPlusROMScore
+       beq SendPlusROMScoreEnd       ; Not player one
+       lda $E0                       ; Game Select (0 - 3)
+       lsr                           ; only the second bit (cadet or commander)
+       sta WriteToBuffer             ; 
+       lda SWCHB                     ; Difficulty switches
+       sta WriteToBuffer             ; 
+       lda $EC,x                     ; Score Hi BCD (we might send score of second player too, but..)
+       sta WriteToBuffer             ; 
+       lda $EE,x                     ; Score Mid BCD
+       sta WriteToBuffer             ; 
+       lda $F0,x                     ; Score Lo BCD
+       sta WriteToBuffer             ; 
+       lda #HIGHSCORE_ID             ; game id in Highscore DB
+       sta WriteSendBuffer
+SendPlusROMScoreEnd
+       rts
+    ENDIF
 
 
        ORG $FF00
@@ -2744,6 +2838,9 @@ LFE8D:
        .byte $79 ; | XXXX  X| $FE94
        .byte $30 ; |  XX    | $FE95
 Copyright6gfx:
+   IF PLUSROM = 1
+Copyright1gfx:
+   ENDIF
        .byte $00 ; |        | $FE96 shared
        .byte $00 ; |        | $FE97 shared
        .byte $00 ; |        | $FE98 shared
@@ -2754,11 +2851,13 @@ Copyright6gfx:
        .byte $00 ; |        | $FE9D shared
        .byte $00 ; |        | $FE9E shared
        .byte $00 ; |        | $FE9F
+;    IF PLUSROM = 0
        .byte $77 ; | XXX XXX| $FEA0
        .byte $54 ; | X X X  | $FEA1
        .byte $77 ; | XXX XXX| $FEA2
        .byte $51 ; | X X   X| $FEA3
        .byte $77 ; | XXX XXX| $FEA4
+;    ENDIF
        .byte $00 ; |        | $FEA5
        .byte $7C ; | XXXXX  | $FEA6
        .byte $C3 ; |XX    XX| $FEA7
@@ -2816,6 +2915,7 @@ Copyright4gfx:
        .byte $80 ; |X       | $FED6
        .byte $FE ; |XXXXXXX | $FED7
        .byte $00 ; |        | $FED8
+    IF PLUSROM = 0
        .byte $80 ; |X       | $FED9
        .byte $80 ; |X       | $FEDA
        .byte $AA ; |X X X X | $FEDB
@@ -2823,20 +2923,32 @@ Copyright4gfx:
        .byte $BA ; |X XXX X | $FEDD
        .byte $27 ; |  X  XXX| $FEDE
        .byte $22 ; |  X   X | $FEDF
+    ENDIF
+
 LFEE0:
        .byte $00 ; |        | $FEE0 shared
        .byte $2C ; |  X XX  | $FEE1
+    IF PAL = 1
+        .byte $52, $20
+LFEE4:
+        .byte $D8
+    ELSE
        .byte $D2 ; |XX X  X | $FEE2
        .byte $10 ; |   X    | $FEE3
 LFEE4:
        .byte $88 ; |X   X   | $FEE4 shared
+    ENDIF
        .byte $2A ; |  X X X | $FEE5
        .byte $2C ; |  X XX  | $FEE6
        .byte $2E ; |  X XXX | $FEE7
        .byte $00 ; |        | $FEE8
        .byte $00 ; |        | $FEE9
+    IF PAL = 1
+       .byte $B2, $B2
+    ELSE
        .byte $80 ; |X       | $FEEA
        .byte $80 ; |X       | $FEEB
+    ENDIF
        .byte $0E ; |    XXX | $FEEC
        .byte $0E ; |    XXX | $FEED
        .byte $0E ; |    XXX | $FEEE
@@ -2851,9 +2963,22 @@ LFDF0:
        .byte $10 ; |   X    | $FDF4
        .byte $00 ; |        | $FDF5
 
+    IF PLUSROM = 1
+       ORG $FFF0
+       .byte $ff,$ff,$ff,$ff             ; Protect PlusROM hotspots
+SendPlusROMScoreCheck
+       CPX #$01                          ; Check for first player
+       JMP SendPlusROMScore
+
+       ORG $FFFA
+        .word (PlusROM_API - $E000)      ; PlusRom API pointer
+
+    ELSE
        .byte $40 ; | X      | $FDF6 unused
        .byte $40 ; | X      | $FDF7 unused
 
        ORG $FFF8
        .byte "2007"
+    ENDIF
+
        .word START,0
