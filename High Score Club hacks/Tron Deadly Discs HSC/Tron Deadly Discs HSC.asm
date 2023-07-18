@@ -1,5 +1,7 @@
 ;TRON - DEADLY DISCS: Supercharger hack by Kurt (Nukey Shay) Howe, 5/18/2008
+; PlusROM HSC hack added by Wolfgang Stubig (Al_Nafuur) 7/2023
 
+PLUSROM = 1
 PAL = 0
 
 ; Disassembly of trondead.bin
@@ -162,7 +164,16 @@ ENEMY7COLOR      = $22
 ENEMY8COLOR      = $F8
   ENDIF
 
+  IF PLUSROM = 1
 
+WriteToBuffer           = $1FF0
+WriteSendBuffer         = $1FF1
+ReceiveBuffer           = $1FF2
+ReceiveBufferSize       = $1FF3
+
+HIGHSCORE_ID            = 69         ; Tron Deadly Discs game ID in Highscore DB
+
+  ENDIF
 
        ORG $F000
 
@@ -968,7 +979,7 @@ LF4A3:
        LDA    #$00                    ;2
        STA    $98                     ;3
        STA    $A0                     ;3
-       JSR    LF7E1                   ;6
+       JSR    SendPlusROMScore        ;6
 LF4CC:
        JSR    LF7DB                   ;6
        JSR    LF8A5                   ;6
@@ -1822,6 +1833,11 @@ LF9D3:
        STA    $DF                     ;3
        RTS                            ;6
 
+    IF PLUSROM = 1
+PlusROM_API
+       .byte "a", 0, "h.firmaplus.de", 0
+    ELSE
+
 ;unused?
        .byte $FF ; |XXXXXXXX| $F9DB
        .byte $FF ; |XXXXXXXX| $F9DC
@@ -1840,6 +1856,7 @@ LF9D3:
        .byte $FF ; |XXXXXXXX| $F9E9
        .byte $FF ; |XXXXXXXX| $F9EA
        .byte $FF ; |XXXXXXXX| $F9EB
+    ENDIF
        .byte $FF ; |XXXXXXXX| $F9EC
 
 LF9ED:
@@ -2125,6 +2142,19 @@ LFBAF:
        STA    $C5                     ;3
        RTS                            ;6
 
+    IF PLUSROM = 1
+SendPlusROMScore
+       lda SWCHB                     ; only left difficulty switch
+       sta WriteToBuffer             ; 
+       lda $BD                       ; Score Hi BCD
+       sta WriteToBuffer             ; 
+       lda $BE                       ; Score Mid BCD
+       sta WriteToBuffer             ; 
+       lda $BF                       ; Score Lo BCD
+       jmp SendPlusROMScore2
+
+       org $FBDB
+    ELSE
 ;unused
        .byte $FF ; |XXXXXXXX| $FBC6
        .byte $FF ; |XXXXXXXX| $FBC7
@@ -2147,8 +2177,10 @@ LFBAF:
        .byte $FF ; |XXXXXXXX| $FBD8
        .byte $FF ; |XXXXXXXX| $FBD9
        .byte $FF ; |XXXXXXXX| $FBDA
+    ENDIF
 
 
+ENEMYSPRITE:
        .byte $0C ; |    XX  | $FBDB
        .byte $0C ; |    XX  | $FBDC
        .byte $1C ; |   XXX  | $FBDD
@@ -2448,6 +2480,26 @@ LFCDE:
        .byte $0F ; |    XXXX| $FCEB
        .byte $71 ; | XXX   X| $FCEC
 
+    IF PLUSROM = 1
+SendPlusROMScore2
+       sta WriteToBuffer             ; 
+       lda #HIGHSCORE_ID             ; game id in Highscore DB
+       sta WriteSendBuffer
+       jmp LF7E1
+
+LFD7F:
+       .byte $84 ; |X    X  | $FD7F
+       .byte $84 ; |X    X  | $FD80
+       .byte $84 ; |X    X  | $FD81
+       .byte $84 ; |X    X  | $FD82
+       .byte $88 ; |X   X   | $FD83
+       .byte $8A ; |X   X X | $FD84
+       .byte $8A ; |X   X X | $FD85
+       .byte $8A ; |X   X X | $FD86
+
+       org $FD00
+
+    ELSE
 ;unused?
        .byte $FF ; |XXXXXXXX| $FCED
        .byte $FF ; |XXXXXXXX| $FCEE
@@ -2468,6 +2520,8 @@ LFCDE:
        .byte $FF ; |XXXXXXXX| $FCFD
        .byte $FF ; |XXXXXXXX| $FCFE
        .byte $FF ; |XXXXXXXX| $FCFF
+    ENDIF
+
 LFD00:
        .byte $00 ; |        | $FD00
        .byte $DD ; |XX XXX X| $FD01
@@ -2597,6 +2651,7 @@ LFD77:
        .byte $6D ; | XX XX X| $FD7C
        .byte $6D ; | XX XX X| $FD7D
        .byte $6D ; | XX XX X| $FD7E
+    IF PLUSROM = 0
 LFD7F:
        .byte $84 ; |X    X  | $FD7F
        .byte $84 ; |X    X  | $FD80
@@ -2606,6 +2661,7 @@ LFD7F:
        .byte $8A ; |X   X X | $FD84
        .byte $8A ; |X   X X | $FD85
        .byte $8A ; |X   X X | $FD86
+    ENDIF
 
 
 LFD87:
@@ -2999,11 +3055,21 @@ LFFDC:
        STA    $90,X                   ;4
        RTS                            ;6
 
+  IF PLUSROM = 1
+       ORG $FFF0
+       .byte $ff,$ff,$ff,$ff             ; Protect PlusROM hotspots
+LFEE8:
+       .byte $10 ; |   X    | $FEE8
+       .byte $12 ; |   X  X | $FEE9
 
+       ORG $FFFA
+        .word (PlusROM_API - $E000)      ; PlusRom API pointer
+  ELSE
 LFEE8:
        .byte $10 ; |   X    | $FEE8
        .byte $12 ; |   X  X | $FEE9
 
        ORG $FFF8
        .byte "2008"
+  ENDIF
        .word START,0
