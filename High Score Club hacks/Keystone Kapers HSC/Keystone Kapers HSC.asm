@@ -1,5 +1,7 @@
 ;KEYSTONE KAPERS (c)1983 Activision ; Supercharger hack by Kurt (Nukey Shay) Howe, 8/30/2009
+; PlusROM HSC hack added by Wolfgang Stubig (Al_Nafuur) 7/2023
 
+PLUSROM = 1
 PAL   = 0
 PAL50 = 0
 
@@ -82,6 +84,17 @@ SWCHA   =  $0280
 SWCHB   =  $0282
 INTIM   =  $0284
 TIM64T  =  $0296
+
+   IF PLUSROM = 1
+
+WriteToBuffer           = $1FF0
+WriteSendBuffer         = $1FF1
+ReceiveBuffer           = $1FF2
+ReceiveBufferSize       = $1FF3
+
+HIGHSCORE_ID            = 70         ; Keystone Kapers game ID in Highscore DB
+
+   ENDIF
 
        ORG $F000
 
@@ -655,8 +668,12 @@ LF39E:
        ldy    $96                     ;3
        dey                            ;2
        bpl    LF3B2                   ;2
+    IF PLUSROM = 1
+       jsr SendPlusROMScore
+    ELSE
        inc    $88                     ;5
        iny                            ;2
+    ENDIF
        sty    $89                     ;3
        beq    LF3BB                   ;2
 LF3B2:
@@ -1607,16 +1624,28 @@ LF9AE:
        tya                            ;2
        eor    #$07                    ;2
        sta    $85                     ;3
+   IF PLUSROM = 1
+       lda    #$58                    ;2
+   ELSE
        lda    #$85                    ;2
+   ENDIF
        ldx    #$0C                    ;2 just start X 4 bytes higher
        sec                            ;2
        sta    WSYNC                   ;3
        sta    HMOVE                   ;3
 LF9BE:
        sta    $BF-4,X                 ;4
+   IF PLUSROM = 1
+       nop                            ;2
+   ELSE
        sbc    #$08                    ;2
+   ENDIF
        sta    $BD-4,X                 ;4
+   IF PLUSROM = 1
+       nop                            ;2
+   ELSE
        sbc    #$08                    ;2
+   ENDIF
        dex                            ;2
        dex                            ;2
        dex                            ;2
@@ -2734,10 +2763,16 @@ LFFE9:
 ;       .byte $F4 ; |XXXX X  | $FFF0
 ;       .byte $F8 ; |XXXXX   | $FFF1
 ;       .byte $F8 ; |XXXXX   | $FFF2
-;altered so sprite copies won't bankswitch
+    IF PLUSROM = 1
+       .byte <spriteCopies
+       .byte <spriteCopies + 4 
+       .byte <spriteCopies + 4
+    ELSE
+;altered so sprite copies won't bankswitch 
        .byte $F4 ; |        | $FFF4
-       .byte $F6 ; |        | $FFF4
-       .byte $F6 ; |        | $FFF4
+       .byte $F6 ; |        | $FFF4 (Al_Nafuur: Will not work on the SC for higher levels,
+       .byte $F6 ; |        | $FFF4  because index reads with +3 and +4 seem to occure!)
+    ENDIF
 
        .byte $58 ; | X XX   | $FFF3
        .byte $00 ; |        | $FFF4
@@ -3179,6 +3214,7 @@ Waste_12_cycles:
        .byte $00 ; |        | $FF5E
        .byte $00 ; |        | $FF5F
 
+    IF PLUSROM = 0
        .byte $F7 ; |XXXX XXX| $FF60
        .byte $95 ; |X  X X X| $FF61
        .byte $87 ; |X    XXX| $FF62
@@ -3224,6 +3260,7 @@ Waste_12_cycles:
        .byte $73 ; | XXX  XX| $FF8A
        .byte $51 ; | X X   X| $FF8B
        .byte $77 ; | XXX XXX| $FF8C
+   ENDIF
 
   IF PAL
 LFF8D:
@@ -3340,11 +3377,44 @@ LFDAB:
        adc    #$1F                    ;2
        rts                            ;6
 
-       ORG $FFF4
+    IF PLUSROM = 1
+SendPlusROMScore
+       lda $9A                        ; Score Hi BCD
+       sta WriteToBuffer              ; 
+       lda $9B                        ; Score Mid BCD
+       sta WriteToBuffer              ; 
+       lda $9C                        ; Score Lo BCD
+       sta WriteToBuffer              ; 
+       lda #HIGHSCORE_ID              ; game id in Highscore DB
+       sta WriteSendBuffer
+       inc    $88                     ;5
+       iny                            ;2
+       rts
+
+        org $FFE0
+spriteCopies
+       .byte $00
+       .byte $04
+       .byte $06
+       .byte $06
+       .byte $00
+       .byte $00
+       .byte $04
+       .byte $04
+
+PlusROM_API
+       .byte "a", 0, "h.firmaplus.de", 0
+
+      ORG $FFFA
+       .word (PlusROM_API - $E000)      ; PlusRom API pointer
+
+    ELSE
+       ORG $FFF4                        ;(this spriteCopies table seems to be wrong and too short!)
        .byte $00
        .byte $00
        .byte $00
        .byte $00
        .byte "2009"
+    ENDIF
        .word START
        .word START
