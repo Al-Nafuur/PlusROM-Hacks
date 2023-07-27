@@ -1,7 +1,21 @@
 ;SPITFIRE ATTACK (c)1983 Milton Bradley: Supercharger conv. by Kurt (Nukey Shay) Howe, 10/06/08
+; PlusROM HSC hack added by Wolfgang Stubig (Al_Nafuur) 7/2023
+
+SUPERCHARGER = 0
+PLUSROM = 1
 
 PAL60 = 0
 RIVER = 1 ;(alters color of the "road"...looks more like a river anyway)
+
+
+   IF SUPERCHARGER = 1 && PLUSROM = 1
+
+      echo ""
+      echo "*** ERROR: SuperCharger and PlusROM arn't compatible"
+      echo ""
+      err
+
+   ENDIF
 
 ;Changelog:
 ; Supercharger-compatability added
@@ -68,6 +82,17 @@ $029E   =  $029E ; long
 
 console = $DF
 ;$E0-$FF unused (stack only on upper ram)
+
+   IF PLUSROM = 1
+
+WriteToBuffer           = $1FF0
+WriteSendBuffer         = $1FF1
+ReceiveBuffer           = $1FF2
+ReceiveBufferSize       = $1FF3
+
+HIGHSCORE_ID            = 70         ; Spitfire Attack game ID in Highscore DB
+
+   ENDIF
 
        ORG $F000
 
@@ -310,8 +335,12 @@ LF103:
 ;       sta    $AE                     ;3
        dec    $C8                     ;5
        bne    LF12C                   ;2
+    IF PLUSROM
+       jsr    SendPlusROMScore
+    ELSE
 ;       lda    #$FF                    ;2
        sta    $DB                     ;3 ...to be used here
+    ENDIF
 LF12C:
        inc    $AF                     ;5
 LF12E:
@@ -352,8 +381,12 @@ LF153:
        sta    $CE                     ;3 ...to be used here
        dec    $C8                     ;5
        bne    LF169                   ;2
+    IF PLUSROM
+       jsr    SendPlusROMScore
+    ELSE
        lda    #$FF                    ;2
        sta    $DB                     ;3
+    ENDIF
 LF169:
 ;       nop                            ;2 ??
        lda    $DB                     ;3
@@ -713,8 +746,12 @@ LF37B:
        sta    $AE                     ;3
        dec    $C8                     ;5
        bne    LF398                   ;2
+    IF PLUSROM
+       jsr    SendPlusROMScore
+    ELSE
        lda    #$FF                    ;2
        sta    $DB                     ;3
+    ENDIF
 LF398:
 ;       nop                            ;2 ??
        lda    $CF                     ;3
@@ -970,7 +1007,13 @@ LF52D:
 LF530:
        sta    WSYNC                   ;3
 ;       nop                            ;2 could remove this...
+    IF PLUSROM
+       nop                            ;2
+       nop                            ;2
+       nop                            ;2
+    ELSE
        lda    ($80,X)                 ;6
+    ENDIF
        lda    $90,X                   ;4
        sec                            ;2
 LF538: ;could possibly reuse subroutine portion LF848!
@@ -1267,7 +1310,7 @@ LF6E9: ;added
 
        lda    #$05                    ;2
        sta    CTRLPF                  ;3
-       lda    #$FB                    ;2
+       lda    #>Digit_0               ;2
        sta    $A7                     ;3
        sta    $A9                     ;3
        sta    $B1                     ;3
@@ -1276,7 +1319,7 @@ LF6E9: ;added
        sta    $B7                     ;3
        sta    $B9                     ;3
        sta    $BB                     ;3
-       lda    #$F9                    ;2
+       lda    #>Reserve_Plane         ;2
        sta    $A1                     ;3
        sta    $BD                     ;3
        sta    $BF                     ;3
@@ -1303,13 +1346,13 @@ LF6E9: ;added
        lda    #$60                    ;2
        sta    $BA                     ;3
 LF750:
-       lda    #$60                    ;2
+       lda    #<Digit_0               ;2
        sta    $B0                     ;3
        sta    $B2                     ;3
        sta    $B4                     ;3
        sta    $B6                     ;3
        sta    $B8                     ;3
-       lda    #$DA                    ;2
+       lda    #<Reserve_Plane         ;2
        sta    $BC                     ;3
        sta    $BE                     ;3
        sta    $C0                     ;3
@@ -1466,7 +1509,13 @@ LF83E:
 LF840:
        sta    WSYNC                   ;3
 ;       nop                            ;2 could eliminate this...
+    IF PLUSROM
+       nop                            ;2
+       nop                            ;2
+       nop                            ;2
+    ELSE
        lda    ($80,X)                 ;6
+    ENDIF
        lda    $8E,X                   ;4
        sec                            ;2
 LF848:
@@ -1516,6 +1565,30 @@ LF879:
 ;       ORG $F840
 ;56 bytes free space
 
+
+    IF PLUSROM
+SendPlusROMScore
+       lda    #$FF                    ;2
+       sta    $DB                     ;3
+       lda $B0                       ; Score digit 6 
+       sta WriteToBuffer             ; 
+       lda $B2                       ; Score digit 5
+       sta WriteToBuffer             ; 
+       lda $B4                       ; Score digit 4
+       sta WriteToBuffer             ; 
+       lda $B6                       ; Score digit 3
+       sta WriteToBuffer             ; 
+       lda $B8                       ; Score digit 2
+       sta WriteToBuffer             ; 
+       lda $BA                       ; Score digit 1
+       sta WriteToBuffer             ; 
+       lda #HIGHSCORE_ID             ; game id in Highscore DB
+       sta WriteSendBuffer
+       rts
+       
+    ENDIF
+
+    IF SUPERCHARGER
        ORG $F878,0
 
 LFFF7: ;moved
@@ -1524,7 +1597,9 @@ LFFF7: ;moved
        .byte $00 ; |        | $FFF9
        .byte $00 ; |        | $FFFA
        .byte $00 ; |        | $FFFB
+    ENDIF
 
+       ORG $F87D,0
        .byte $2C ; |  X XX  | $F87D
        .byte $0E ; |    XXX | $F87E
        .byte $F2 ; |XXXX  X | $F87F
@@ -1655,12 +1730,12 @@ LF8F5:
        .byte $B9 ; |X XXX  X| $F8F8
 LF8F9:
        .byte $00 ; |        | $F8F9
-       .byte $8A ; |X   X X | $F8FA
-       .byte $83 ; |X     XX| $F8FB
-       .byte $7C ; | XXXXX  | $F8FC
-       .byte $75 ; | XXX X X| $F8FD
-       .byte $6E ; | XX XXX | $F8FE
-       .byte $67 ; | XX  XXX| $F8FF
+       .byte <Digit_6 ; $8A ; |X   X X | $F8FA
+       .byte <Digit_5 ; $83 ; |X     XX| $F8FB
+       .byte <Digit_4 ; $7C ; | XXXXX  | $F8FC
+       .byte <Digit_3 ; $75 ; | XXX X X| $F8FD
+       .byte <Digit_2 ; $6E ; | XX XXX | $F8FE
+       .byte <Digit_1 ; $67 ; | XX  XXX| $F8FF
        .byte $00 ; |        | $F900
        .byte $12 ; |   X  X | $F901
        .byte $12 ; |   X  X | $F902
@@ -1879,6 +1954,7 @@ LF8F9:
        .byte $00 ; |        | $F9D7
        .byte $E2 ; |XXX   X | $F9D8
        .byte $02 ; |      X | $F9D9
+Reserve_Plane
        .byte $38 ; |  XXX   | $F9DA
        .byte $10 ; |   X    | $F9DB
        .byte $10 ; |   X    | $F9DC
@@ -2274,6 +2350,7 @@ LF8F9:
        .byte $3C ; |  XXXX  | $FB5E
        .byte $18 ; |   XX   | $FB5F
 
+Digit_0
        .byte $60 ; | XX     | $FB60
        .byte $90 ; |X  X    | $FB61
        .byte $90 ; |X  X    | $FB62
@@ -2282,6 +2359,7 @@ LF8F9:
        .byte $90 ; |X  X    | $FB65
        .byte $60 ; | XX     | $FB66
 
+Digit_1
        .byte $E0 ; |XXX     | $FB67
        .byte $40 ; | X      | $FB68
        .byte $40 ; | X      | $FB69
@@ -2290,6 +2368,7 @@ LF8F9:
        .byte $C0 ; |XX      | $FB6C
        .byte $40 ; | X      | $FB6D
 
+Digit_2
        .byte $F0 ; |XXXX    | $FB6E
        .byte $80 ; |X       | $FB6F
        .byte $40 ; | X      | $FB70
@@ -2298,6 +2377,7 @@ LF8F9:
        .byte $90 ; |X  X    | $FB73
        .byte $60 ; | XX     | $FB74
 
+Digit_3
        .byte $60 ; | XX     | $FB75
        .byte $90 ; |X  X    | $FB76
        .byte $10 ; |   X    | $FB77
@@ -2306,6 +2386,7 @@ LF8F9:
        .byte $90 ; |X  X    | $FB7A
        .byte $60 ; | XX     | $FB7B
 
+Digit_4
        .byte $10 ; |   X    | $FB7C
        .byte $10 ; |   X    | $FB7D
        .byte $10 ; |   X    | $FB7E
@@ -2314,6 +2395,7 @@ LF8F9:
        .byte $50 ; | X X    | $FB81
        .byte $30 ; |  XX    | $FB82
 
+Digit_5
        .byte $60 ; | XX     | $FB83
        .byte $90 ; |X  X    | $FB84
        .byte $10 ; |   X    | $FB85
@@ -2322,6 +2404,7 @@ LF8F9:
        .byte $80 ; |X       | $FB88
        .byte $F0 ; |XXXX    | $FB89
 
+Digit_6
        .byte $60 ; | XX     | $FB8A
        .byte $90 ; |X  X    | $FB8B
        .byte $90 ; |X  X    | $FB8C
@@ -2330,6 +2413,7 @@ LF8F9:
        .byte $90 ; |X  X    | $FB8F
        .byte $60 ; | XX     | $FB90
 
+Digit_7
        .byte $40 ; | X      | $FB91
        .byte $40 ; | X      | $FB92
        .byte $20 ; |  X     | $FB93
@@ -2338,6 +2422,7 @@ LF8F9:
        .byte $90 ; |X  X    | $FB96
        .byte $F0 ; |XXXX    | $FB97
 
+Digit_8
        .byte $60 ; | XX     | $FB98
        .byte $90 ; |X  X    | $FB99
        .byte $90 ; |X  X    | $FB9A
@@ -2346,6 +2431,7 @@ LF8F9:
        .byte $90 ; |X  X    | $FB9D
        .byte $60 ; | XX     | $FB9E
 
+Digit_9
        .byte $60 ; | XX     | $FB9F
        .byte $90 ; |X  X    | $FBA0
        .byte $10 ; |   X    | $FBA1
@@ -2711,13 +2797,16 @@ LFD02:
        ldy    $9A                     ;3
        cpy    $85                     ;3
        bcc    LFD16                   ;2
-
+    IF PLUSROM
+       jsr    Waste_13                ;6
+    ELSE
 ;waste 22 here (including BCS)
        lda    $80                     ;3
        nop                            ;2
        nop                            ;2
        lda    ($80,X)                 ;6
        lda    ($80,X)                 ;6
+    ENDIF
        bcs    LFD24                   ;2 always branch
 
 LFD16:
@@ -2739,7 +2828,13 @@ LFD24:
        lda    #$00                    ;2
        sta    GRP0                    ;3
        sta    GRP1                    ;3
+    IF PLUSROM
+       nop                            ;2
+       nop                            ;2
+       nop                            ;2
+    ELSE
        lda    ($80,X)                 ;6
+    ENDIF
        bcs    LFD42                   ;2 always branch
 
 LFD3A:
@@ -2751,7 +2846,13 @@ LFD42:
        jmp    LFD02                   ;3
 
 LFD45:
+    IF PLUSROM
+       nop                            ;2
+       nop                            ;2
+       nop                            ;2
+    ELSE
        lda    ($80,X)                 ;6
+    ENDIF
        lda    CXM0P                   ;3
        sta    $D2                     ;3
        sta    CXCLR                   ;3
@@ -2771,11 +2872,16 @@ LFD45:
        ldy    $9A                     ;3
        cpy    $85                     ;3
        bcc    LFD6D                   ;2
+    IF PLUSROM
+       jsr    Waste_13                ;6
+    ELSE
+;waste 22 here (including BCS)
        lda    $80                     ;3
        nop                            ;2
        nop                            ;2
        lda    ($80,X)                 ;6
        lda    ($80,X)                 ;6
+    ENDIF
        bcs    LFD7B                   ;2 always branch
 
 LFD6D:
@@ -2793,8 +2899,12 @@ LFD7B:
        bcc    LFD8D                   ;2
        ldx    $80                     ;3
        ldy    #$00                    ;2
+    IF PLUSROM
+       jsr    Waste_6                ;6
+    ELSE
        lda    ($80,X)                 ;6
        lda    ($80,X)                 ;6
+    ENDIF
        bcs    LFD99                   ;2 always branch
 
 LFD8D:
@@ -2839,7 +2949,13 @@ LFDBE:
        jmp    LFDDF                   ;3 could use BCC
 
 LFDCB:
+    IF PLUSROM
+       nop                            ;2
+       nop                            ;2
+       nop                            ;2
+    ELSE
        lda    ($80,X)                 ;6
+    ENDIF
        lda    $80                     ;3
        lda    $94                     ;3
        stx    HMM0                    ;3
@@ -2861,11 +2977,16 @@ LFDDF:
        ldy    $9A                     ;3
        cpy    $85                     ;3
        bcc    LFDFA                   ;2
+    IF PLUSROM
+       jsr    Waste_14                ;6
+    ELSE
+;waste 23 here (including BCS page cross)
        lda    $80                     ;3
        nop                            ;2
        nop                            ;2
        lda    ($80,X)                 ;6
        lda    ($80,X)                 ;6
+    ENDIF
        bcs    LFE08                   ;2 always branch
 
 LFDFA:
@@ -2892,11 +3013,16 @@ LFE08:
        ldy    $9A                     ;3
        cpy    $85                     ;3
        bcc    LFE2A                   ;2
+    IF PLUSROM
+       jsr    Waste_13                ;6
+    ELSE
+;waste 22 here (including BCS)
        lda    $80                     ;3
        nop                            ;2
        nop                            ;2
        lda    ($80,X)                 ;6
        lda    ($80,X)                 ;6
+    ENDIF
        bcs    LFE38                   ;2 always branch
 
 LFE2A:
@@ -2944,11 +3070,16 @@ LFE38:
        ldy    $9A                     ;3
        cpy    $85                     ;3
        bcc    LFE6A                   ;2
+    IF PLUSROM
+       jsr    Waste_13                ;6
+    ELSE
+;waste 22 here (including BCS)
        lda    $80                     ;3
        nop                            ;2
        nop                            ;2
        lda    ($80,X)                 ;6
        lda    ($80,X)                 ;6
+    ENDIF
        bcs    LFE78                   ;2 always branch
 
 LFE6A:
@@ -2968,7 +3099,13 @@ LFE78:
        tay                            ;2
        tax                            ;2
        nop                            ;2
+    IF PLUSROM
+       nop                            ;2
+       nop                            ;2
+       nop                            ;2
+    ELSE
        lda    ($80,X)                 ;6
+    ENDIF
        lda    $80                     ;3
        bcs    LFE97                   ;2 always branch
 
@@ -3014,7 +3151,13 @@ LFEBC:
        jmp    LFEDD                   ;3 could use BCC
 
 LFEC9:
+    IF PLUSROM
+       nop                            ;2
+       nop                            ;2
+       nop                            ;2
+    ELSE
        lda    ($80,X)                 ;6
+    ENDIF
        lda    $80                     ;3
        lda    $95                     ;3
        stx    HMM0                    ;3
@@ -3036,11 +3179,16 @@ LFEDD:
        ldy    $9A                     ;3
        cpy    $85                     ;3
        bcc    LFEF8                   ;2
+    IF PLUSROM
+       jsr    Waste_14                ;6
+    ELSE
+;waste 23 here (including BCS page cross)
        lda    $80                     ;3
        nop                            ;2
        nop                            ;2
        lda    ($80,X)                 ;6
        lda    ($80,X)                 ;6
+    ENDIF
        bcs    LFF06                   ;2 always branch
 
 LFEF8:
@@ -3069,11 +3217,16 @@ LFF06:
        ldy    $9A                     ;3
        cpy    $85                     ;3
        bcc    LFF2C                   ;2
+    IF PLUSROM
+       jsr    Waste_13                ;6
+    ELSE
+;waste 22 here (including BCS)
        lda    $80                     ;3
        nop                            ;2
        nop                            ;2
        lda    ($80,X)                 ;6
        lda    ($80,X)                 ;6
+    ENDIF
        bcs    LFF3A                   ;2 always branch
 
 LFF2C:
@@ -3088,11 +3241,16 @@ LFF3A:
        lda    #$00                    ;2
        sta    HMP1                    ;3
        ldx    #$00                    ;2
+    IF PLUSROM
+       jsr Waste_20                   ;6
+    ELSE
+;waste 26
        lda    ($80,X)                 ;6
        lda    ($80,X)                 ;6
        lda    ($80,X)                 ;6
        lda    ($80,X)                 ;6
        nop                            ;2
+    ENDIF
   IF PAL60
        lda    #$58                    ;2
   ELSE
@@ -3105,11 +3263,16 @@ LFF4D:
        ldy    $9A                     ;3
        cpy    $85                     ;3
        bcc    LFF61                   ;2
+    IF PLUSROM
+       jsr    Waste_13                ;6
+    ELSE
+;waste 22 here (including BCS)
        lda    $80                     ;3
        nop                            ;2
        nop                            ;2
        lda    ($80,X)                 ;6
        lda    ($80,X)                 ;6
+    ENDIF
        bcs    LFF6F                   ;2 always branch
 
 LFF61:
@@ -3143,11 +3306,16 @@ LFF8D:
        ldy    $9A                     ;3
        cpy    $85                     ;3
        bcc    LFFA1                   ;2
+    IF PLUSROM
+       jsr    Waste_13                ;6
+    ELSE
+;waste 22 here (including BCS)
        lda    $80                     ;3
        nop                            ;2
        nop                            ;2
        lda    ($80,X)                 ;6
        lda    ($80,X)                 ;6
+    ENDIF
        bcs    LFFAF                   ;2 always branch
 
 LFFA1:
@@ -3191,7 +3359,7 @@ LFFCC:
        sta    HMCLR                   ;3
        rts                            ;6
 
-
+; unused?
        .byte $10 ; |   X    | $FFE1
        .byte $08 ; |    X   | $FFE2
        .byte $00 ; |        | $FFE3
@@ -3215,13 +3383,46 @@ LFFCC:
        .byte $1C ; |   XXX  | $FFF5
        .byte $08 ; |    X   | $FFF6
 
-;LFFF7:
-;       .byte $F0 ; |XXXX    | $FFF7 5 bytes
-;       .byte $D0 ; |XX X    | $FFF8
-;       .byte $00 ; |        | $FFF9
-;       .byte $00 ; |        | $FFFA
-;       .byte $00 ; |        | $FFFB
-
+    IF SUPERCHARGER = 1
        ORG $FFF7,0
        .byte "-2008"
+    ELSE
+LFFF7:
+       .byte $F0 ; |XXXX    | $FFF7 5 bytes
+       .byte $D0 ; |XX X    | $FFF8
+       .byte $00 ; |        | $FFF9
+       .byte $00 ; |        | $FFFA
+       .byte $00 ; |        | $FFFB
+
+    ENDIF
+
+    IF PLUSROM = 1
+
+Waste_13
+        nop                   ; 2
+        nop                   ; 2
+        nop 0                 ; 3
+        rts                   ; 6
+
+Waste_20
+        nop                   ; 2
+        nop                   ; 2
+        nop                   ; 2
+Waste_14
+        nop                   ; 2
+        nop                   ; 2
+        nop                   ; 2
+        nop                   ; 2
+Waste_6
+        rts                   ; 6
+
+PlusROM_API
+       .byte "a", 0, "h.firmaplus.de", 0
+
+       ORG $FFFA
+        .word (PlusROM_API - $E000)      ; PlusRom API pointer
+
+    ENDIF
+
+       ORG $FFFC
        .word START,START
