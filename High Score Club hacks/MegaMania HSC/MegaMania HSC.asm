@@ -1,4 +1,11 @@
-ENDGAME = 0 ;set to 1 if you want game to end at 999,999 points
+; MegaMania (c)1982 Steve Cartwright
+; Supercharger conv. by Kurt (Nukey Shay) Howe 2007
+; PlusROM HSC hack added by Wolfgang Stubig (Al_Nafuur) 8/2023
+; PAL colors added by Wolfgang Stubig (Al_Nafuur) 8/2023
+
+ENDGAME = 0 ; set to 1 if you want game to end at 999,999 points
+PLUSROM = 1 ; might not be compatible with ENDGAME
+PAL50   = 0
 
 ; Disassembly of Megamana.bin
 ; Disassembled Tue May 01 23:40:50 2007
@@ -56,6 +63,36 @@ SWCHA   =  $0280
 SWCHB   =  $0282
 INTIM   =  $0284
 TIM64T  =  $0296
+
+
+  IF PAL50
+BLACK             = $00
+YELLOW            = $20
+ORANGE            = $60
+RED               = $60
+MAUVE             = $70
+BLUE              = $B0
+GREEN             = $50
+  ELSE
+BLACK             = $00
+YELLOW            = $10
+ORANGE            = $30
+RED               = $40
+MAUVE             = $50
+BLUE              = $80
+GREEN             = $C0
+  ENDIF
+
+   IF PLUSROM = 1
+
+WriteToBuffer           = $1FF0
+WriteSendBuffer         = $1FF1
+ReceiveBuffer           = $1FF2
+ReceiveBufferSize       = $1FF3
+
+HIGHSCORE_ID            = 72         ; MegaMania game ID in Highscore DB
+
+   ENDIF
 
        ORG $F000
 
@@ -912,7 +949,7 @@ LF55E:
        jsr    LFF9F                   ;6
        lda    #$10                    ;2
        sta    HMP1                    ;3
-       lda    #$16                    ;2
+       lda    #YELLOW|$6                    ;2
        eor    $86                     ;3
        and    $87                     ;3
        sta    COLUP0                  ;3
@@ -931,6 +968,9 @@ LF55E:
        sta    GRP0                    ;3
        sta    GRP1                    ;3
        sta    GRP0                    ;3
+   IF PLUSROM
+       ldy    #$07                    ;2 don't scroll Activision Logo
+   ELSE
        lda    $DA                     ;3
        lsr                            ;2
        lsr                            ;2
@@ -943,6 +983,7 @@ LF55E:
        sbc    #$04                    ;2
        tay                            ;2
 LF5EC:
+   ENDIF
        sty    $A4                     ;3
        sta    HMCLR                   ;3
 LF5F0:
@@ -981,7 +1022,11 @@ LF5F0:
        bne    LF639                   ;2
        dec    $DA                     ;5
 LF639:
+    IF PAL50
+       lda    #$3A                    ;2
+    ELSE
        lda    #$1F                    ;2
+    ENDIF
        ldx    #$82                    ;2
        sta    WSYNC                   ;3
        sta    TIM64T                  ;4
@@ -1147,7 +1192,11 @@ LF749:
        sty    $86                     ;3
        asl    $86                     ;5
        sta    $87                     ;3
+    IF PAL50
+       lda    #$50                    ;2
+    ELSE
        lda    #$30                    ;2
+    ENDIF
        sta    WSYNC                   ;3
        sta    TIM64T                  ;4
        lda    SWCHA                   ;4
@@ -1373,7 +1422,11 @@ LF8A5:
        inc    $DA                     ;5
        lda    $88                     ;3
        sta    $D4                     ;3
+    IF PLUSROM
+       jmp    SendPlusROMScore        ;3
+    ELSE
        jmp    LF8C9                   ;3
+    ENDIF
 
 LF8BE:
        jsr    LFFCE                   ;6
@@ -1825,6 +1878,7 @@ LFB88:
 
 
   IF ENDGAME = 0
+       .byte $60                      ; (rts) at original LFFC5-1 if X = 0 
 LFFC5:
        .byte $20 ; |  X     | $FFC5
        .byte $30 ; |  XX    | $FFC6
@@ -1857,16 +1911,16 @@ LFB96:
        sta    $AC                     ;3
        lda    LFD3F,X                 ;4
        sta    $AD                     ;3
-       lda    #$84                    ;2
+       lda    #BLUE|$4                ;2
        eor    $86                     ;3
        and    $87                     ;3
        sta    $99                     ;3
-       lda    #$82                    ;2
+       lda    #BLUE|$2                ;2
        eor    $86                     ;3
        and    $87                     ;3
        sta    $9B                     ;3
-       ldx    #$C4                    ;2
-       ldy    #$C2                    ;2
+       ldx    #GREEN|$4               ;2
+       ldy    #GREEN|$2               ;2
        lda    SWCHB                   ;4
        and    #$08                    ;2
        bne    LFBCB                   ;2
@@ -2052,6 +2106,7 @@ LFC80:
        .byte $00 ; |        | $FC85
        .byte $00 ; |        | $FC86
        .byte $00 ; |        | $FC87
+    IF PLUSROM = 0
        .byte $00 ; |        | $FC88
        .byte $00 ; |        | $FC89
        .byte $F7 ; |XXXX XXX| $FC8A
@@ -2060,6 +2115,8 @@ LFC80:
        .byte $80 ; |X       | $FC8D
        .byte $90 ; |X  X    | $FC8E
        .byte $F0 ; |XXXX    | $FC8F
+    ENDIF
+
 LFC90:
        .byte $AD ; |X X XX X| $FC90
        .byte $A9 ; |X X X  X| $FC91
@@ -2069,6 +2126,7 @@ LFC90:
        .byte $41 ; | X     X| $FC95
        .byte $0F ; |    XXXX| $FC96
        .byte $00 ; |        | $FC97
+    IF PLUSROM = 0
        .byte $47 ; | X   XXX| $FC98
        .byte $41 ; | X     X| $FC99
        .byte $77 ; | XXX XXX| $FC9A
@@ -2077,6 +2135,7 @@ LFC90:
        .byte $00 ; |        | $FC9D
        .byte $00 ; |        | $FC9E
        .byte $00 ; |        | $FC9F
+    ENDIF
 LFCA0:
        .byte $50 ; | X X    | $FCA0
        .byte $58 ; | X XX   | $FCA1
@@ -2086,6 +2145,7 @@ LFCA0:
        .byte $11 ; |   X   X| $FCA5
        .byte $F0 ; |XXXX    | $FCA6
        .byte $00 ; |        | $FCA7
+    IF PLUSROM = 0
        .byte $03 ; |      XX| $FCA8
        .byte $00 ; |        | $FCA9
        .byte $4B ; | X  X XX| $FCAA
@@ -2094,6 +2154,7 @@ LFCA0:
        .byte $00 ; |        | $FCAD
        .byte $08 ; |    X   | $FCAE
        .byte $00 ; |        | $FCAF
+    ENDIF
 LFCB0:
        .byte $BA ; |X XXX X | $FCB0
        .byte $8A ; |X   X X | $FCB1
@@ -2103,6 +2164,7 @@ LFCB0:
        .byte $80 ; |X       | $FCB5
        .byte $FE ; |XXXXXXX | $FCB6
        .byte $00 ; |        | $FCB7
+    IF PLUSROM = 0
        .byte $80 ; |X       | $FCB8
        .byte $80 ; |X       | $FCB9
        .byte $AA ; |X X X X | $FCBA
@@ -2111,6 +2173,7 @@ LFCB0:
        .byte $22 ; |  X   X | $FCBD
        .byte $27 ; |  X  XXX| $FCBE
        .byte $02 ; |      X | $FCBF
+    ENDIF
 LFCC0:
        .byte $E9 ; |XXX X  X| $FCC0
        .byte $AB ; |X X X XX| $FCC1
@@ -2120,6 +2183,7 @@ LFCC0:
        .byte $00 ; |        | $FCC5
        .byte $00 ; |        | $FCC6
        .byte $00 ; |        | $FCC7
+    IF PLUSROM = 0
        .byte $00 ; |        | $FCC8
        .byte $00 ; |        | $FCC9
        .byte $11 ; |   X   X| $FCCA
@@ -2128,6 +2192,7 @@ LFCC0:
        .byte $15 ; |   X X X| $FCCD
        .byte $17 ; |   X XXX| $FCCE
        .byte $00 ; |        | $FCCF
+    ENDIF
 LFCD0:
        .byte $00 ; |        | $FCD0
        .byte $00 ; |        | $FCD1
@@ -2137,6 +2202,7 @@ LFCD0:
        .byte $00 ; |        | $FCD5
        .byte $00 ; |        | $FCD6
        .byte $00 ; |        | $FCD7
+    IF PLUSROM = 0
        .byte $00 ; |        | $FCD8
        .byte $00 ; |        | $FCD9
        .byte $77 ; | XXX XXX| $FCDA
@@ -2145,6 +2211,39 @@ LFCD0:
        .byte $51 ; | X X   X| $FCDD
        .byte $77 ; | XXX XXX| $FCDE
        .byte $00 ; |        | $FCDF
+    ELSE
+LFFEE:
+       lda    LFDBA+1,Y               ;4
+       sta    $A3                     ;3
+       sta    $B0                     ;3
+       ldy    $D5                     ;3
+       lda    ($A2),Y                 ;5
+       sta    $AF                     ;3
+       rts                            ;6
+
+SendPlusROMScore
+       lda $80                       ; game variant -> skip if bit0 is set (two player game) like Planet Patrol
+       and #1
+       bne SkipSendScore             ; Don't send scores for 2 player variants
+       lda $80                       ; Game variant
+       clc                           ; usually we don't
+       ror                           ; transform here
+       sta WriteToBuffer             ; 
+       lda SWCHB
+       sta WriteToBuffer             ; 
+       lda $DB                       ; Score Hi BCD
+       sta WriteToBuffer             ; 
+       lda $DC                       ; Score Mid BCD
+       sta WriteToBuffer             ; 
+       lda $DD                       ; Score Lo BCD
+       sta WriteToBuffer             ; 
+       lda #HIGHSCORE_ID             ; game id in Highscore DB
+       sta WriteSendBuffer
+SkipSendScore
+       jmp    LF8C9                   ;3
+
+       ORG $FCE0
+    ENDIF
 LFCE0:
        .byte $D2 ; |XX X  X | $FCE0
        .byte $96 ; |X  X XX | $FCE1
@@ -2163,29 +2262,14 @@ LFCEA:
        .byte $50 ; | X X    | $FCEC
        .byte $38 ; |  XXX   | $FCED
        .byte $A8 ; |X X X   | $FCEE
-LFCEF:
-       .byte $00 ; |        | $FCEF
-       .byte $42 ; | X    X | $FCF0
-       .byte $44 ; | X   X  | $FCF1
-       .byte $1A ; |   XX X | $FCF2
-       .byte $06 ; |     XX | $FCF3
-LFCF4:
-       .byte $58 ; | X XX   | $FCF4
-       .byte $1A ; |   XX X | $FCF5
-       .byte $C8 ; |XX  X   | $FCF6
-       .byte $58 ; | X XX   | $FCF7
-       .byte $C8 ; |XX  X   | $FCF8
-       .byte $1A ; |   XX X | $FCF9
-       .byte $36 ; |  XX XX | $FCFA
-       .byte $1A ; |   XX X | $FCFB
-       .byte $C8 ; |XX  X   | $FCFC
-       .byte $36 ; |  XX XX | $FCFD
-       .byte $58 ; | X XX   | $FCFE
-       .byte $C8 ; |XX  X   | $FCFF
-       .byte $1A ; |   XX X | $FD00
-       .byte $58 ; | X XX   | $FD01
-       .byte $C8 ; |XX  X   | $FD02
-       .byte $1A ; |   XX X | $FD03
+LFCEF:  ; Color Table 1
+       .byte BLACK, RED|$2, RED|$4, YELLOW|$A
+       .byte BLACK|$6
+LFCF4:  ; Color Table 2
+       .byte MAUVE|$8, YELLOW|$A, GREEN|$8,  MAUVE|$8
+       .byte GREEN|$8, YELLOW|$A, ORANGE|$6, YELLOW|$A
+       .byte GREEN|$8, ORANGE|$6, MAUVE|$8,  GREEN|$8
+       .byte YELLOW|$A, MAUVE|$8, GREEN|$8,  YELLOW|$A
 LFD04:
        .byte $3F ; |  XXXXXX| $FD04
        .byte $5F ; | X XXXXX| $FD05
@@ -2901,10 +2985,9 @@ LFFB6:
        lsr                            ;2
        lsr                            ;2
        bcc    LFFC2                   ;2
-       ldy    LFFC4,X                 ;4
+       ldy    LFFC5-1,X               ;4
 LFFC2:
        sty    $E0                     ;3
-LFFC4:
        rts                            ;6
 
   IF ENDGAME
@@ -2942,7 +3025,13 @@ LFFE5:
 LFFEB:
        stx    $F1,Y                   ;4
        rts                            ;6
+  IF PLUSROM = 1
+PlusROM_API
+       .byte "a", 0, "h.firmaplus.de", 0
 
+        ORG $FFFA
+        .word (PlusROM_API - $E000)             ; PlusRom API pointer
+  ELSE
 LFFEE:
        lda    LFDBA+1,Y               ;4
        sta    $A3                     ;3
@@ -2952,9 +3041,10 @@ LFFEE:
        sta    $AF                     ;3
        rts                            ;6
 
-  IF ENDGAME = 0
+    IF ENDGAME = 0
        .byte "N.S.2007"
-  ENDIF
+    ENDIF
 
        ORG $FFFC
+  ENDIF
        .word START,START
