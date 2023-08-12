@@ -1,4 +1,5 @@
-;KOOLAID MAN (c)1982 Mattel: Supercharger version by Kurt (Nukey Shay) Howe, 8/31/2009
+; KOOLAID MAN (c)1982 Mattel: Supercharger version by Kurt (Nukey Shay) Howe, 8/31/2009
+; PlusROM HSC hack added by Wolfgang Stubig (Al_Nafuur) 8/2023
 
 PAL = 0
 PLUSROM = 1
