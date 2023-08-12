@@ -1,6 +1,7 @@
 ;KOOLAID MAN (c)1982 Mattel: Supercharger version by Kurt (Nukey Shay) Howe, 8/31/2009
 
 PAL = 0
+PLUSROM = 1
 
 ; Disassembly of Koolaid.bin
 ; Disassembled Wed Aug 26 17:54:18 2009
@@ -67,6 +68,17 @@ SWCHA   =  $0280
 SWCHB   =  $0282
 INTIM   =  $0284
 TIM64T  =  $0296
+
+   IF PLUSROM = 1
+
+WriteToBuffer           = $1FF0
+WriteSendBuffer         = $1FF1
+ReceiveBuffer           = $1FF2
+ReceiveBufferSize       = $1FF3
+
+HIGHSCORE_ID            = 74         ; Kool.Aid Man game ID in Highscore DB
+
+   ENDIF
 
        ORG $F000
 
@@ -1101,8 +1113,14 @@ LF5D1:
        lda    $B6                     ;3
        cmp    #$2E                    ;2
        bne    LF5CD                   ;2
+  IF PLUSROM = 1
+       jmp SendPlusROMScore
+       nop       
+ReturnFromSendScore
+  ELSE
        lda    #$80                    ;2
        sta    $D1                     ;3
+  ENDIF
        ldx    $CC                     ;3
        lda    #$19                    ;2
        sta    $98,X                   ;4
@@ -2992,8 +3010,30 @@ LFF7A:
        .byte $00 ; |        | $FFA4
        .byte $00 ; |        | $FFA5
 
+  IF PLUSROM = 1
+PlusROM_API
+       .byte "a", 0, "h.firmaplus.de", 0
 
+SendPlusROMScore
+       lda    #$80                    ;2
+       sta    $D1                     ;3
+       lda SWCHB
+       sta WriteToBuffer              ; 
+       lda $80                        ; Score Hi BCD
+       sta WriteToBuffer              ; 
+       lda $81                        ; Score Mid BCD
+       sta WriteToBuffer              ; 
+       lda #$00                       ; Score Lo BCD (always 00)
+       sta WriteToBuffer              ; 
+       lda #HIGHSCORE_ID              ; game id in Highscore DB
+       sta WriteSendBuffer
+       jmp ReturnFromSendScore
+
+       ORG $FFFA,$FF
+       .word (PlusROM_API - $E000)             ; PlusRom API pointer
+  ELSE
        ORG $FFF8,$FF
        .byte "2009"
+  ENDIF
        .word START
        .word START
