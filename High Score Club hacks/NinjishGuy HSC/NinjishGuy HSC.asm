@@ -14130,7 +14130,17 @@ ld1a9
     sta ram_A4,x
     dex
     bpl ld1a9
+
+  IF PLUSROM = 1
+
+    jmp SendPlusROMScoreEnd
+
+  ELSE
+
     jmp Lffdd
+
+  ENDIF
+
     ldx #$2b
     jmp ld1e5
 
@@ -15244,14 +15254,29 @@ Ldd8e
     jmp     Lffdd                    ;3
 
   IF PLUSROM = 1
+
 PlusROM_API
        .byte "a", 0, "h.firmaplus.de", 0
+SendPlusROMScoreEnd
+       lda $93                       ; Score Hi BCD
+       sta WriteToBuffer             ; 
+       lda $94                       ; Score Mid BCD
+       sta WriteToBuffer             ; 
+       lda $95                       ; Score Lo BCD
+       sta WriteToBuffer             ; 
+       lda #HIGHSCORE_ID             ; game id in Highscore DB
+       sta WriteSendBuffer
+    jmp     Lffdd                   ;3   =  39
+
 
     ORG     $6fd0, $ff
     RORG    $dfd0
+
   ELSE
+
     ORG     $6fd4, $ff
     RORG    $dfd4
+
   ENDIF
 
 Start_b6
