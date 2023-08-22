@@ -71,6 +71,8 @@ PAL60                   = 2
 TRUE                    = 1
 FALSE                   = 0
 
+PLUSROM                 = 1
+
    IFNCONST COMPILE_REGION
 
 COMPILE_REGION          = NTSC      ; change to compile for different regions
@@ -86,7 +88,22 @@ COMPILE_REGION          = NTSC      ; change to compile for different regions
       err
 
    ENDIF
-   
+
+;===============================================================================
+; PlusROM hotspots and gameId for HSC backend
+;===============================================================================
+ 
+   IF PLUSROM
+
+WriteToBuffer           = $1FF0
+WriteSendBuffer         = $1FF1
+ReceiveBuffer           = $1FF2
+ReceiveBufferSize       = $1FF3
+
+HIGHSCORE_ID            = 75         ; Laser Blast game ID in Highscore DB
+
+   ENDIF
+  
 ;===============================================================================
 ; F R A M E - T I M I N G S
 ;===============================================================================
@@ -757,7 +774,17 @@ Overscan
    lda leadShipDamageStatus         ; get LeadShip damage status value
    cmp #1
    bne BCD2Digits
+
+   IF PLUSROM = 1
+
+   jsr SendPlusROMScore
+
+   ELSE
+
    jsr ResetPlayerInfo
+
+   ENDIF
+
    dec remainingLives               ; reduce number of lives
    bpl BCD2Digits
    inc remoteStartTimer
@@ -1743,7 +1770,36 @@ ReserveFleetNUSIZTable
    .byte THREE_MED_COPIES
    .byte THREE_MED_COPIES
        
+    IF PLUSROM = 1
+
+PlusROM_API
+   .byte "a", 0, "h.firmaplus.de", 0
+
+SendPlusROMScore
+   lda remainingLives
+   bne endPlusROMScore
+   lda gameSelection
+   sta WriteToBuffer                ; game variation
+   lda playerScore
+   sta WriteToBuffer
+   lda playerScore + 1
+   sta WriteToBuffer
+   lda playerScore + 2
+   sta WriteToBuffer
+   lda #HIGHSCORE_ID                ; game id in Highscore DB
+   sta WriteSendBuffer
+endPlusROMScore
+   jmp ResetPlayerInfo
+
+   .org ROM_BASE + 4096 - 6, 0      ; 4K ROM
+   .word (PlusROM_API - $E000)      ; PlusRom API pointer
+
+    ELSE
+
    .org ROM_BASE + 2048 - 4, 0      ; 2K ROM
+
+   ENDIF
+
    .word Start
 LaserAudioFrequencyOffset
    .byte 0, 4
