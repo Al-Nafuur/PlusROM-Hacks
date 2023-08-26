@@ -1820,15 +1820,12 @@ SendPlusROMScore
    bpl .skipGameOver                ; if still positive then game not over
    sty gameState                    ; show that game is over (y = 0)
 
-; todo: add SWCHB here and in HSC backend transformation
-;   Left Difficulty Switch : UP for fast enemy shot.
-;                            DOWN for slow enemy shot.
-;   Right Difficulty Switch: UP for frequent enemy shot.
-;                            DOWN for less frequent enemy shot.
-;   lda SWCHB
-;   sta WriteToBuffer                ; game difficulty
-   lda gameSelection
-   sta WriteToBuffer                ; game variation
+   lda SWCHB                        ; merge difficulty switches (0-3)
+   and #%11000000                   ; and game selection (0-15)
+   lsr
+   lsr
+   ora gameSelection
+   sta WriteToBuffer                ; game difficulty & game selection (0-63)
    lda playerScore
    sta WriteToBuffer
    lda playerScore + 1
