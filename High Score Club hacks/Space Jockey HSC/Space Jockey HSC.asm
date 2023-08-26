@@ -104,6 +104,8 @@ PAL50                   = 1
 TRUE                    = 1
 FALSE                   = 0
 
+PLUSROM                 = 1
+
    IFNCONST COMPILE_REGION
 
 COMPILE_REGION         = NTSC       ; change to compile for different regions
@@ -117,6 +119,21 @@ COMPILE_REGION         = NTSC       ; change to compile for different regions
       echo "*** Valid values: NTSC = 0, PAL50 = 1"
       echo ""
       err
+
+   ENDIF
+
+;===============================================================================
+; PlusROM hotspots and gameId for HSC backend
+;===============================================================================
+ 
+   IF PLUSROM
+
+WriteToBuffer           = $1FF0
+WriteSendBuffer         = $1FF1
+ReceiveBuffer           = $1FF2
+ReceiveBufferSize       = $1FF3
+
+HIGHSCORE_ID            = 77         ; Space Jockey game ID in Highscore DB
 
    ENDIF
 
@@ -641,9 +658,21 @@ RollingMountainAnimation
    bpl .clearEnemiesLoop
    bcs .moveEnemies
    dec numberOfLives                ; reduce the number of lives
+
+  IF PLUSROM = 1
+
+   jmp SendPlusROMScore
+   nop                              ; just to have 4 bytes too
+ReturnFromSendPlusROMScore
+
+  ELSE
+
    bpl .skipGameOver                ; if still positive then game not over
    sty gameState                    ; show that game is over (y = 0)
 .skipGameOver
+
+  ENDIF
+
    sty spaceJockeyHit               ; show Space Jockey not hit (D1 = 0)
    ldx #<[spaceJockeyHorzPos - spaceJockeyColors]
    jsr InitLoop
@@ -1781,6 +1810,43 @@ Explosion3
    .byte $81 ; |X......X|
    .byte $24 ; |..X..X..|
        
+
+    IF PLUSROM = 1
+
+PlusROM_API
+   .byte "a", 0, "h.firmaplus.de", 0
+
+SendPlusROMScore
+   bpl .skipGameOver                ; if still positive then game not over
+   sty gameState                    ; show that game is over (y = 0)
+
+; todo: add SWCHB here and in HSC backend transformation
+;   Left Difficulty Switch : UP for fast enemy shot.
+;                            DOWN for slow enemy shot.
+;   Right Difficulty Switch: UP for frequent enemy shot.
+;                            DOWN for less frequent enemy shot.
+;   lda SWCHB
+;   sta WriteToBuffer                ; game difficulty
+   lda gameSelection
+   sta WriteToBuffer                ; game variation
+   lda playerScore
+   sta WriteToBuffer
+   lda playerScore + 1
+   sta WriteToBuffer
+   lda playerScore + 2
+   sta WriteToBuffer
+   lda #HIGHSCORE_ID                ; game id in Highscore DB
+   sta WriteSendBuffer
+.skipGameOver
+   jmp ReturnFromSendPlusROMScore
+
+   .org ROM_BASE + 4096 - 6, 0      ; 4K ROM
+   .word (PlusROM_API - $E000)      ; PlusRom API pointer
+
+    ELSE
+
    .org ROM_BASE + 2048 - 4, 0      ; 2K ROM
+
+   ENDIF
    .word Start                      ; RESET vector
    .word Start                      ; BRK vector
