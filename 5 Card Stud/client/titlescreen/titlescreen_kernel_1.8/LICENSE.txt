@@ -1,0 +1,48 @@
+Section 1 - The Titlescreen Kernel
+--------------------------------------------
+All references to "the code" in this section refer to the source code the 
+author has distributed with this package, with the exception of the code in the 
+"score_kernel.asm" file, which is bound by the batari Basic license. (see 
+section 2)
+
+The code is hereby placed into the public domain. Should your jurisdiction not 
+allow works to be placed in the public domain, the author hereby waives all 
+copyright and related or neighboring rights together with all associated claims 
+and causes of action with respect to this work to the extent possible under the 
+law.
+
+The author offers no guarantee of fitness or warranty for the code. You are 
+are liable for any and all damages or claims resulting from the usage of the 
+code, not the author. 
+
+Section 2 - The batari Basic License
+------------------------------------
+Permission is hereby granted, free of charge, to redistribute and use the 
+binaries or source code with or without modification, provided that the 
+following conditions are met: 
+
+1. Redistributions of source code must retain this list of conditions and the 
+following Copyright Notice and Disclaimer. 
+2. Distributions of any binary forms that are derived from the source code, 
+modified or unmodified, must reproduce this list of conditions and the 
+following Copyright Notice and Disclaimer in the documentation and/or other 
+materials provided with the distribution.
+
+Copyright Notice:
+batari Basic
+Copyright (C) 2005-2007
+Fred X. Quimby
+All Rights Reserved.
+
+Disclaimer:
+THIS SOFTWARE, ITS DOCUMENTATION, AND SOURCE CODE ARE PROVIDED BY THE AUTHOR 
+AS-IS, AND ARE OFFERED WITHOUT ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING BUT 
+NOT LIMITED TO IMPLIED WARRANTIES OF FITNESS FOR A PARTICULAR PURPOSE. IN NO 
+EVENT SHALL THE AUTHOR BE LIABLE FOR ANY CLAIM, OR ANY SPECIAL INDIRECT OR 
+CONSEQUENTIAL DAMAGES, OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, 
+DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS 
+ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS 
+SOFTWARE. 
+
+THE USER IS ADVISED TO TEST THIS SOFTWARE THOROUGHLY BEFORE RELYING ON IT, AND 
+MUST ASSUME THE ENTIRE RISK OF USING IT. 

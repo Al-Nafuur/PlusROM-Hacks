@@ -1,0 +1,132 @@
+;  Stella configuration file
+;
+;  Lines starting with ';' are comments and are ignored.
+;  Spaces and tabs are ignored.
+;
+;  Format MUST be as follows:
+;    command = value
+;
+;  Commands are the same as those specified on the commandline,
+;  without the '-' character.
+;
+;  Values are the same as those allowed on the commandline.
+;  Boolean values are specified as 1 (or true) and 0 (or false)
+;
+video = opengl
+framerate = 0
+vsync = true
+fullscreen = 0
+center = false
+palette = standard
+timing = sleep
+uimessages = true
+tia.zoom = 3
+tia.inter = false
+tia.aspectn = 91
+tia.aspectp = 109
+tia.fsfill = false
+tia.dbgcolors = roygpb
+tv.filter = 0
+tv.phosphor = byrom
+tv.phosblend = 50
+tv.scanlines = 25
+tv.scaninter = true
+tv.contrast = 0
+tv.brightness = 0
+tv.hue = 0
+tv.saturation = 0
+tv.gamma = 0
+tv.sharpness = 0
+tv.resolution = 0
+tv.artifacts = 0
+tv.fringing = 0
+tv.bleed = 0
+sound = true
+fragsize = 512
+freq = 31400
+volume = 100
+keymap = 121:0:0:0:0:51:0:56:53:50:26:24:23:60:25:63:64:0:0:61:62:48:0:52:101:0:0:49:55:22:54:45:46:47:20:21:27:28:57:58:59:0:103:104:99:19:0:0:0:0:100:0:65:0:102:66:67:68:0:9:10:3:4:5:6:7:8:95:93:94:96:0:0:98:0:0:0:0:0:0:18:17:16:15:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:19:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:115:119:120:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:111:113:0:112:114:110:109:108:107:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0
+joymap = 121
+combomap = 16:0,0,0,0,0,0,0,0:0,0,0,0,0,0,0,0:0,0,0,0,0,0,0,0:0,0,0,0,0,0,0,0:0,0,0,0,0,0,0,0:0,0,0,0,0,0,0,0:0,0,0,0,0,0,0,0:0,0,0,0,0,0,0,0:0,0,0,0,0,0,0,0:0,0,0,0,0,0,0,0:0,0,0,0,0,0,0,0:0,0,0,0,0,0,0,0:0,0,0,0,0,0,0,0:0,0,0,0,0,0,0,0:0,0,0,0,0,0,0,0:0,0,0,0,0,0,0,0
+joydeadzone = 13
+joyallow4 = false
+usemouse = analog
+grabmouse = true
+cursor = 2
+dsense = 10
+msense = 10
+tsense = 10
+saport = lr
+ctrlcombo = true
+snapsavedir = ~/
+snaploaddir = ~/
+snapname = int
+sssingle = false
+ss1x = false
+ssinterval = 2
+romdir = 
+statedir = ~/.config/stella/state/
+cheatfile = ~/.config/stella/stella.cht
+palettefile = ~/.config/stella/stella.pal
+propsfile = ~/.config/stella/stella.pro
+nvramdir = ~/.config/stella/nvram/
+cfgdir = ~/.config/stella/cfg/
+exitlauncher = false
+launcherres = 900x600
+launcherfont = medium
+launcherexts = allroms
+romviewer = 1
+lastrom = 
+dbg.res = 1160x770
+uipalette = standard
+listdelay = 300
+mwheel = 4
+autoslot = false
+loglevel = 1
+logtoconsole = 0
+avoxport = 
+fastscbios = 1
+threads = false
+dbg.fontsize = medium
+dbg.fontstyle = 0
+dbg.uhex = false
+dbg.ghostreadstrap = true
+dis.resolve = true
+dis.gfxformat = 2
+dis.showaddr = true
+dis.relocate = false
+plr.stats = false
+plr.bankrandom = false
+plr.ramrandom = false
+plr.cpurandom = 
+plr.colorloss = false
+plr.tv.jitter = true
+plr.tv.jitter_recovery = 10
+plr.debugcolors = false
+plr.tiadriven = false
+plr.console = 2600
+plr.timemachine = 0
+plr.tm.size = 100
+plr.tm.uncompressed = 30
+plr.tm.interval = 30f
+plr.tm.horizon = 10m
+plr.thumb.trapfatal = false
+plr.eepromaccess = false
+dev.settings = false
+dev.stats = true
+dev.bankrandom = true
+dev.ramrandom = true
+dev.cpurandom = SAXYP
+dev.colorloss = true
+dev.tv.jitter = true
+dev.tv.jitter_recovery = 2
+dev.debugcolors = false
+dev.tiadriven = true
+dev.console = 2600
+dev.timemachine = 1
+dev.tm.size = 100
+dev.tm.uncompressed = 60
+dev.tm.interval = 1f
+dev.tm.horizon = 10s
+dev.thumb.trapfatal = true
+dev.eepromaccess = true
