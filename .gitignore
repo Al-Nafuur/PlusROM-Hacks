@@ -1,4 +1,6 @@
 .vscode
+**/php.ini
+**/.htaccess
 **/bin
 **/macro.h
 **/vcs.h
