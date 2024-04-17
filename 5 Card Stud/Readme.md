@@ -34,5 +34,7 @@ You can always leave the table to the title screen with the console "RESET" swit
 
 ## Links
 2600 Wizards forum: https://woodgrain.taswegian.com/index.php?topic=74.0
+
 FujiNet discord: https://discord.com/channels/655893677146636301/1194775662628704287
+
 AtariAge forum: https://forums.atariage.com/topic/359421-fujinet-for-atari-2600/
