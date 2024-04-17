@@ -1,0 +1,59 @@
+<FridgeGrid>
+  <comment text="tari 2600 VCS Playfield Template&#xa;&#xa;This is a template for creating Atari 2600 VCS effects. Access of playfield registers are marked."/>
+  <elements>
+    <element text="PF1 USED" y="2" color="#ffa0a0" x="32" height="1" width="10"/>
+    <element text="PF2 USED" y="2" color="#ff8080" x="43" height="1" width="10"/>
+    <element text="PF1 USED" y="3" color="#ffa0a0" x="32" height="1" width="10"/>
+    <element text="PF2 USED" y="3" color="#ff8080" x="43" height="1" width="10"/>
+    <element text="PF0 USED" y="2" color="#ffc0c0" x="53" height="1" width="5"/>
+    <element text="PF1 USED" y="2" color="#ffa0a0" x="59" height="1" width="10"/>
+    <element text="PF2 USED" y="2" color="#ff8080" x="69" height="1" width="11"/>
+    <element text="PF2 USED" y="3" color="#ff8080" x="53" height="1" width="11"/>
+    <element text="PF1 USED" y="3" color="#ffa0a0" x="64" height="1" width="10"/>
+    <element text="PF0 USED" y="3" color="#ffc0c0" x="75" height="1" width="5"/>
+    <element text="Playfield Repeated" y="2" color="#c0c0ff" x="6" height="1" width="20"/>
+    <element text="Playfield Mirrored" y="3" color="#c0c0ff" x="6" height="1" width="20"/>
+    <element text="PF0 USED" y="2" color="#ffc0c0" x="27" height="1" width="5"/>
+    <element text="PF0 USED" y="3" color="#ffc0c0" x="27" height="1" width="5"/>
+    <element text="mitte" y="24" color="#c0c0ff" x="27" height="1" width="27"/>
+    <element text="mitte" y="24" color="#c0c0ff" x="54" height="1" width="27"/>
+    <element text="1/4" y="23" color="#c0c0ff" x="68" height="1" width="13"/>
+    <element text="1/4" y="23" color="#c0c0ff" x="54" height="1" width="13"/>
+    <element text="1/4" y="23" color="#c0c0ff" x="41" height="1" width="13"/>
+    <element text="1/4" y="23" color="#c0c0ff" x="27" height="1" width="13"/>
+    <element text="" y="22" color="#c0c0ff" x="39" height="1" width="3"/>
+    <element text="" y="22" color="#c0c0ff" x="66" height="1" width="3"/>
+    <element text="sta GRP0" y="16" color="#fff0c0" x="64" height="1" width="3"/>
+    <element text="lda (current_row),y" y="16" color="#c0f0ff" x="32" height="1" width="5"/>
+    <element text="sta GRP0" y="16" color="#c0f0ff" x="40" height="1" width="3"/>
+    <element text="lda current_color" y="16" color="#ffc0c0" x="43" height="1" width="3"/>
+    <element text="sta COLUP0" y="16" color="#ffc0c0" x="46" height="1" width="3"/>
+    <element text="lda (current_row),y" y="16" color="#fff0c0" x="52" height="1" width="5"/>
+    <element text="lda (current_row),y" y="16" color="#ffc0c0" x="19" height="1" width="5"/>
+    <element text="sta GRP0" y="16" color="#c0c0ff" x="16" height="1" width="3"/>
+    <element text="lda (current_row),y" y="16" color="#c0c0ff" x="11" height="1" width="5"/>
+    <element text="sta COLUP0" y="16" color="#c0c0ff" x="8" height="1" width="3"/>
+    <element text="lda current_color" y="16" color="#c0c0ff" x="5" height="1" width="3"/>
+    <element text="ldx current_color" y="16" color="#c0f0ff" x="29" height="1" width="3"/>
+    <element text="stx COLUP0" y="16" color="#c0f0ff" x="37" height="1" width="3"/>
+    <element text="ldx current_color" y="16" color="#fff0c0" x="49" height="1" width="3"/>
+    <element text="stx COLUP0" y="16" color="#fff0c0" x="67" height="1" width="3"/>
+    <element text="space 1. row" y="17" color="#c0c0ff" x="66" height="1" width="8"/>
+    <element text="space 2. row" y="18" color="#c0c0ff" x="38" height="1" width="8"/>
+    <element text="space 2. row" y="18" color="#c0c0ff" x="65" height="1" width="8"/>
+    <element text="space 3. row" y="19" color="#c0c0ff" x="37" height="1" width="8"/>
+    <element text="space 3. row" y="19" color="#c0c0ff" x="63" height="1" width="8"/>
+    <element text="space 4. row" y="20" color="#c0c0ff" x="35" height="1" width="8"/>
+    <element text="space 4. row" y="20" color="#c0c0ff" x="62" height="1" width="8"/>
+    <element text="space 5. row" y="21" color="#c0c0ff" x="34" height="1" width="8"/>
+    <element text="space 5. row" y="21" color="#c0c0ff" x="61" height="1" width="8"/>
+    <element text="space 1. row" y="17" color="#c0c0ff" x="39" height="1" width="8"/>
+    <element text="Total" y="13" color="#c0c0ff" x="5" height="1" width="76"/>
+    <element text="Start" y="13" color="#c0c0ff" x="4" height="30" width="1"/>
+    <element text="22 cycles, 68 TIA (Horizontal blank)" y="14" color="#c0c0ff" x="5" height="1" width="22"/>
+    <element text="54 cycles, 160 TIA (Visible scanline)" y="14" color="#c0c0ff" x="27" height="1" width="54"/>
+    <element text="HBlank" y="13" color="#c0c0ff" x="26" height="30" width="1"/>
+    <element text="sta GRP0" y="16" color="#ffc0c0" x="24" height="1" width="3"/>
+    <element text="End" y="13" color="#c0c0ff" x="81" height="30" width="1"/>
+  </elements>
+</FridgeGrid>
