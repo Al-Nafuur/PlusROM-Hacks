@@ -81,6 +81,8 @@ PAL60                   = 2
 TRUE                    = 1
 FALSE                   = 0
 
+PLUSROM                 = 1
+
    IFNCONST COMPILE_REGION
 
 COMPILE_REGION          = NTSC      ; change to compile for different regions
@@ -218,6 +220,17 @@ BLANK_OFFSET            = (Blank - NumberFonts) / H_DIGITS
 
 ; game state values
 GAME_IN_PROGRESS        = %10000000
+
+   IF PLUSROM
+
+WriteToBuffer           = $1FF0
+WriteSendBuffer         = $1FF1
+ReceiveBuffer           = $1FF2
+ReceiveBufferSize       = $1FF3
+
+HIGHSCORE_ID            = 80         ; Grand Prix game ID in Highscore DB
+
+   ENDIF
 
 ;===============================================================================
 ; M A C R O S
@@ -1145,8 +1158,20 @@ DetermineIfTimeToShowBridge
    bne .animateObstacleSprite       ; branch if not done with race
    ldy treeHorizPos
    cpy #$30
+
+   IF PLUSROM = 1
+
+   jmp SendPlusROMScore
+   nop
+ReturnFromSendPlusROMScore
+
+   ELSE
+
    bcs .animateObstacleSprite
    sta gameState                    ; set for race is over (i.e D6 - D0 high)
+
+   ENDIF
+
 .animateObstacleSprite
    lda gameState                    ; get current game state
    cmp #GAME_IN_PROGRESS
@@ -2344,6 +2369,8 @@ CarAnimation_00
    .byte $80 ; |X.......|
    .byte $00 ; |........|
    .byte $00 ; |........|
+
+   IF PLUSROM = 0
    .byte $00 ; |........|
    .byte $00 ; |........|
    .byte $00 ; |........|
@@ -2352,6 +2379,8 @@ CarAnimation_00
    .byte $00 ; |........|
    .byte $00 ; |........|
    .byte $00 ; |........|
+   ENDIF
+
 OilSlickAnimation_00
    .byte $00 ; |........|
    .byte $00 ; |........|
@@ -2385,7 +2414,23 @@ OilSlickAnimation_00
    .byte $00 ; |........|
    .byte $00 ; |........|
    .byte $00 ; |........|
-   
+
+   IF PLUSROM = 1
+StartingTrackPositionValues
+   .byte TRACK_BRIDGE_03            ; Watkins Glen
+   .byte TRACK_BRIDGE_02            ; Brands Hatch (1 Bridge)
+   .byte TRACK_BRIDGE_01            ; Le Mans (2 Bridges)
+   .byte 0                          ; Monaco (3 Bridges)
+
+ObstacleSpeedMaskValues
+   .byte $C0
+   .byte $30
+   .byte $0C
+   .byte $03
+   ENDIF
+
+   BOUNDARY 0
+
 CarAnimation_01
    .byte $00 ; |........|
    .byte $1F ; |...XXXXX|
@@ -2609,6 +2654,8 @@ CarAnimation_01
    .byte $80 ; |X.......|
    .byte $00 ; |........|
    .byte $00 ; |........|
+
+   IF PLUSROM = 0
    .byte $00 ; |........|
    .byte $00 ; |........|
    .byte $00 ; |........|
@@ -2617,6 +2664,7 @@ CarAnimation_01
    .byte $00 ; |........|
    .byte $00 ; |........|
    .byte $00 ; |........|
+   ENDIF
    
 OilSlickAnimation_01
    .byte $00 ; |........|
@@ -2651,7 +2699,21 @@ OilSlickAnimation_01
    .byte $00 ; |........|
    .byte $00 ; |........|
    .byte $00 ; |........|
-   
+
+   IF PLUSROM = 1
+DecimalGraphicMask
+   .byte %11111111
+   .byte %11111111
+   .byte %11111111
+   .byte %11111111
+   .byte %11111110
+   .byte %11111110
+   .byte %11111110
+   .byte %11111110
+   ENDIF
+
+   BOUNDARY 0
+
 CarAnimation_02
    .byte $00 ; |........|
    .byte $1F ; |...XXXXX|
@@ -2875,6 +2937,8 @@ CarAnimation_02
    .byte $80 ; |X.......|
    .byte $00 ; |........|
    .byte $00 ; |........|
+
+   IF PLUSROM = 0
    .byte $00 ; |........|
    .byte $00 ; |........|
    .byte $00 ; |........|
@@ -2883,6 +2947,7 @@ CarAnimation_02
    .byte $00 ; |........|
    .byte $00 ; |........|
    .byte $00 ; |........|
+   ENDIF
 
 OilSlickAnimation_02
    .byte $00 ; |........|
@@ -2917,6 +2982,17 @@ OilSlickAnimation_02
    .byte $00 ; |........|
    .byte $00 ; |........|
    .byte $00 ; |........|
+
+   IF PLUSROM = 1
+GameColors
+   .byte DK_GREEN + 4, DK_GREEN + 4 ; treeColors
+   .byte BLUE + 4                   ; riverColor
+   .byte YELLOW + 8                 ; gardenDirtColor
+   .byte BLACK + 6                  ; roadColor
+   .byte BLACK                      ; backgroundColor
+   .byte ORANGE + 8                 ; copyrightColor
+   .byte DK_GREEN + 6               ; grassColor
+   ENDIF
 
    BOUNDARY 0
    
@@ -3012,14 +3088,15 @@ nine
    .byte $CD ; |XX..XX.X|
    .byte $79 ; |.XXXX..X|
 Blank
-   .byte $01 ; |........|
-   .byte $02 ; |........|
-   .byte $03 ; |........|
-   .byte $04 ; |........|
-   .byte $05 ; |........|
-   .byte $06 ; |........|
-   .byte $07 ; |........|
-   .byte $08 ; |........|
+   .byte $00 ; |........|
+   .byte $00 ; |........|
+   .byte $00 ; |........|
+   IF PLUSROM = 0
+   .byte $00 ; |........|
+   .byte $00 ; |........|
+   .byte $00 ; |........|
+   .byte $00 ; |........|
+   .byte $00 ; |........|
 
 GameColors
    .byte DK_GREEN + 4, DK_GREEN + 4 ; treeColors
@@ -3029,6 +3106,7 @@ GameColors
    .byte BLACK                      ; backgroundColor
    .byte ORANGE + 8                 ; copyrightColor
    .byte DK_GREEN + 6               ; grassColor
+   ENDIF
 
 FinishlineGraphics
    .byte $00 ; |........|
@@ -3036,6 +3114,12 @@ FinishlineGraphics
    .byte $00 ; |........|
    .byte $00 ; |........|
    .byte $00 ; |........|
+   IF PLUSROM = 1
+Copyright_0
+Copyright_1
+Copyright_2
+Copyright_3
+  ENDIF
    .byte $08 ; |....X...|
    .byte $14 ; |...X.X..|
    .byte $2A ; |..X.X.X.|
@@ -3097,13 +3181,16 @@ PlayfieldGraphicIndexValues
    .byte <rightPF2GraphicData - playfieldGraphicData
    .byte <rightPF2GraphicData - playfieldGraphicData
    
+   IF PLUSROM = 0
 InitObstacleCoarseMoveValues
    .byte 4, 0, 0, 0, 0
+   ENDIF
 
 InitObstacleFineMoveValues
    .byte HMOVE_R2 | ID_CAR, HMOVE_L6 | ID_CAR
    .byte HMOVE_L6 | ID_CAR, HMOVE_L6,| ID_CAR HMOVE_L6 | ID_CAR
 
+   IF PLUSROM = 0
 StartingTrackPositionValues
    .byte TRACK_BRIDGE_03            ; Watkins Glen
    .byte TRACK_BRIDGE_02            ; Brands Hatch (1 Bridge)
@@ -3125,6 +3212,7 @@ DecimalGraphicMask
    .byte %11111110
    .byte %11111110
    .byte %11111110
+   ENDIF
    
 ObstacleRightGraphicLSBValue
    .byte H_SPRITES * 6
@@ -3142,6 +3230,8 @@ ObstacleMidScreenSizeLSBValue
    .byte H_SPRITES * 3
    .byte H_SPRITES * 4
    .byte H_SPRITES * 4
+
+   IF PLUSROM = 0
 
 Copyright_0
    .byte $00 ; |........|
@@ -3180,6 +3270,11 @@ Copyright_3
    .byte $00 ; |........|
    .byte $00 ; |........|
 
+   ELSE
+InitObstacleCoarseMoveValues
+   .byte 4, 0, 0
+   ENDIF
+
 BorderTreeSprite
    .byte $00 ; |........|
    .byte $00 ; |........|
@@ -3198,6 +3293,39 @@ BorderTreeSprite
    .byte $00 ; |........|
    .byte $00 ; |........|
 
+   IF PLUSROM = 1
+
+SendPlusROMScore
+   bcs .endOfSendPlusROMScore
+   cmp gameState                    ; check if we have been here before
+   beq .endOfSendPlusROMScore       ; then skip sending score
+   sta gameState                    ; set for race is over (i.e D6 - D0 high)
+   lda elapsedTime
+   cmp #$AA                         ; check for select after game end
+   beq .endOfSendPlusROMScore       ; then skip sending score
+
+   ldx gameSelection                ; game number
+   stx WriteToBuffer
+   sta WriteToBuffer
+   lda elapsedTime+1
+   sta WriteToBuffer
+   lda elapsedTime+2
+   sta WriteToBuffer
+   lda #HIGHSCORE_ID                ; game id in Highscore DB
+   sta WriteSendBuffer
+.endOfSendPlusROMScore
+   jmp ReturnFromSendPlusROMScore
+
+PlusROM_API
+   .byte "a", 0, "h.firmaplus.de"
+   .byte 0
+   .org ROM_BASE + 4096 - 6, 0      ; 4K ROM
+   .word (PlusROM_API - $E000)      ; PlusRom API pointer
+
+   ELSE
    .org ROM_BASE + 4096 - 4, 0      ; 4K ROM
+
+   ENDIF
+
    .word Start
    .word 0
